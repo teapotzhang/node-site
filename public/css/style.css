@@ -1,0 +1,179 @@
+/* common */
+
+html, body{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	color: #333;
+}
+
+.v-center{
+    display:flex;/*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items:center;/*指定垂直居中*/
+    height: 100%;
+}
+
+#navbar{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+	border-bottom: 2px solid #eee;
+	height: 50px;
+	width: 100%;
+	background: #fff;
+}
+
+#navbar .logo{
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	float: left;
+	margin-top: 10px;
+}
+
+#navbar .float_r a{
+	float: right;
+	font-size: 16px !important;
+	line-height: 50px;
+	vertical-align: middle;
+	cursor: pointer;
+	color: #666;
+	font-weight: 600;
+}
+
+#hero{
+	width: 100%;
+	background: #fff;
+	height: 100%;
+}
+
+#hero .screen_shot{
+	display: block;
+	width: 80%;
+	height: auto;
+	margin: 0 auto;
+	max-width: 320px;
+}
+
+#hero .logo{
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	float: left;
+}
+
+#hero .logo_section{
+	width: 300px;
+}
+
+#hero .logo_section p{
+	font-size: 24px;
+	line-height: 60px;
+	vertical-align: middle;
+	text-indent:  10px;
+	color: #666;
+	font-weight: 600;
+}
+
+#hero, #hero .container,#hero .container .row, #hero .container .row .col-md-12, #hero .container .row .col-md-12 .v-center{
+	height: 100%;
+}
+
+#hero h1{
+	display: block;
+	margin-top: 20px;
+	font-size: 60px;
+	line-height: 80px;
+}
+
+#hero h1 div{
+	font-size: 72px;
+}
+
+#cartoon{
+	background: #f0f0f0;
+	height: 600px;
+}
+
+#features{
+	padding: 50px 0px;
+	text-align: center;
+}
+
+#features h2{
+	line-height: 30px;
+	font-size: 20px;
+}
+
+#features .features_icon{
+	border-radius: 50%;
+	background: #32b6f4;	
+	margin: 40px auto 20px;
+	width: 180px;
+	height: 180px;	
+}
+
+#features .feature_icon{
+	width: 180px;
+	height: 180px;
+	padding: 40px;
+	margin: 0px auto;
+	display: block;
+}
+
+#features h3{
+	font-weight: 600;
+	font-size: 20px;
+	text-align: center;
+	padding-top: 40px;
+	color: #aaa;
+}
+
+#QA{
+	padding: 50px 0px;
+	background: #f0f0f0;
+	text-align: center;
+}
+
+#QA h3{
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 30px;
+	text-align: center;
+}
+
+#QA p{
+	font-size: 16px;
+	line-height: 24px;
+	color: #666;	
+}
+
+#QA .qa-question{
+	padding: 10px 30px;
+}
+
+#contact{
+	padding: 50px 0px;
+	text-align: center;
+	height: 600px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
