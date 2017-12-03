@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>记忆小卡片</title>
 
+		{{#if showTests}}
+			<link rel="stylesheet" href="/vendor/mocha.css">
+		{{/if}}
+
 		<meta name="keywords" content="记忆小卡片 anki 司法考试 司考 法考 记忆 小卡片 卡片记忆">
 		<meta name="description" content="">
 			
@@ -19,9 +23,21 @@
 	        <script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
 	  	<![endif]-->
 	    <link rel="apple-touch-icon" href="img/cute_logo.png"/>
-	    <meta name="apple-mobile-web-app-title" content="记忆小卡片">		
+	    <meta name="apple-mobile-web-app-title" content="记忆小卡片">	
 	</head>
 	<body>
 		{{{ body }}}
+
+		{{#if showTests}}
+			<div id="mocha"></div>
+			<script type="text/javascript" src="/vendor/mocha.js"></script>
+			<script type="text/javascript" src="/vendor/chai.js"></script>
+			<script src='/qa/tests-global.js'></script>
+			{{#if pageTestScript}}
+				<script type="text/javascript" src="{{pageTestScript}}"></script>
+			{{/if}}
+			<script type="text/javascript">mocha.run();</script>>
+		{{/if}}		
+
 	</body>
 </html>

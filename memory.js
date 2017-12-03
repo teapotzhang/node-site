@@ -2,6 +2,8 @@ var express = require('express');
 
 var app = express();
 
+var login = require('./routes/login');
+
 var handlebars = require('express3-handlebars')
 				.create({ defaultLayout : 'main' });
 app.engine('handlebars', handlebars.engine);
@@ -11,9 +13,19 @@ app.set('port', process.env.PORT || 8080);
 
 app.use(express.static(__dirname + '/public'));
 
+app.use(function(req, res, next){
+	res.locals.showTests = app.get('env') !== 'production' &&
+			req.query.test == '1';
+	next();
+});
+
+//路由设置
+
 app.get('/', function(req, res){
 	res.render('home');
 });
+
+app.use('/login', login);
 
 app.use(function(req, res){
 	res.status(404);
