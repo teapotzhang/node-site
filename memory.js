@@ -58,7 +58,7 @@ app.get('/login', function(req, res, next){
 
         var sessionid = get_session_id();
 
-        res.string({ sessionid })
+        res.json({ sessionid: 'hey' })
       } else {
         console.log("[error]", err)
         res.json(err)
