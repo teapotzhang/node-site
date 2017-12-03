@@ -1,20 +1,13 @@
-const exec = require('child_process').exec;
-
 var express = require('express');
 
 var request = require('request');
+
+var randomString = require('random-string');
 
 var app = express();
 
 var handlebars = require('express3-handlebars')
 				.create({ defaultLayout : 'main' });
-
-function get_session_id(){
-	exec('head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168', function(err,stdout,stderr){
-		return stdout;
-	});
-};
-
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -55,10 +48,8 @@ app.get('/login', function(req, res, next){
 
         //TODO: 生成一个唯一字符串sessionid作为键，将openid和session_key作为值，存入redis，超时时间设置为2小时
         //伪代码: redisStore.set(sessionid, openid + session_key, 7200)
-
-        var sessionid = get_session_id();
-
-        res.json({ sessionid: 'hey' })
+        var session_id = randomString({length: 32});
+        res.json({ sessionid: session_id })
       } else {
         console.log("[error]", err)
         res.json(err)
