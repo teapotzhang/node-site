@@ -161,7 +161,11 @@ html, body{
 	height: 600px;
 }
 
-
+#contact img{
+	width: 100%;
+	height: auto;
+	max-width: 300px;
+}
 
 
 
