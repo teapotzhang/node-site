@@ -42,6 +42,7 @@ router.get('/', function(req, res, next){
 
 router.get('/add_user', function(req, res, next){
 	let userInfo = req.query.userInfo;
+	alert(userInfo);
 	var UserEntity = new UserModel({
 		session_id: sessionID,
 		openID: user_open_id,
