@@ -67,7 +67,8 @@ router.get('/add_user', function(req, res, next){
 		}
 	});
 
-	res.json({ 'data_json': data_json });
+	res.json({ 'tada': userInfo,
+				'heyyou' : data_json });
 });
 
 module.exports = router;
