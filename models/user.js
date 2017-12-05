@@ -10,11 +10,9 @@ var UserSchema = new Schema({
 	gender: String,
 	avartar_url: String,
 	session_id: String,
-	address : {
-		province: String,
-		city: String,
-		country: String
-	},
+	province: String,
+	city: String,
+	country: String,
 	last_udpated: Date
 });
 

@@ -47,11 +47,9 @@ router.get('/add_user', function(req, res, next){
 		nickName: userInfo.nickName,
 		gender: userInfo.gender,
 		avartar_url: userInfo.avatarUrl,
-		address : {
-			province: userInfo.province,
-			city: userInfo.city,
-			country: userInfo.country
-		},
+		province: userInfo.province,
+		city: userInfo.city,
+		country: userInfo.country,
 		last_udpated: new Date()
 	};
 	var UserEntity = new UserModel(data_json);
