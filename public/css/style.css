@@ -167,6 +167,9 @@ html, body{
 	max-width: 300px;
 }
 
+table th, table td{
+	padding: 10px;
+}
 
 
 

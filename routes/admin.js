@@ -1,12 +1,13 @@
 var express = require('express');
 var AdminModel = require('../models/admin');
+var CardModel = require('../models/card')
 var router = express.Router();
 
 var sess;
 
 router.get('/login', function(req, res, next){
 
-  
+
 
   sess = req.session;
   if(sess.authenticated){
@@ -61,6 +62,19 @@ router.get('/index', function (req, res) {
       return res.redirect('/admin/login');
    }
 
+});
+
+router.post('/index', function(req, res){
+
+  let cardFile = req.files.cardFile;
+  console.log(cardFile.name);
+  var file_link = './card_lib/' + cardFile.name;
+  cardFile.mv(file_link, function(err){
+    if (err)
+      return res.status(500).send(err);
+ 
+    res.send('File uploaded!');
+  });
 });
 
 module.exports = router;

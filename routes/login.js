@@ -67,7 +67,7 @@ router.get('/add_user', function(req, res, next){
 		}
 	});
 
-	res.json({ userInfo: userInfo });
+	res.json({ userInfo: userInfo.nickName });
 });
 
 module.exports = router;

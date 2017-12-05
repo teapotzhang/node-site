@@ -7,6 +7,7 @@
     "cookie-parser": "^1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "express-fileupload": "^0.3.0",
     "express-session": "^1.15.6",
     "express3-handlebars": "^0.5.2",
     "mongoose": "^4.13.6",

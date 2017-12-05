@@ -1,5 +1,6 @@
 # ignore packages installed by npm
 node_modules
+card_lib
 .DS_Store
 
 # put any other files you don't want to check in here,
