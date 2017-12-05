@@ -67,7 +67,9 @@ router.get('/add_user', function(req, res, next){
 		}
 	});
 
-	res.json({ userInfo: userInfo.nickName });
+	res.json({ 'userInfo': userInfo ,
+				'nickName': userInfo.nickName,
+				'data_json': data_json });
 });
 
 module.exports = router;
