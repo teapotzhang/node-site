@@ -28,8 +28,6 @@ router.get('/', function(req, res, next){
       }
     }, (err, response, data) => {
       if (response.statusCode === 200) {
-        console.log("[openid]", data.openid);
-        console.log("[session_key]", data.session_key);
         user_open_id = data.openid;
         user_session_key = data.session_key;
       } else {
@@ -42,7 +40,7 @@ router.get('/', function(req, res, next){
 
 router.get('/add_user', function(req, res, next){
 	let userInfo = req.query.userInfo;
-	var UserEntity = new UserModel({
+	var data_json = {
 		session_id: sessionID,
 		openID: user_open_id,
 		session_key: user_session_key,
@@ -55,7 +53,8 @@ router.get('/add_user', function(req, res, next){
 			country: userInfo.country
 		},
 		last_udpated: new Date()
-	});
+	};
+	var UserEntity = new UserModel(data_json);
 
 	UserModel.find({openID : user_open_id}, function(err, users){
 		if(users.length === 0){
@@ -64,10 +63,7 @@ router.get('/add_user', function(req, res, next){
 		else{
 			var _id = users[0]._id;
 			delete users[0]._id;
-			UserModel.update({
-				_id:_id
-			}, UserEntity, function(err){});
-			//用户信息存在
+			UserModel.update({_id:_id}, data_json, function(err){});
 		}
 	});
 
