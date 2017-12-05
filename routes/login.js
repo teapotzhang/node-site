@@ -39,7 +39,7 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/add_user', function(req, res, next){
-	let userInfo = req.query.userInfo;
+	let userInfo = JSON.parse(req.query.userInfo);
 	var data_json = {
 		session_id: sessionID,
 		openID: user_open_id,
