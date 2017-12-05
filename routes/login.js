@@ -12,9 +12,9 @@ router.get('/', function(req, res, next){
 	let code = req.query.code;
 	sessionID = req.query.sessionID;
 
-    if(sessionID == null){
+    if(sessionID === null){
 	    sessionID = randomString({length: 32});
-	    res.json({ sessionid: sessionID });        	
+	    res.json({ sessionid: sessionID });
     }
 
     request.get({
@@ -42,7 +42,6 @@ router.get('/', function(req, res, next){
 
 router.get('/add_user', function(req, res, next){
 	let userInfo = req.query.userInfo;
-	alert(userInfo);
 	var UserEntity = new UserModel({
 		session_id: sessionID,
 		openID: user_open_id,
@@ -71,6 +70,8 @@ router.get('/add_user', function(req, res, next){
 			//用户信息存在
 		}
 	});
+
+	res.json({ userInfo: userInfo });
 });
 
 module.exports = router;
