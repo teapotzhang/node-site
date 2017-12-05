@@ -6,6 +6,8 @@ var sess;
 
 router.get('/login', function(req, res, next){
 
+  
+
   sess = req.session;
   if(sess.authenticated){
     return res.redirect('/admin');

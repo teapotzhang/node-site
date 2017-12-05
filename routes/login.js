@@ -62,6 +62,11 @@ router.get('/add_user', function(req, res, next){
 			UserEntity.save();
 		}
 		else{
+			var _id = users[0]._id;
+			delete users[0]._id;
+			UserModel.update({
+				_id:_id
+			}, UserEntity, function(err){});
 			//用户信息存在
 		}
 	});
