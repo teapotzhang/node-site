@@ -1,10 +1,24 @@
 var express = require('express');
-
-var request = require('request');
-
-var randomString = require('random-string');
-
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.use(cookieParser());
+
+app.use(session({
+	secret: 'anystringoftext',
+	saveUninitialized: true,
+	resave: true
+}));
+
+var login = require('./routes/login');
+var admin = require('./routes/admin');
 
 var handlebars = require('express3-handlebars')
 				.create({ defaultLayout : 'main' });
@@ -28,35 +42,8 @@ app.get('/', function(req, res){
 	res.render('home');
 });
 
-app.get('/login', function(req, res, next){
-	//wechat user login, get code
-	let code = req.query.code;
-
-    request.get({
-      uri: 'https://api.weixin.qq.com/sns/jscode2session',
-      json: true,
-      qs: {
-        grant_type: 'authorization_code',
-        appid: 'wxf965e072652b2dc6',
-        secret: 'e68999f635998f962f245ba78a6ba45d',
-        js_code: code
-      }
-    }, (err, response, data) => {
-      if (response.statusCode === 200) {
-        console.log("[openid]", data.openid)
-        console.log("[session_key]", data.session_key)
-
-        //TODO: 生成一个唯一字符串sessionid作为键，将openid和session_key作为值，存入redis，超时时间设置为2小时
-        //伪代码: redisStore.set(sessionid, openid + session_key, 7200)
-        var session_id = randomString({length: 32});
-        res.json({ sessionid: session_id })
-      } else {
-        console.log("[error]", err)
-        res.json(err)
-      }
-  })
-
-});
+app.use('/login', login);
+app.use('/admin', admin);
 
 app.use(function(req, res){
 	res.status(404);
