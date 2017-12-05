@@ -4,13 +4,13 @@ var randomString = require('random-string');
 var UserModel = require('../models/user');
 var router = express.Router();
 
-var user_open_id, user_session_key;
+var user_open_id, user_session_key, sessionID;
 
 router.get('/', function(req, res, next){
 
 	//wechat user login, get code
 	let code = req.query.code;
-	let sessionID = req.query.sessionID;
+	sessionID = req.query.sessionID;
 
     if(sessionID == null){
 	    sessionID = randomString({length: 32});
@@ -41,7 +41,7 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/add_user', function(req, res, next){
-	let code = req.query.userInfo;
+	let userInfo = req.query.userInfo;
 	var UserEntity = new UserModel({
 		session_id: sessionID,
 		openID: user_open_id,
