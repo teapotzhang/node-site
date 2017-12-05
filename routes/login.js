@@ -12,7 +12,7 @@ router.get('/', function(req, res, next){
 	let code = req.query.code;
 	sessionID = req.query.sessionID;
 
-    if(sessionID === null){
+    if(sessionID == null){
 	    sessionID = randomString({length: 32});
 	    res.json({ sessionid: sessionID });
     }
