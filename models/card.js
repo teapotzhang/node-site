@@ -13,9 +13,9 @@ var CardSchema = new Schema({
 	firstLine : String,
 	lastLine : String,
 	analysis : String,
-	card_unique_id : String
+	card_unique_id : String,
+	activated: Boolean
 });
 
 var CardModel = db.model('Card', CardSchema);
-
-module.exports = CardModel
+module.exports = CardModel;

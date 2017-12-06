@@ -16,5 +16,5 @@ var UserSchema = new Schema({
 	last_udpated: Date
 });
 
-var UserSchema = db.model('User', UserSchema);
-module.exports = UserSchema;
+var UserModel = db.model('User', UserSchema);
+module.exports = UserModel;

@@ -16,19 +16,21 @@
     <th>分析</th>
     <th>卡的唯一ID</th>
   </tr>
+  {{#each cards}}
   <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>	    	    	    	    
+    <td>{{packageName}}</td>
+    <td>{{packagePrice}}</td>
+    <td>{{cardType}}</td>
+    <td>{{rightItem}}</td>
+    <td>{{expression}}</td>
+    <td>{{blueItem}}</td>
+    <td>{{redItem}}</td>
+    <td>{{firstLine}}</td>
+    <td>{{lastLine}}</td>
+    <td>{{analysis}}</td>
+    <td>{{card_unique_id}}</td>	    	    	    	    
   </tr>
+  {{/each}}
 </table>
 
 <a href="/new">新增卡片</a>
