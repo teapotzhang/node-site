@@ -112,6 +112,10 @@ router.post('/index', function(req, res){
           var blueItem = jsonArrayobj[i].blueItem;
           var redItem = jsonArrayobj[i].redItem;
           var cardType = 'Normal';
+          var analysis = null;
+          if(jsonArrayobj[i].hasOwnProperty('analysis')){
+            var analysis = jsonArrayobj[i].analysis;
+          }
 
           if( packagename == '介绍')
           {
@@ -128,7 +132,7 @@ router.post('/index', function(req, res){
             'redItem' : redItem,
             'firstLine' : firstLine,
             'lastLine' : lastLine,
-            'analysis' : null,
+            'analysis' : analysis,
             'card_unique_id' : card_unique_id,
             'activated': true        
           };

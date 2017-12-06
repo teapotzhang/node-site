@@ -13,7 +13,7 @@ var CardSchema = new Schema({
 	firstLine : String,
 	lastLine : String,
 	analysis : String,
-	card_unique_id : String,
+	card_unique_id : { type: String, index: { unique: true } },
 	activated: Boolean
 });
 
