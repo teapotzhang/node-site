@@ -7,9 +7,10 @@ var router = express.Router();
 var sess;
 
 function get_line(whole_line){
-    var k = whole_line.split('#');
-    return k;  
-}
+  var _whole_line = whole_line || "#";
+  var k = _whole_line.split('#');
+  return k; 
+} 
 
 router.get('/login', function(req, res, next){
 
@@ -159,16 +160,7 @@ router.get('/index/search', function(req, res){
 
 router.get('/index/update', function(req, res){
 
-    var card_unique_id = req.query.card_unique_id;
-    var blueItem = req.query.blueItem;
-    var redItem = req.query.redItem;
-    var packageName = req.query.packageName;
-    var analysis = req.query.analysis;
-    var expression = req.query.expression;
-    var rightItem = req.query.rightItem;
-    var whole_line = req.query.whole_line;
-
-    var k = get_line(whole_line);
+    var k = get_line(req.query.whole_line);
 
     var data_json = {
       'rightItem' : req.query.rightItem,
@@ -180,12 +172,23 @@ router.get('/index/update', function(req, res){
       'analysis' : req.query.analysis
     };
 
-    CardModel.find({card_unique_id : card_unique_id}, function(err, cards){
+    CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
     if(cards.length === 0){
       return res.render('admin/index');
     }
     else{
       var _id = cards[0]._id;
+
+      data_json = {
+        'rightItem' : req.query.rightItem || cards[0].rightItem,
+        'expression' : req.query.expression || cards[0].expression,
+        'blueItem' : req.query.blueItem || cards[0].blueItem,
+        'redItem' : req.query.redItem || cards[0].redItem,
+        'firstLine' : k[0] || cards[0].firstLine,
+        'lastLine' : k[1] || cards[0].lastLine,
+        'analysis' : req.query.analysis  || cards[0].analysis
+      };
+
       CardModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
         if (err) return handleError(err);        
       });
