@@ -2,6 +2,22 @@
 
 <h2>卡片列表</h2>
 
+<form ref="searchForm" id="searchForm" method="get" action="/admin/index/search">
+    <input type='text' name='searchKey' placeholder='card_unique_id'/>
+    <input type='submit' value='搜索'>
+</form>
+
+<form ref="updateForm" id="updateForm" method="get" action="/admin/index/update">
+    <input type='text' name='card_unique_id' placeholder='card_unique_id 用来进行查询' required/>
+    <input type='text' name='blueItem' placeholder='blueItem'/>
+    <input type='text' name='redItem' placeholder='redItem'/>
+    <input type='text' name='analysis' placeholder='analysis'/>
+    <input type='text' name='expression' placeholder='expression'/>
+    <input type='text' name='rightItem' placeholder='rightItem'/>
+    <input type='text' name='whole_line' placeholder='whole_line'/>
+    <input type='submit' value='搜索'>
+</form>
+
 <table>
   <tr>
     <th>卡包名字</th>
@@ -32,11 +48,6 @@
   </tr>
   {{/each}}
 </table>
-
-<a href="/new">新增卡片</a>
-<a href="/delete">删除卡片</a>
-<a href="/update">修改卡片</a>
-<a href="/find">查询卡片</a>
 
 <form ref="uploadForm" id="uploadForm" method="post" encType="multipart/form-data">
         <input type="file" name="cardFile" />
