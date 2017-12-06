@@ -60,7 +60,9 @@ router.get('/add_user', function(req, res, next){
 		}
 		else{
 			var _id = users[0]._id;
-			UserModel.where({_id: _id}).update(data_json);
+		    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
+		        if (err) return handleError(err);        
+		    });			
 		}
 	});
 
