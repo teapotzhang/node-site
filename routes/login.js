@@ -12,9 +12,8 @@ router.get('/', function(req, res, next){
 	let code = req.query.code;
 	sessionID = req.query.sessionID;
 
-    if(sessionID == null){
+    if(sessionID.length != 32){
 	    sessionID = randomString({length: 32});
-	    res.json({ sessionid: sessionID });
     }
 
     request.get({
@@ -35,7 +34,7 @@ router.get('/', function(req, res, next){
         res.json(err)
       }
   })
-
+  res.json({ sessionid: sessionID });
 });
 
 router.get('/add_user', function(req, res, next){
