@@ -39,7 +39,7 @@ router.get('/', function(req, res, next){
         res.json(err)
       }
   });
-
+  res.json({sessionID:sessionID});
 });
 
 router.get('/add_user', function(req, res, next){
