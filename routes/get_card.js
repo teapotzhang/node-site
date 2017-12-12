@@ -31,7 +31,7 @@ router.get('/', function(req, res, next){
 
         var card_unique_id = card.card_unique_id;
         //去card表里查询卡的具体内容
-        CardModel.find({card_unique_id: card_unique_id}, function(err, cards){
+        CardModel.findOne({card_unique_id: card_unique_id}, function(err, card){
           var card_json = {
             packageName: card.packageName,
             packageType: card.packageType,
