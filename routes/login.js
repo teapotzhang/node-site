@@ -3,6 +3,7 @@ var request = require('request');
 var randomString = require('random-string');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
+var PackageModel = require('../models/package');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
