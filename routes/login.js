@@ -103,9 +103,8 @@ router.get('/add_user', function(req, res, next){
 		'country': userInfo.country,
 		'last_udpated': new Date()
 	};
-	var UserEntity = new UserModel(data_json);
 
-	UserModel.find({'sessionID' : sessionID}, function(err, users){
+	UserModel.find({'session_id' : sessionID}, function(err, users){
 		//不是新用户 更新用户的sessionID以及别的信息
 		var _id = users[0]._id;
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
