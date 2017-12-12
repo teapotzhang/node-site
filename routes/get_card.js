@@ -38,6 +38,7 @@ router.get('/', function(req, res, next){
           }
         });
       });
+
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
@@ -75,6 +76,8 @@ router.get('/', function(req, res, next){
       //标记完后返回下一张卡
 
     }
+
+    res.json(card_json);
 });
 
 module.exports = router;

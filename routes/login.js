@@ -13,6 +13,8 @@ router.get('/', function(req, res, next){
 
 	//wechat user login, get code
 	let code = req.query.code;
+
+	
 	sessionID = req.query.sessionID;
 
     if(sessionID.length != 32){
@@ -38,11 +40,12 @@ router.get('/', function(req, res, next){
       }
   });
 
-  res.json({ sessionID: sessionID });
 });
 
 router.get('/add_user', function(req, res, next){
 	let userInfo = JSON.parse(req.query.userInfo);
+	var sessionID = req.query.sessionID;
+
 	var data_json = {
 		'session_id': sessionID,
 		'openID': user_open_id,
@@ -70,7 +73,6 @@ router.get('/add_user', function(req, res, next){
 							card_unique_id : cards[j].card_unique_id,  //确定卡片的id
 							LastShowDate : new Date(2000, 0, 2),   //确定这张卡下次出现的时间
 							openID : user_open_id,   //确定是谁
-							sessionID : sessionID,
 							Showed: false,   //是否出现过
 							usedStatus: [],
 							activated: true								
@@ -82,6 +84,7 @@ router.get('/add_user', function(req, res, next){
 			}
 		}
 		else{
+			//不是新用户 更新用户的sessionID以及别的信息
 			var _id = users[0]._id;
 		    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
 		        if (err) return handleError(err);        
