@@ -1,7 +1,9 @@
 var express = require('express');
 var request = require('request');
 var randomString = require('random-string');
+var CardModel = require('../models/card');
 var UserModel = require('../models/user');
+var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
 var user_open_id, user_session_key, sessionID;
@@ -55,7 +57,30 @@ router.get('/add_user', function(req, res, next){
 
 	UserModel.find({'openID' : user_open_id}, function(err, users){
 		if(users.length === 0){
+			//是新用户
 			UserEntity.save();
+			//生成初始刷卡列表
+			var init_packages = ['介绍','三国法'];
+			for( var i = 0; i < init_packages.length; i++ ){
+				PackageModel.find({'packageName' : init_packages[i]}, function(err, package){
+					var package_id = package[0].package_unique_id;
+					CardModel.find({'package_unique_id' : package_unique_id}, function(err, cards){
+						for( var j = 0; j< cards.length; j++){
+							var data_json = {
+								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+								LastShowDate : new Date(2000, 0, 2),   //确定这张卡下次出现的时间
+								openID : user_open_id,   //确定是谁
+								sessionID : sessionID,
+								Showed: false,   //是否出现过
+								usedStatus: [],
+								activated: true								
+							}
+							var UserCardEntity = new UserCardModel(data_json);
+							UserCardEntity.save();
+						}
+					});
+				});
+			}
 		}
 		else{
 			var _id = users[0]._id;
@@ -64,9 +89,6 @@ router.get('/add_user', function(req, res, next){
 		    });			
 		}
 	});
-
-	res.json({ 'tada': userInfo,
-				'heyyou' : data_json });
 });
 
 module.exports = router;

@@ -9,7 +9,7 @@ var UserSchema = new Schema({
 	unionID: String,
 	gender: String,
 	avartar_url: String,
-	session_id: String,
+	session_id: { type: String, index: { unique: true } },
 	province: String,
 	city: String,
 	country: String,

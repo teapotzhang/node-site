@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 
 var CardSchema = new Schema({
 	packageName : String,
-	package_price : Number,
 	cardType : String,
 	rightItem : Number,
 	expression : String,
@@ -13,8 +12,7 @@ var CardSchema = new Schema({
 	firstLine : String,
 	lastLine : String,
 	analysis : String,
-	card_unique_id : { type: String, index: { unique: true } },
-	activated: Boolean
+	card_unique_id : { type: String, index: { unique: true } }
 });
 
 var CardModel = db.model('Card', CardSchema);

@@ -1,13 +1,15 @@
 var express = require('express');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
+var PackageModel = require('../models/package');
 var csv = require('csvtojson');
+var randomString = require('random-string');
 var router = express.Router();
 
 var sess;
 
 function get_line(whole_line){
-  var _whole_line = whole_line || "#";
+  var _whole_line = toString(whole_line || "#");
   var k = _whole_line.split('#');
   return k; 
 } 
@@ -84,32 +86,55 @@ router.post('/index', function(req, res){
     .fromFile(file_link)
     .on("end_parsed" , function(jsonArrayobj){
 
+      var packagename = cardFile.name.split(".")[0];
+
+      PackageModel.find({packageName : packagename}, function(err, packages){
+        if( packages.length === 0 ){
+          var data_json = {
+            packageName : packagename,
+            packagePrice : 0.00
+          };
+
+          var PackageEntity = new PackageModel(data_json);
+          PackageEntity.save();            
+        }
+      });
+
       var i = 0;
 
       while(i < jsonArrayobj.length){
+
+        var cardType;
+
         if(jsonArrayobj[i].hasOwnProperty('whole_line')){
           var k = get_line(jsonArrayobj[i]);
           var firstLine = k[0];
-          var lastLine = k[1];      
-          var packagename = cardFile.name.split(".")[0];
+          var lastLine = k[1];
+          cardType = 'Normal';        
+        }
+
+        else if(jsonArrayobj[i].hasOwnProperty('expression')){
+          var expression = jsonArrayobj[i].expression;
+          cardType = 'Exam';
+        }
+
           var card_unique_id = packagename + '_' + i;
           var rightItem = jsonArrayobj[i].rightItem;
           var blueItem = jsonArrayobj[i].blueItem;
           var redItem = jsonArrayobj[i].redItem;
-          var cardType = 'Normal';
           var analysis = null;
+
           if(jsonArrayobj[i].hasOwnProperty('analysis')){
             var analysis = jsonArrayobj[i].analysis;
           }
 
-          if( packagename == '介绍')
+          if( packagename.indexOf('介绍') != -1)
           {
-            cardType = 'Intro';
+            cardType = 'Introduction';
           }
 
           var data_json = {
             'packageName' : packagename,
-            'package_price' : 0.00,
             'cardType' : 'Normal',
             'rightItem' : rightItem,
             'expression' : null,
@@ -126,7 +151,6 @@ router.post('/index', function(req, res){
           CardEntity.save();
 
           i++;
-        }
       }
 
     });
@@ -140,8 +164,7 @@ router.get('/index/search', function(req, res){
       var context = {
         cards : cards.map(function(card){
           return{
-            packageName : card.packageName,
-            packagePrice : card.package_price,
+            packageName : card.packagename,
             cardType : card.cardType,
             rightItem : card.rightItem,
             expression : card.expression,
