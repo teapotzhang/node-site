@@ -9,10 +9,10 @@ var router = express.Router();
 var sess;
 
 function get_line(whole_line){
-  var _whole_line = toString(whole_line || "#");
+  var _whole_line = whole_line || "#";
   var k = _whole_line.split('#');
   return k; 
-} 
+}
 
 router.get('/login', function(req, res, next){
 
@@ -107,7 +107,7 @@ router.post('/index', function(req, res){
         var cardType;
 
         if(jsonArrayobj[i].hasOwnProperty('whole_line')){
-          var k = get_line(jsonArrayobj[i]);
+          var k = get_line(jsonArrayobj[i].whole_line);
           var firstLine = k[0];
           var lastLine = k[1];
           cardType = 'Normal';        
