@@ -93,22 +93,27 @@ router.get('/add_user', function(req, res, next){
 	let userInfo = JSON.parse(req.query.userInfo);
 	var sessionID = req.query.sessionID;
 
-	var data_json = {
-		'session_id': sessionID,
-		'nickName': userInfo.nickName,
-		'gender': userInfo.gender,
-		'avartar_url': userInfo.avatarUrl,
-		'province': userInfo.province,
-		'city': userInfo.city,
-		'country': userInfo.country,
-		'last_udpated': new Date()
-	};
-
 	UserModel.find({'session_id' : sessionID}, function(err, users){
 		//不是新用户 更新用户的sessionID以及别的信息
 		var _id = users[0]._id;
+		var openID = users[0].openID;
+		var session_key = users[0].session_key;
+
+		var data_json = {
+			'openID' = users[0].openID;
+			'session_key' = users[0].session_key;
+			'session_id': sessionID,
+			'nickName': userInfo.nickName,
+			'gender': userInfo.gender,
+			'avartar_url': userInfo.avatarUrl,
+			'province': userInfo.province,
+			'city': userInfo.city,
+			'country': userInfo.country,
+			'last_udpated': new Date()
+		};
+
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
-	        if (err) return handleError(err);        
+	        if (err) return handleError(err);
 	    });			
 	});
 });
