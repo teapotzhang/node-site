@@ -7,10 +7,7 @@ var router = express.Router();
 router.get('/', function(req, res, next){
 
     var packageName;
-    var sessionID = req.sessionID; //确定用户
-
-    var startDate = moment(req.params.startTime).add('hours',7); //req.params.startTime = 2016-09-25 00:00:00
-    var endDate   = moment(req.params.endTime).add('hours',7); //req.params.endTime = 2016-09-25 01:00:00
+    var sessionID = req.query.sessionID; //确定用户
 
     //根据date排序
 
@@ -21,7 +18,7 @@ router.get('/', function(req, res, next){
       console.log(user_cards);
     });
 
-    if(req.first_card){
+    if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       UserCardModel.findOne({sessionID : sessionID}, function(err, card){
 
@@ -45,10 +42,10 @@ router.get('/', function(req, res, next){
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
       var data_json =  {
-        seconds: req.seconds,
-        answerStatus: req.answerStatus,
-        card_unique_id: req.card_unique_id,
-        sessionID: req.sessionID
+        seconds: req.query.seconds,
+        answerStatus: req.query.answerStatus,
+        card_unique_id: req.query.card_unique_id,
+        sessionID: req.query.sessionID
       }
 
       var tag;

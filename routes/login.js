@@ -36,8 +36,9 @@ router.get('/', function(req, res, next){
         console.log("[error]", err)
         res.json(err)
       }
-  })
-  res.json({ sessionid: sessionID });
+  });
+
+  res.json({ sessionID: sessionID });
 });
 
 router.get('/add_user', function(req, res, next){
@@ -63,21 +64,22 @@ router.get('/add_user', function(req, res, next){
 			//生成初始刷卡列表
 			var init_packages = ['介绍','三国法'];
 			for( var i = 0; i < init_packages.length; i++ ){
-			CardModel.find({'packageName' : package_unique_id}, function(err, cards){
-				for( var j = 0; j< cards.length; j++){
-					var data_json = {
-						card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-						LastShowDate : new Date(2000, 0, 2),   //确定这张卡下次出现的时间
-						openID : user_open_id,   //确定是谁
-						sessionID : sessionID,
-						Showed: false,   //是否出现过
-						usedStatus: [],
-						activated: true								
+				CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
+					for( var j = 0; j< cards.length; j++){
+						var data_json = {
+							card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+							LastShowDate : new Date(2000, 0, 2),   //确定这张卡下次出现的时间
+							openID : user_open_id,   //确定是谁
+							sessionID : sessionID,
+							Showed: false,   //是否出现过
+							usedStatus: [],
+							activated: true								
+						}
+						var UserCardEntity = new UserCardModel(data_json);
+						UserCardEntity.save();
 					}
-					var UserCardEntity = new UserCardModel(data_json);
-					UserCardEntity.save();
-				}
-			});
+				});
+			}
 		}
 		else{
 			var _id = users[0]._id;
@@ -86,6 +88,7 @@ router.get('/add_user', function(req, res, next){
 		    });			
 		}
 	});
+
 });
 
 module.exports = router;
