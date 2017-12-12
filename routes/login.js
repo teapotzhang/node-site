@@ -91,7 +91,7 @@ router.get('/add_user', function(req, res, next){
 		    });			
 		}
 	});
-
+	res.json({sessionID:sessionID});
 });
 
 module.exports = router;
