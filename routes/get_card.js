@@ -1,5 +1,6 @@
 var express = require('express');
 var CardModel = require('../models/card');
+var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
@@ -9,15 +10,21 @@ router.get('/', function(req, res, next){
     var packageName;
     var sessionID = req.query.sessionID; //确定用户
 
-    //根据date排序
+    //获取openID 不暴漏用户
+    var openID; 
+    UserModel.findOne({ sessionID : sessionID }, function(err, user){
+      openID = user.openID;
+    });
 
-    UserCardModel.find({sessionID : sessionID, lastShowDate : {
+    //根据date排序
+    /*
+    UserCardModel.find({openID : openID, lastShowDate : {
         $gt:  new Date(2000, 0, 1).toISOString(),
         $lt:  new Date().toISOString()
     }}, null, {sort: {date: -1}}, function(err, user_cards) { 
       console.log(user_cards);
     });
-
+    */
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       UserCardModel.findOne({sessionID : sessionID}, function(err, card){
