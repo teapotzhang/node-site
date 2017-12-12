@@ -12,7 +12,7 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID; 
-    UserModel.findOne({ 'sessionID' : sessionID }, function(err, user){
+    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user.openID;
     });
 
