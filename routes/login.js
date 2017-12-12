@@ -13,8 +13,6 @@ router.get('/', function(req, res, next){
 
 	//wechat user login, get code
 	let code = req.query.code;
-
-	
 	sessionID = req.query.sessionID;
 
     if(sessionID.length != 32){
@@ -39,25 +37,20 @@ router.get('/', function(req, res, next){
         res.json(err)
       }
   });
-  res.json({sessionID:sessionID});
-});
-
-router.get('/add_user', function(req, res, next){
-	let userInfo = JSON.parse(req.query.userInfo);
-	var sessionID = req.query.sessionID;
 
 	var data_json = {
 		'session_id': sessionID,
 		'openID': user_open_id,
 		'session_key': user_session_key,
-		'nickName': userInfo.nickName,
-		'gender': userInfo.gender,
-		'avartar_url': userInfo.avatarUrl,
-		'province': userInfo.province,
-		'city': userInfo.city,
-		'country': userInfo.country,
+		'nickName': "",
+		'gender': "",
+		'avartar_url': ""
+		'province': ""
+		'city': "",
+		'country': "",
 		'last_udpated': new Date()
 	};
+
 	var UserEntity = new UserModel(data_json);
 
 	UserModel.find({'openID' : user_open_id}, function(err, users){
@@ -90,6 +83,32 @@ router.get('/add_user', function(req, res, next){
 		        if (err) return handleError(err);        
 		    });			
 		}
+	});  
+
+});
+
+router.get('/add_user', function(req, res, next){
+	let userInfo = JSON.parse(req.query.userInfo);
+	var sessionID = req.query.sessionID;
+
+	var data_json = {
+		'session_id': sessionID,
+		'nickName': userInfo.nickName,
+		'gender': userInfo.gender,
+		'avartar_url': userInfo.avatarUrl,
+		'province': userInfo.province,
+		'city': userInfo.city,
+		'country': userInfo.country,
+		'last_udpated': new Date()
+	};
+	var UserEntity = new UserModel(data_json);
+
+	UserModel.find({'sessionID' : sessionID}, function(err, users){
+		//不是新用户 更新用户的sessionID以及别的信息
+		var _id = users[0]._id;
+	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
+	        if (err) return handleError(err);        
+	    });			
 	});
 });
 
