@@ -96,12 +96,10 @@ router.get('/add_user', function(req, res, next){
 	UserModel.find({'session_id' : sessionID}, function(err, users){
 		//不是新用户 更新用户的sessionID以及别的信息
 		var _id = users[0]._id;
-		var openID = users[0].openID;
-		var session_key = users[0].session_key;
 
 		var data_json = {
-			'openID' = users[0].openID,
-			'session_key' = users[0].session_key,
+			'openID' : users[0].openID,
+			'session_key' : users[0].session_key,
 			'session_id': sessionID,
 			'nickName': userInfo.nickName,
 			'gender': userInfo.gender,
