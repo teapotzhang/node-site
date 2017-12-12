@@ -16,7 +16,7 @@ router.get('/', function(req, res, next){
 	sessionID = req.query.sessionID;
 
     if(sessionID.length != 32){
-	    sessionID = randomString({length: 32});
+	   sessionID = randomString({length: 32});
     }
 
     request.get({
@@ -83,7 +83,9 @@ router.get('/', function(req, res, next){
 		        if (err) return handleError(err);        
 		    });			
 		}
-	});  
+	});
+
+	res.json({'sessionID' : sessionID})
 
 });
 
