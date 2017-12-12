@@ -27,7 +27,7 @@ router.get('/', function(req, res, next){
     */
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
-      UserCardModel.findOne({sessionID : sessionID}, function(err, card){
+      UserCardModel.findOne({openID : openID}, function(err, card){
 
         var card_unique_id = card.card_unique_id;
         //去card表里查询卡的具体内容
