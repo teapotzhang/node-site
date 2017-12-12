@@ -85,7 +85,7 @@ router.get('/', function(req, res, next){
 		}
 	});
 
-	res.json({'sessionID' : sessionID})
+	res.json({'sessionID' : sessionID});
 
 });
 
@@ -100,8 +100,8 @@ router.get('/add_user', function(req, res, next){
 		var session_key = users[0].session_key;
 
 		var data_json = {
-			'openID' = users[0].openID;
-			'session_key' = users[0].session_key;
+			'openID' = users[0].openID,
+			'session_key' = users[0].session_key,
 			'session_id': sessionID,
 			'nickName': userInfo.nickName,
 			'gender': userInfo.gender,
