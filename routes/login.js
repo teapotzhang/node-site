@@ -44,8 +44,8 @@ router.get('/', function(req, res, next){
 		'session_key': user_session_key,
 		'nickName': "",
 		'gender': "",
-		'avartar_url': ""
-		'province': ""
+		'avartar_url': "",
+		'province': "",
 		'city': "",
 		'country': "",
 		'last_udpated': new Date()
