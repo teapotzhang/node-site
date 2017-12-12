@@ -12,7 +12,7 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID; 
-    UserModel.findOne({ sessionID : sessionID }, function(err, user){
+    UserModel.findOne({ 'sessionID' : sessionID }, function(err, user){
       openID = user.openID;
     });
 
@@ -27,11 +27,11 @@ router.get('/', function(req, res, next){
     */
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
-      UserCardModel.findOne({openID : openID}, function(err, card){
+      UserCardModel.findOne({'openID' : openID}, function(err, card){
 
         var card_unique_id = card.card_unique_id;
         //去card表里查询卡的具体内容
-        CardModel.findOne({card_unique_id: card_unique_id}, function(err, card){
+        CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
           var card_json = {
             packageName: card.packageName,
             packageType: card.packageType,
@@ -43,6 +43,7 @@ router.get('/', function(req, res, next){
             analysis: card.analysis,
             card_unique_id : card_unique_id       
           }
+          res.json(card_json);
         });
       });
 
@@ -71,7 +72,7 @@ router.get('/', function(req, res, next){
 
       }
 
-      UserCardModel.findOne({card_unique_id : card_unique_id}, function(err, card){
+      UserCardModel.findOne({'card_unique_id' : card_unique_id}, function(err, card){
         //更新LastShowDate和usedStatus
         for( var i = 0; i < card.usedStatus.length; i++ ){
 
@@ -83,8 +84,6 @@ router.get('/', function(req, res, next){
       //标记完后返回下一张卡
 
     }
-
-    res.json(card_json);
 });
 
 module.exports = router;
