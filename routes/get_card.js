@@ -95,8 +95,10 @@ router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
     //获取openID 不暴漏用户
-    var openID, card_unique_id; 
+    var openID, card_unique_id;
+    console.log(sessionID);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+      console.log(user);
       openID = user.openID;
     });  
 
