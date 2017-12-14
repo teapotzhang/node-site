@@ -70,7 +70,7 @@ router.get('/', function(req, res, next){
 							Showed: false,   //是否出现过
 							usedStatus: [],
 							activated: true								
-						}
+						};
 						var UserCardEntity = new UserCardModel(data_json);
 						UserCardEntity.save();
 					}

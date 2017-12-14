@@ -22,7 +22,8 @@ function getNextCard(openID){
       LastUpdateDate: {
           $gt:  new Date(2000, 0, 1).toISOString().split('T')[0],
           $lt:  new Date().toISOString().split('T')[0]
-      }
+      },
+      activated : true
     }
 
     UserCardModel.findOne(query, null, {sort: {lastShowDate: -1}}, function(err, user_card) {
