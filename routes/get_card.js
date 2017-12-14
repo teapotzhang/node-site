@@ -35,7 +35,8 @@ function get_date_obj(year, month, date){
 function getNextCard(openID){
     var tomorrow = addDays( new Date(), 1 );
     var today = addDays(new Date(), 0);
-    var query = {openID : openID, 
+    var query = {
+      openID : openID, 
       LastShowDate : {
           $gt:  20000101,
           $lt:  tomorrow
@@ -47,7 +48,7 @@ function getNextCard(openID){
       activated : true
     }
 
-    UserCardModel.findOne(query, null, {sort: {lastShowDate: -1}}, function(err, user_card) {
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
     if( user_card === null )
     {
       //当天没有可以刷的卡了
@@ -157,7 +158,7 @@ router.get('/', function(req, res, next){
           }
         }
         card.usedStatus = currentArray;
-        card.LastUpdateDate = new Date().toISOString().split('T')[0];
+        card.LastUpdateDate = addDays(new Date(), 0);
         card.save();
       });
 
