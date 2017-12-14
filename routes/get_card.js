@@ -58,8 +58,8 @@ function getNextCard(openID){
     console.log(query);
 
     UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
-      console.log(user_card);
-    if( user_card === null )
+      console.log('user_card       ' + user_card);
+    if( user_card == null )
     {
       //当天没有可以刷的卡了
       var card = {
@@ -69,7 +69,6 @@ function getNextCard(openID){
     }
     else
     {
-      console.log(user_card);
       var card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
         var card_json = {
@@ -97,13 +96,13 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID, card_unique_id;
-    console.log(sessionID);
+    console.log('sessionID            ' + sessionID);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-      console.log(user);
+      console.log('user            ' + user);
       openID = user.openID;
     });  
 
-    console.log(openID);
+    console.log('openID            ' + openID);
 
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
