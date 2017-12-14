@@ -110,7 +110,7 @@ router.get('/add_user', function(req, res, next){
 			'last_udpated': new Date()
 		};
 
-	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
+	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
 	        if (err) return handleError(err);
 	    });			
 	});
