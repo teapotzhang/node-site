@@ -6,28 +6,28 @@ var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
 function get_date_obj(year, month, date){
-  var date_string = year + '-' + month + '-' + date;
+  var date_string = (year + '-' + month + '-' + date).toString();
   var date_obj = new Date(date_string);
   return date_obj;
 }
 
 function dateObjToDateNumber(date_obj){
-  var year = toString(date_obj.getFullYear());
-  var month = toString(date_obj.getMonth() + 1);
-  var date_n = toString(date_obj.getDate());
+    var year = date_obj.getFullYear().toString();
+    var month = (date_obj.getMonth() + 1).toString();
+    var date_n = date_obj.getDate().toString();
   if( date_n < 10 ){
     date_n = '0' + date_n;
   }
   if( month < 10 ){
     month = '0' + month;
   }
-  result = year + month + date_n;
-  result = parseInt(result);  
+  var result = year + month + date_n;
+  result = parseInt(result);
   return result;
 }
 
 function addDays(date, days) {
-  var date_string = toString(date);
+  var date_string = date.toString();
   var year = date_string.slice(0,4);
   var month = date_string.slice(4,6);
   var day = date_string.slice(6, 8);
@@ -57,7 +57,7 @@ function getNextCard(openID){
 
     console.log(query);
 
-    UserCardModel.findOne(query, function(err, user_card) {
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
     if( user_card === null )
     {
       //当天没有可以刷的卡了
