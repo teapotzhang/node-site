@@ -36,56 +36,58 @@ router.get('/', function(req, res, next){
         console.log("[error]", err)
         res.json(err)
       }
-  });
+    
+		var data_json = {
+			'session_id': sessionID,
+			'openID': user_open_id,
+			'session_key': user_session_key,
+			'nickName': "",
+			'gender': "",
+			'avartar_url': "",
+			'province': "",
+			'city': "",
+			'country': ""
+		};
 
-	var data_json = {
-		'session_id': sessionID,
-		'openID': user_open_id,
-		'session_key': user_session_key,
-		'nickName': "",
-		'gender': "",
-		'avartar_url': "",
-		'province': "",
-		'city': "",
-		'country': ""
-	};
+		var UserEntity = new UserModel(data_json);
 
-	var UserEntity = new UserModel(data_json);
-
-	UserModel.find({'openID' : user_open_id}, function(err, users){
-		if(users.length === 0){
-			//是新用户
-			UserEntity.save();
-			//生成初始刷卡列表
-			var init_packages = ['介绍','三国法'];
-			for( var i = 0; i < init_packages.length; i++ ){
-				CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
-					for( var j = 0; j< cards.length; j++){
-						var data_json = {
-							card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-							LastShowDate : 20000102,   //确定这张卡下次出现的时间
-							LastUpdateDate : 20000102,
-							openID : user_open_id,   //确定是谁
-							Showed: false,   //是否出现过
-							usedStatus: [],
-							activated: true								
-						};
-						var UserCardEntity = new UserCardModel(data_json);
-						UserCardEntity.save();
-					}
-				});
+		UserModel.find({'openID' : user_open_id}, function(err, users){
+			if(users.length === 0){
+				//是新用户
+				UserEntity.save();
+				//生成初始刷卡列表
+				var init_packages = ['介绍','三国法'];
+				for( var i = 0; i < init_packages.length; i++ ){
+					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
+						for( var j = 0; j< cards.length; j++){
+							var data_json = {
+								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+								LastShowDate : 20000102,   //确定这张卡下次出现的时间
+								LastUpdateDate : 20000102,
+								openID : user_open_id,   //确定是谁
+								Showed: false,   //是否出现过
+								usedStatus: [],
+								activated: true								
+							};
+							var UserCardEntity = new UserCardModel(data_json);
+							UserCardEntity.save();
+						}
+					});
+				}
 			}
-		}
-		else{
-			//不是新用户 更新用户的sessionID以及别的信息
-			var _id = users[0]._id;
-		    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
-		        if (err) return handleError(err);        
-		    });			
-		}
-	});
+			else{
+				//不是新用户 更新用户的sessionID以及别的信息
+				var _id = users[0]._id;
+			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
+			        if (err) return handleError(err);        
+			    });			
+			}
+		});
 
-	res.json({'sessionID' : sessionID, "openid" : user_open_id});
+		res.json({'sessionID' : sessionID, "openid" : user_open_id});
+
+
+    });
 
 });
 
