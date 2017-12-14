@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 
 var UserCardSchema = new Schema({
 	card_unique_id : String,  //确定卡片的id
-	LastShowDate : Date,   //确定这张卡下次出现的时间
+	LastShowDate : String,   //确定这张卡下次出现的时间
+	LastUpdateDate : String, //确定最后一次这张卡背诵的时间
 	openID : String,   //确定是谁
 	Showed: Boolean,   //是否出现过
 	usedStatus: Array,
