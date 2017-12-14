@@ -5,13 +5,13 @@ var PackageModel = require('../models/package');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
-function addDays(date, days) {
-  var date_string = toString(date);
-  var year = date_string.slice(0,4);
-  var month = date_string.slice(4,6);
-  var day = date_string.slice(6, 8);
-  var date_obj = get_date_obj(year, month, day);
-  date_obj.setDate(date_obj.getDate() + days);
+function get_date_obj(year, month, date){
+  var date_string = year + '-' + month + '-' + date;
+  var date_obj = new Date(date_string);
+  return date_obj;
+}
+
+function dateObjToDateNumber(date_obj){
   var year = toString(date_obj.getFullYear());
   var month = toString(date_obj.getMonth() + 1);
   var date_n = toString(date_obj.getDate());
@@ -22,19 +22,26 @@ function addDays(date, days) {
     month = '0' + month;
   }
   result = year + month + date_n;
-  result = parseInt(result);
+  result = parseInt(result);  
   return result;
 }
 
-function get_date_obj(year, month, date){
-  var date_string = year + '-' + month + '-' + date;
-  var date_obj = new Date(date_string);
-  return date_obj;
+function addDays(date, days) {
+  var date_string = toString(date);
+  var year = date_string.slice(0,4);
+  var month = date_string.slice(4,6);
+  var day = date_string.slice(6, 8);
+  var date_obj = get_date_obj(year, month, day);
+  date_obj.setDate(date_obj.getDate() + days);
+  var result = dateObjToDateNumber(date_obj);
+  return result;
 }
 
 function getNextCard(openID){
-    var tomorrow = addDays( new Date(), 1 );
-    var today = addDays(new Date(), 0);
+    var today_obj = new Date();
+    var today_num = dateObjToDateNumber(today_obj);
+    var tomorrow = addDays( today_num, 1 );
+    var today = addDays( today_num, 0);
     var query = {
       openID : openID, 
       LastShowDate : {
@@ -59,7 +66,7 @@ function getNextCard(openID){
     }
     else
     {
-      card_unique_id = user_card.card_unique_id;
+      var card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
         var card_json = {
           packageName: card.packageName,
@@ -158,7 +165,9 @@ router.get('/', function(req, res, next){
           }
         }
         card.usedStatus = currentArray;
-        card.LastUpdateDate = addDays(new Date(), 0);
+        var today_obj = new Date();
+        var today_num = dateObjToDateNumber(today_obj);        
+        card.LastUpdateDate = addDays(today_num, 0);
         card.save();
       });
 
