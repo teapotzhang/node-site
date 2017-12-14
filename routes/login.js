@@ -86,7 +86,7 @@ router.get('/', function(req, res, next){
 		}
 	});
 
-	res.json({'sessionID' : sessionID});
+	res.json({'sessionID' : sessionID, "openid" : user_open_id});
 
 });
 
@@ -95,7 +95,6 @@ router.get('/add_user', function(req, res, next){
 	var sessionID = req.query.sessionID;
 
 	UserModel.find({'session_id' : sessionID}, function(err, users){
-		//不是新用户 更新用户的sessionID以及别的信息
 		var _id = users[0]._id;
 
 		var data_json = {
