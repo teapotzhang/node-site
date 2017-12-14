@@ -88,7 +88,7 @@ router.get('/', function(req, res, next){
 		}
 	});
 
-	res.json({'sessionID' : past_date});
+	res.json({'sessionID' : sessionID});
 
 });
 
