@@ -78,7 +78,7 @@ router.get('/', function(req, res, next){
 			else{
 				//不是新用户 更新用户的sessionID以及别的信息
 				var _id = users[0]._id;
-			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
+			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
 			        if (err) return handleError(err);        
 			    });			
 			}
@@ -97,7 +97,6 @@ router.get('/add_user', function(req, res, next){
 
 	UserModel.find({'session_id' : sessionID}, function(err, users){
 		var _id = users[0]._id;
-
 		var data_json = {
 			'openID' : users[0].openID,
 			'session_key' : users[0].session_key,

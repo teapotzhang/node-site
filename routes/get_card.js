@@ -66,6 +66,7 @@ function getNextCard(openID){
     }
     else
     {
+      console.log(user_card);
       var card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
         var card_json = {
