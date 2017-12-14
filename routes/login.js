@@ -47,8 +47,7 @@ router.get('/', function(req, res, next){
 		'avartar_url': "",
 		'province': "",
 		'city': "",
-		'country': "",
-		'last_udpated': new Date()
+		'country': ""
 	};
 
 	var UserEntity = new UserModel(data_json);
@@ -106,8 +105,7 @@ router.get('/add_user', function(req, res, next){
 			'avartar_url': userInfo.avatarUrl,
 			'province': userInfo.province,
 			'city': userInfo.city,
-			'country': userInfo.country,
-			'last_udpated': new Date()
+			'country': userInfo.country
 		};
 
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){

@@ -4,16 +4,20 @@ var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
 	nickName: String,
-	openID: String,
-	session_key: String,
-	unionID: String,
+	openID: {
+        type: String,
+        required: true
+    },
+	session_key: {
+        type: String,
+        required: true
+    },
 	gender: String,
 	avartar_url: String,
 	session_id: { type: String, index: { unique: true } },
 	province: String,
 	city: String,
-	country: String,
-	last_udpated: Date
+	country: String
 });
 
 var UserModel = db.model('User', UserSchema);
