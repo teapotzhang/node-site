@@ -6,22 +6,43 @@ var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
 function addDays(date, days) {
-  var result = new Date(date);
-  result.setDate(result.getDate() + days);
-  result = result.toISOString().split('T')[0];
+  var date_string = toString(date);
+  var year = date_string.slice(0,4);
+  var month = date_string.slice(4,6);
+  var day = date_string.slice(6, 8);
+  var date_obj = get_date_obj(year, month, day);
+  date_obj.setDate(date_obj.getDate() + days);
+  var year = toString(date_obj.getFullYear());
+  var month = toString(date_obj.getMonth() + 1);
+  var date_n = toString(date_obj.getDate());
+  if( date_n < 10 ){
+    date_n = '0' + date_n;
+  }
+  if( month < 10 ){
+    month = '0' + month;
+  }
+  result = year + month + date_n;
+  result = parseInt(result);
   return result;
+}
+
+function get_date_obj(year, month, date){
+  var date_string = year + '-' + month + '-' + date;
+  var date_obj = new Date(date_string);
+  return date_obj;
 }
 
 function getNextCard(openID){
     var tomorrow = addDays( new Date(), 1 );
+    var today = addDays(new Date(), 0);
     var query = {openID : openID, 
       LastShowDate : {
-          $gt:  new Date('01 January 2000').toISOString().split('T')[0],
+          $gt:  20000101,
           $lt:  tomorrow
       },
       LastUpdateDate: {
-          $gt:  new Date('01 January 2000').toISOString().split('T')[0],
-          $lt:  new Date().toISOString().split('T')[0]
+          $gt:  20000101,
+          $lt:  today
       },
       activated : true
     }
@@ -100,7 +121,7 @@ router.get('/', function(req, res, next){
 
       UserCardModel.findOne({'card_unique_id' : card_unique_id}, function(err, card){
         //更新LastShowDate, LastUpdateDate和usedStatus
-        var LastShowDate = new Date();
+        var LastShowDate = card.LastShowDate;
         if( !card.Showed ){
           card.Showed = true;
           switch(tag) {
@@ -118,7 +139,6 @@ router.get('/', function(req, res, next){
           }          
         }
         else{
-          var date = card.LastShowDate;
           var currentArray = card.usedStatus.push(tag);
           for( var i = 0; i < currentArray.length; i++ ){
             switch(currentArray[i]) {

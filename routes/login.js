@@ -52,8 +52,6 @@ router.get('/', function(req, res, next){
 	};
 
 	var UserEntity = new UserModel(data_json);
-	var past_date = new Date('02 January 2000');
-	var last_date = past_date.toISOString().split('T')[0];
 
 	UserModel.find({'openID' : user_open_id}, function(err, users){
 		if(users.length === 0){
@@ -66,8 +64,8 @@ router.get('/', function(req, res, next){
 					for( var j = 0; j< cards.length; j++){
 						var data_json = {
 							card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-							LastShowDate : last_date,   //确定这张卡下次出现的时间
-							LastUpdateDate : last_date,
+							LastShowDate : 20000102,   //确定这张卡下次出现的时间
+							LastUpdateDate : 20000102,
 							openID : user_open_id,   //确定是谁
 							Showed: false,   //是否出现过
 							usedStatus: [],
