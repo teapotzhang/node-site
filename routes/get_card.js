@@ -99,7 +99,8 @@ router.get('/', function(req, res, next){
     console.log('sessionID            ' + sessionID);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       console.log('user            ' + user);
-      openID = JSON.parse(user).openID;
+      var user_json = JSON.parse(user);
+      openID = user_json.openID;
     });  
 
     console.log('openID            ' + openID);
