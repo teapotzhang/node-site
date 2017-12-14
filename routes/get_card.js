@@ -57,9 +57,9 @@ function getNextCard(openID){
 
     console.log(query);
 
-    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
-      console.log('user_card       ' + user_card);
-    if( user_card == null )
+    UserCardModel.find(query, null, {sort: {LastShowDate: -1}}, function(err, user_cards) {
+      console.log('user_card       ' + user_cards);
+    if( user_cards.length === 0 )
     {
       //当天没有可以刷的卡了
       var card = {
@@ -69,17 +69,17 @@ function getNextCard(openID){
     }
     else
     {
-      var card_unique_id = user_card.card_unique_id;
-      CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
+      var card_unique_id = user_cards[0].card_unique_id;
+      CardModel.find({'card_unique_id': card_unique_id}, function(err, cards){
         var card_json = {
-          packageName: card.packageName,
-          packageType: card.packageType,
-          firstLine: card.firstLine,
-          lastLine: card.lastLine,
-          blueItem: card.blueItem,
-          redItem: card.redItem,
-          blueRight: card.rightItem % 2,
-          analysis: card.analysis,
+          packageName: cards[0].packageName,
+          packageType: cards[0].packageType,
+          firstLine: cards[0].firstLine,
+          lastLine: cards[0].lastLine,
+          blueItem: cards[0].blueItem,
+          redItem: cards[0].redItem,
+          blueRight: cards[0].rightItem % 2,
+          analysis: cards[0].analysis,
           card_unique_id : card_unique_id,
           lastCard : false     
         }
@@ -97,9 +97,9 @@ router.get('/', function(req, res, next){
     //获取openID 不暴漏用户
     var openID, card_unique_id;
     console.log('sessionID            ' + sessionID);
-    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-      console.log('user            ' + user);
-      openID = user.openID;
+    UserModel.find({ 'session_id' : sessionID }, function(err, users){
+      console.log('user            ' + users);
+      openID = users[0].openID;
     });  
 
     console.log('openID            ' + openID);
@@ -134,48 +134,48 @@ router.get('/', function(req, res, next){
 
       }
 
-      UserCardModel.findOne({'card_unique_id' : card_unique_id}, function(err, card){
+      UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
-        var LastShowDate = card.LastShowDate;
-        if( !card.Showed ){
-          card.Showed = true;
+        var LastShowDate = cards[0].LastShowDate;
+        if( !cards[0].Showed ){
+          cards[0].Showed = true;
           switch(tag) {
               case 1:
                   var date = addDays(LastShowDate, 6);
-                  card.LastShowDate = date;
+                  cards[0].LastShowDate = date;
                   break;
               case 2:
                   var date = addDays(LastShowDate, 2);
-                  card.LastShowDate = date;
+                  cards[0].LastShowDate = date;
                   break;
               default:
                   var date = addDays(LastShowDate, 1);
-                  card.LastShowDate = date;
+                  cards[0].LastShowDate = date;
           }          
         }
         else{
-          var currentArray = card.usedStatus.push(tag);
+          var currentArray = cards[0].usedStatus.push(tag);
           for( var i = 0; i < currentArray.length; i++ ){
             switch(currentArray[i]) {
                 case 1:
                     date = addDays(date, 3);
-                    card.LastShowDate = date;
+                    cards[0].LastShowDate = date;
                     break;
                 case 2:
                     date = addDays(date, 2);
-                    card.LastShowDate = date;
+                    cards[0].LastShowDate = date;
                     break;
                 default:
                     date = addDays(date, 1);
-                    card.LastShowDate = date;
+                    cards[0].LastShowDate = date;
             }              
           }
         }
-        card.usedStatus = currentArray;
+        cards[0].usedStatus = currentArray;
         var today_obj = new Date();
         var today_num = dateObjToDateNumber(today_obj);        
-        card.LastUpdateDate = addDays(today_num, 0);
-        card.save();
+        cards[0].LastUpdateDate = addDays(today_num, 0);
+        cards[0].save();
       });
 
       //标记完后返回下一张卡
