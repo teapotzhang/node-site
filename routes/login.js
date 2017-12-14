@@ -52,7 +52,8 @@ router.get('/', function(req, res, next){
 	};
 
 	var UserEntity = new UserModel(data_json);
-
+	var last_date = new Date(2000, 0, 2).toISOstring().split('T')[0];
+	
 	UserModel.find({'openID' : user_open_id}, function(err, users){
 		if(users.length === 0){
 			//是新用户
@@ -64,8 +65,8 @@ router.get('/', function(req, res, next){
 					for( var j = 0; j< cards.length; j++){
 						var data_json = {
 							card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-							LastShowDate : new Date(2000, 0, 2).toISOstring().split('T')[0],   //确定这张卡下次出现的时间
-							LastUpdateDate : new Date(2000, 0, 2).toISOstring().split('T')[0],
+							LastShowDate : last_date,   //确定这张卡下次出现的时间
+							LastUpdateDate : last_date,
 							openID : user_open_id,   //确定是谁
 							Showed: false,   //是否出现过
 							usedStatus: [],
