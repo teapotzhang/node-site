@@ -52,8 +52,9 @@ router.get('/', function(req, res, next){
 	};
 
 	var UserEntity = new UserModel(data_json);
-	var last_date = new Date(2000, 0, 2).toISOstring().split('T')[0];
-	
+	var past_date = new Date('02 January 2000');
+	var last_date = past_date.toISOString().split('T')[0];
+
 	UserModel.find({'openID' : user_open_id}, function(err, users){
 		if(users.length === 0){
 			//是新用户
@@ -87,7 +88,7 @@ router.get('/', function(req, res, next){
 		}
 	});
 
-	res.json({'sessionID' : sessionID});
+	res.json({'sessionID' : past_date});
 
 });
 

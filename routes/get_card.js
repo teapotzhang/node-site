@@ -16,11 +16,11 @@ function getNextCard(openID){
     var tomorrow = addDays( new Date(), 1 );
     var query = {openID : openID, 
       LastShowDate : {
-          $gt:  new Date(2000, 0, 1).toISOString().split('T')[0],
+          $gt:  new Date('01 January 2000').toISOString().split('T')[0],
           $lt:  tomorrow
       },
       LastUpdateDate: {
-          $gt:  new Date(2000, 0, 1).toISOString().split('T')[0],
+          $gt:  new Date('01 January 2000').toISOString().split('T')[0],
           $lt:  new Date().toISOString().split('T')[0]
       },
       activated : true
