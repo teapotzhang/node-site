@@ -58,6 +58,7 @@ function getNextCard(openID){
     console.log(query);
 
     UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
+      console.log(user_card);
     if( user_card === null )
     {
       //当天没有可以刷的卡了
@@ -101,6 +102,8 @@ router.get('/', function(req, res, next){
       console.log(user);
       openID = user.openID;
     });  
+
+    console.log(openID);
 
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
