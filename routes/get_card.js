@@ -55,7 +55,9 @@ function getNextCard(openID){
       activated : true
     }
 
-    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
+    console.log(query);
+
+    UserCardModel.findOne(query, function(err, user_card) {
     if( user_card === null )
     {
       //当天没有可以刷的卡了
