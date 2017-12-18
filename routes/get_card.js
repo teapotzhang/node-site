@@ -143,7 +143,7 @@ router.get('/', function(req, res, next){
 
       var tag;
 
-      if( answerStatus == false ){
+      if( data_json.answerStatus == 'false' ){
         tag = 3; //回答错了
       } 
       else{
