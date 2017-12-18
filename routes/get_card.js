@@ -111,7 +111,7 @@ router.get('/', function(req, res, next){
     var tomorrow = addDays( today_num, 1 );
     var today = addDays( today_num, 0);
     var card_json = {};
-    var query = {
+    var l_query = {
       openID : openID,
       LastShowDate : {
           $gt:  20000101,
@@ -136,9 +136,9 @@ router.get('/', function(req, res, next){
       //去card表里查询卡的具体内容
       console.log('-----------------------------------------');
 
-      UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
+      UserCardModel.findOne(l_query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
         console.log('user_card       ' + user_card);
-      if( user_card == null )
+      if( user_card == 'null' )
       {
         //当天没有可以刷的卡了
         card_json = {
@@ -243,9 +243,9 @@ router.get('/', function(req, res, next){
         card.save();
 
         //标记完后返回下一张卡
-        UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
+        UserCardModel.findOne(l_query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
           console.log('user_card       ' + user_card);
-        if( user_card == null )
+        if( user_card == 'null' )
         {
           //当天没有可以刷的卡了
           card_json = {
@@ -279,7 +279,7 @@ router.get('/', function(req, res, next){
           });
         }
         });
-        
+
       });
     }
 
