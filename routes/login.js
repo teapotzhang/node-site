@@ -32,11 +32,7 @@ router.get('/', function(req, res, next){
       if (response.statusCode === 200) {
         user_open_id = data.openid;
         user_session_key = data.session_key;
-      } else {
-        console.log("[error]", err)
-        res.json(err)
-      }
-    
+
 		var data_json = {
 			'session_id': sessionID,
 			'openID': user_open_id,
@@ -84,7 +80,13 @@ router.get('/', function(req, res, next){
 			}
 		});
 
-		res.json({'sessionID' : sessionID, "openid" : user_open_id});
+		res.json({'sessionID' : sessionID, "openid" : user_open_id});      
+
+
+      } else {
+        console.log("[error]", err)
+        res.json(err)
+      }
 
     });
 

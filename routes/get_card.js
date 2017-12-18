@@ -57,14 +57,15 @@ function getNextCard(openID, cb){
       activated : true
     };
 
-    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
     if( user_card == null )
     {
       //当天没有可以刷的卡了
       card_json = {
         lastCard: true
       }
-      cb(card_json);
+      var get_json = JSON.stringify(card_json);
+      cb(get_json);
     }
     else
     {
@@ -130,11 +131,6 @@ router.get('/', function(req, res, next){
 
       var tag;
 
-      console.log('answer we get seconds    ' + seconds);
-      console.log('answer we get answerStatus      ' + answerStatus);
-      console.log('answer we get card_unique_id     ' + card_unique_id);
-      console.log('answer we get sessionID      ' + sessionID);
-
       if( answerStatus == 'false' ){
         tag = 3; //回答错了
       } 
@@ -147,8 +143,6 @@ router.get('/', function(req, res, next){
         }
 
       }
-
-      console.log('answer we get tag     ' + tag);
 
       UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
