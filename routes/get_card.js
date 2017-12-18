@@ -100,10 +100,6 @@ router.get('/', function(req, res, next){
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       console.log('user            ' + user);
       openID = user['openID'];
-      console.log('openID  in user object       ' + openID);
-    });  
-
-    console.log('openID            ' + openID);
 
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
@@ -183,6 +179,7 @@ router.get('/', function(req, res, next){
       var card_json = getNextCard(openID);
       res.json(card_json);
 
+    });
     }
 });
 
