@@ -213,7 +213,9 @@ router.get('/', function(req, res, next){
         console.log(m_data_json);
 
         UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
-            if (err) return handleError(err);
+            if (err){
+              console.log('err   ' + err);
+            }
 
             //标记完后返回下一张卡
             var card_json;
