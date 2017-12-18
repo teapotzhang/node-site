@@ -112,6 +112,7 @@ router.get('/', function(req, res, next){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       //去card表里查询卡的具体内容
       var card_json = getNextCard(openID);
+      console.log('return card_json           ' + card_json);
       res.json(card_json);
     }
     else{
