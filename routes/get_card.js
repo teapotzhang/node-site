@@ -179,8 +179,10 @@ router.get('/', function(req, res, next){
       var card_json = getNextCard(openID);
       res.json(card_json);
 
-    });
     }
+
+
+    });  
 });
 
 module.exports = router;
