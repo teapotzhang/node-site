@@ -1,4 +1,5 @@
 var express = require('express');
+var Promise = require("bluebird");
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
@@ -37,7 +38,7 @@ function addDays(date, days) {
   return result;
 }
 
-function getNextCard(openID){
+function getNextCard(openID, cb){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);
     var tomorrow = addDays( today_num, 1 );
@@ -66,7 +67,7 @@ function getNextCard(openID){
       card_json = {
         lastCard: true
       }
-      return card_json;
+      cb(null, card_json);
     }
     else
     {
@@ -90,7 +91,7 @@ function getNextCard(openID){
         console.log('json          '+json);
         console.log('card_json          '+card_json);
         console.log('get_json          '+get_json);
-        return get_json;
+        rcb(null, get_json);
       });
     }
   });
@@ -117,8 +118,17 @@ router.get('/', function(req, res, next){
       console.log('-----------------------------------------');
 
       var card_json;
-      card_json = getNextCard(openID)
-      res.json(card_json);
+
+      var PromiseGetNextCard = new Promise(function(resolve,reject){
+        getNextCard(openID, function(result){
+          resolve(result);
+         });
+      });
+
+      PromiseGetNextCard.then(function(result){
+        card_json = result;
+        res.json(card_json);
+      })
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
