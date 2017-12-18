@@ -135,7 +135,7 @@ router.get('/', function(req, res, next){
       console.log('answer we get card_unique_id     ' + card_unique_id);
       console.log('answer we get sessionID      ' + sessionID);
 
-      if( answerStatus == false ){
+      if( answerStatus == 'false' ){
         tag = 3; //回答错了
       } 
       else{
