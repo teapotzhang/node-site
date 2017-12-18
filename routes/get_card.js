@@ -57,10 +57,7 @@ function getNextCard(openID, cb){
       activated : true
     };
 
-    console.log(query);
-
     UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
-      console.log('user_card       ' + user_card);
     if( user_card == null )
     {
       //当天没有可以刷的卡了
@@ -87,10 +84,6 @@ function getNextCard(openID, cb){
           lastCard : false     
         }
         var get_json = JSON.stringify(card_json);
-        console.log('card          '+card);
-        console.log('json          '+json);
-        console.log('card_json          '+card_json);
-        console.log('get_json          '+get_json);
         cb(get_json);
       });
     }
@@ -104,14 +97,9 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID, card_unique_id;
-    console.log('sessionID            ' + sessionID);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-    console.log('user            ' + user);
     openID = user['openID'];
 
-
-
-    console.log('first_card           ' + req.query.first_card);
     if(req.query.first_card == 'true'){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       //去card表里查询卡的具体内容
@@ -127,7 +115,6 @@ router.get('/', function(req, res, next){
 
       PromiseGetNextCard.then(function(result){
         card_json = result;
-        console.log(card_json);
         res.json(card_json);
       });
     }
@@ -143,10 +130,10 @@ router.get('/', function(req, res, next){
 
       var tag;
 
-      console.log('answer we get seconds' + seconds);
-      console.log('answer we get answerStatus' + answerStatus);
-      console.log('answer we get card_unique_id' + card_unique_id);
-      console.log('answer we get sessionID' + sessionID);
+      console.log('answer we get seconds    ' + seconds);
+      console.log('answer we get answerStatus      ' + answerStatus);
+      console.log('answer we get card_unique_id     ' + card_unique_id);
+      console.log('answer we get sessionID      ' + sessionID);
 
       if( answerStatus == false ){
         tag = 3; //回答错了
@@ -160,6 +147,8 @@ router.get('/', function(req, res, next){
         }
 
       }
+
+      console.log('answer we get tag     ' + tag);
 
       UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
@@ -215,8 +204,6 @@ router.get('/', function(req, res, next){
           activated: true          
         };
 
-        console.log(m_data_json);
-
         UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
             if (err){
               console.log('err   ' + err);
@@ -233,7 +220,6 @@ router.get('/', function(req, res, next){
 
             PromiseGetNextCard.then(function(result){
               card_json = result;
-              console.log(card_json + 'ddddddddddd');
               res.json(card_json);
             });
 
