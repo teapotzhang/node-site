@@ -126,7 +126,6 @@ router.get('/', function(req, res, next){
       var seconds = parseInt(req.query.seconds);
       var answerStatus = req.query.answerStatus;
       var card_unique_id = req.query.card_unique_id;
-      var sessionID = req.query.sessionID;
       
 
       var tag;
@@ -134,7 +133,6 @@ router.get('/', function(req, res, next){
       console.log('answer we get seconds    ' + seconds);
       console.log('answer we get answerStatus      ' + answerStatus);
       console.log('answer we get card_unique_id     ' + card_unique_id);
-      console.log('answer we get sessionID      ' + sessionID);
 
       if( answerStatus == 'false' ){
         tag = 3; //回答错了
@@ -151,7 +149,7 @@ router.get('/', function(req, res, next){
 
       console.log('answer we get tag     ' + tag);
 
-      UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
+      UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
         var LastShowDate = cards[0]['LastShowDate'];
         var date = LastShowDate;
