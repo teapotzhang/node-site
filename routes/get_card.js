@@ -112,7 +112,7 @@ router.get('/', function(req, res, next){
 
 
     console.log('first_card           ' + req.query.first_card);
-    if(req.query.first_card){
+    if(req.query.first_card == true){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       //去card表里查询卡的具体内容
       console.log('-----------------------------------------');
