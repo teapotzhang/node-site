@@ -83,6 +83,8 @@ function getNextCard(openID){
           card_unique_id : card_unique_id,
           lastCard : false     
         }
+        console.log('card          '+card);
+        console.log('card_json          '+card_json);
         return card_json;
       });
     }
