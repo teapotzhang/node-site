@@ -153,19 +153,20 @@ router.get('/', function(req, res, next){
       UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
         var LastShowDate = cards[0]['LastShowDate'];
-        var oldArray = cards[0]['usedStatus'];
         var date = LastShowDate;
         var NewShowDate;
+        var NewArray = [];
+        NewArray = cards[0]['usedStatus'].slice(0);
         var today_obj = new Date();
         var today_num = dateObjToDateNumber(today_obj);        
         NewUpdateDate = addDays(today_num, 0);        
-        var currentArray = oldArray.push(tag);
+        NewArray.push(tag);
         if( cards[0].Showed == false ){
           switch(tag) {
               case 1:
                   date = addDays(today_num, 6);
                   NewShowDate = date;
-                  break;
+                  break; 
               case 2:
                   date = addDays(today_num, 2);
                   NewShowDate = date;
@@ -176,8 +177,9 @@ router.get('/', function(req, res, next){
           }          
         }
         else{
-          for( var i = 0; i < currentArray.length; i++ ){
-            switch(currentArray[i]) {
+          for( var i = 0; i < NewArray.length; i++ ){
+
+            switch(NewArray[i]) {
                 case 1:
                     date = addDays(date, 3);
                     NewShowDate = date;
@@ -200,8 +202,8 @@ router.get('/', function(req, res, next){
           LastUpdateDate : NewUpdateDate, 
           openID : cards[0].openID,
           Showed: true,
-          usedStatus: currentArray,
-          activated: true          
+          usedStatus: NewArray,
+          activated: true
         };
 
         UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
