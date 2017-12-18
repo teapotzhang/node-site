@@ -129,7 +129,7 @@ router.get('/', function(req, res, next){
         card_json = result;
         console.log(card_json);
         res.json(card_json);
-      })
+      });
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
@@ -156,58 +156,83 @@ router.get('/', function(req, res, next){
 
       }
 
-      UserCardModel.findOne({'card_unique_id' : card_unique_id}, function(err, card){
+      UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
-        var LastShowDate = card.LastShowDate;
-        if( !card.Showed ){
-          card.Showed = true;
+        var LastShowDate = cards[0]['LastShowDate'];
+        var oldArray = cards[0]['usedStatus'];
+        var date = LastShowDate;
+        var NewShowDate;
+        var currentArray = oldArray.push(tag);
+        if( !cards[0].Showed ){
           switch(tag) {
               case 1:
-                  var date = addDays(LastShowDate, 6);
-                  card.LastShowDate = date;
+                  date = addDays(LastShowDate, 6);
+                  NewShowDate = date;
                   break;
               case 2:
-                  var date = addDays(LastShowDate, 2);
-                  card.LastShowDate = date;
+                  date = addDays(LastShowDate, 2);
+                  NewShowDate = date;
                   break;
               default:
-                  var date = addDays(LastShowDate, 1);
-                  card.LastShowDate = date;
+                  date = addDays(LastShowDate, 1);
+                  NewShowDate = date;
           }          
         }
         else{
-          var currentArray = card.usedStatus.push(tag);
           for( var i = 0; i < currentArray.length; i++ ){
             switch(currentArray[i]) {
                 case 1:
                     date = addDays(date, 3);
-                    card.LastShowDate = date;
+                    NewShowDate = date;
                     break;
                 case 2:
                     date = addDays(date, 2);
-                    card.LastShowDate = date;
+                    NewShowDate = date;
                     break;
                 default:
                     date = addDays(date, 1);
-                    card.LastShowDate = date;
+                    NewShowDate = date;
             }              
           }
         }
-        card.usedStatus = currentArray;
+
         var today_obj = new Date();
         var today_num = dateObjToDateNumber(today_obj);        
-        card.LastUpdateDate = addDays(today_num, 0);
-        card.save();
+        NewUpdateDate = addDays(today_num, 0);        
+        
+        var _id = cards[0]._id;
+        var data_json = {
+          card_unique_id : cards[0].card_unique_id,  
+          LastShowDate : NewShowDate,   
+          LastUpdateDate : NewUpdateDate, 
+          openID : cards[0].openID,
+          Showed: true,
+          usedStatus: currentArray,
+          activated: true          
+        }
+
+        UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+            if (err) return handleError(err);
+
+            //标记完后返回下一张卡
+            var card_json;
+
+            var PromiseGetNextCard = new Promise(function(resolve,reject){
+              getNextCard(openID, function(result){
+                resolve(result);
+               });
+            });
+
+            PromiseGetNextCard.then(function(result){
+              card_json = result;
+              console.log(card_json);
+              res.json(card_json);
+            });
+
+
+        });        
       });
-
-      //标记完后返回下一张卡
-      var card_json;
-      card_json = getNextCard(openID)
-      res.json(card_json);
-
     }
-
-
     });  
 });
 

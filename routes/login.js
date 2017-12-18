@@ -13,6 +13,7 @@ router.get('/', function(req, res, next){
 
 	//wechat user login, get code
 	let code = req.query.code;
+	let userInfo = JSON.parse(req.query.userInfo);
 	sessionID = req.query.sessionID;
 
     if(sessionID.length != 32){
@@ -85,7 +86,6 @@ router.get('/', function(req, res, next){
 		});
 
 		res.json({'sessionID' : sessionID, "openid" : user_open_id});
-
 
     });
 
