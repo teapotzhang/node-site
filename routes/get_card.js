@@ -134,22 +134,25 @@ router.get('/', function(req, res, next){
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
       console.log('////////////////////////////////////////');
-      var data_json =  {
-        seconds: req.query.seconds,
-        answerStatus: req.query.answerStatus,
-        card_unique_id: req.query.card_unique_id,
-        sessionID: req.query.sessionID
-      }
+      
+      var seconds = parseInt(req.query.seconds);
+      var answerStatus = req.query.answerStatus;
+      var card_unique_id = req.query.card_unique_id;
+      var sessionID = req.query.sessionID;
+      
 
       var tag;
 
-      console.log('answer we get ' + data_json);
+      console.log('answer we get seconds' + seconds);
+      console.log('answer we get answerStatus' + answerStatus);
+      console.log('answer we get card_unique_id' + card_unique_id);
+      console.log('answer we get sessionID' + sessionID);
 
-      if( data_json.answerStatus == false ){
+      if( answerStatus == false ){
         tag = 3; //回答错了
       } 
       else{
-        if(data_json.seconds <= 8){
+        if(seconds <= 8){
           tag = 1; //简单
         }
         else{
@@ -158,7 +161,7 @@ router.get('/', function(req, res, next){
 
       }
 
-      UserCardModel.find({'card_unique_id' : data_json.card_unique_id}, function(err, cards){
+      UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
         var LastShowDate = cards[0]['LastShowDate'];
         var oldArray = cards[0]['usedStatus'];
