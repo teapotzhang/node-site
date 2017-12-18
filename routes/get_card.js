@@ -156,7 +156,7 @@ router.get('/', function(req, res, next){
 
       }
 
-      UserCardModel.find({'card_unique_id' : card_unique_id}, function(err, cards){
+      UserCardModel.find({'card_unique_id' : data_json.card_unique_id}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus
         var LastShowDate = cards[0]['LastShowDate'];
         var oldArray = cards[0]['usedStatus'];
@@ -201,7 +201,7 @@ router.get('/', function(req, res, next){
         NewUpdateDate = addDays(today_num, 0);        
         
         var _id = cards[0]._id;
-        var data_json = {
+        var m_data_json = {
           card_unique_id : cards[0].card_unique_id,  
           LastShowDate : NewShowDate,   
           LastUpdateDate : NewUpdateDate, 
@@ -211,7 +211,7 @@ router.get('/', function(req, res, next){
           activated: true          
         }
 
-        UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+        UserModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
             if (err) return handleError(err);
 
             //标记完后返回下一张卡
