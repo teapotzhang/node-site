@@ -67,7 +67,7 @@ function getNextCard(openID, cb){
       card_json = {
         lastCard: true
       }
-      cb(null, card_json);
+      cb(card_json);
     }
     else
     {
@@ -91,7 +91,7 @@ function getNextCard(openID, cb){
         console.log('json          '+json);
         console.log('card_json          '+card_json);
         console.log('get_json          '+get_json);
-        cb(null, get_json);
+        cb(get_json);
       });
     }
   });
