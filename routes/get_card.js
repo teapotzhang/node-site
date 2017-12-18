@@ -72,21 +72,25 @@ function getNextCard(openID){
     {
       var card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
+        var json = JSON.stringify(card)
         card_json = {
-          packageName: card['packageName'],
-          packageType: card['packageType'],
-          firstLine: card['firstLine'],
-          lastLine: card['lastLine'],
-          blueItem: card['blueItem'],
-          redItem: card['redItem'],
-          blueRight: card['rightItem'] % 2,
-          analysis: card['analysis'],
+          packageName: json['packageName'],
+          packageType: json['packageType'],
+          firstLine: json['firstLine'],
+          lastLine: json['lastLine'],
+          blueItem: json['blueItem'],
+          redItem: json['redItem'],
+          blueRight: json['rightItem'] % 2,
+          analysis: json['analysis'],
           card_unique_id : card_unique_id,
           lastCard : false     
         }
+        var get_json = JSON.stringify(card_json);
         console.log('card          '+card);
+        console.log('json          '+json);
         console.log('card_json          '+card_json);
-        return JSON.stringify(card_json);
+        console.log('get_json          '+get_json);
+        return get_json;
       });
     }
   });
