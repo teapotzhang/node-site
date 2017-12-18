@@ -209,7 +209,9 @@ router.get('/', function(req, res, next){
           Showed: true,
           usedStatus: currentArray,
           activated: true          
-        }
+        };
+
+        console.log(m_data_json);
 
         UserModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
             if (err) return handleError(err);
@@ -225,7 +227,7 @@ router.get('/', function(req, res, next){
 
             PromiseGetNextCard.then(function(result){
               card_json = result;
-              console.log(card_json);
+              console.log(card_json + 'ddddddddddd');
               res.json(card_json);
             });
 
