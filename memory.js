@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var fileUpload = require('express-fileupload');
 var dateUtils = require('date-utils');
-var sync    = require('synchronize');
 var app = express();
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
