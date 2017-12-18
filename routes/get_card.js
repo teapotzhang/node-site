@@ -43,7 +43,7 @@ function getNextCard(openID){
     var tomorrow = addDays( today_num, 1 );
     var today = addDays( today_num, 0);
     var query = {
-      openID : openID, 
+      openID : openID,
       LastShowDate : {
           $gt:  20000101,
           $lt:  tomorrow
@@ -53,7 +53,7 @@ function getNextCard(openID){
           $lt:  today
       },
       activated : true
-    }
+    };
 
     console.log(query);
 
@@ -99,8 +99,8 @@ router.get('/', function(req, res, next){
     console.log('sessionID            ' + sessionID);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       console.log('user            ' + user);
-      var user_json = JSON.parse(user);
-      openID = user_json.openID;
+      openID = user['openID'];
+      console.log('openID  in user object       ' + openID);
     });  
 
     console.log('openID            ' + openID);
