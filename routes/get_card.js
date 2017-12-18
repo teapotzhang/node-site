@@ -91,7 +91,7 @@ function getNextCard(openID, cb){
         console.log('json          '+json);
         console.log('card_json          '+card_json);
         console.log('get_json          '+get_json);
-        rcb(null, get_json);
+        cb(null, get_json);
       });
     }
   });
