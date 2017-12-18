@@ -1,4 +1,5 @@
 var express = require('express');
+var sync    = require('synchronize');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
