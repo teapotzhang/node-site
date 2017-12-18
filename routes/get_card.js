@@ -162,19 +162,22 @@ router.get('/', function(req, res, next){
         var oldArray = cards[0]['usedStatus'];
         var date = LastShowDate;
         var NewShowDate;
+        var today_obj = new Date();
+        var today_num = dateObjToDateNumber(today_obj);        
+        NewUpdateDate = addDays(today_num, 0);        
         var currentArray = oldArray.push(tag);
-        if( !cards[0].Showed ){
+        if( cards[0].Showed == false ){
           switch(tag) {
               case 1:
-                  date = addDays(LastShowDate, 6);
+                  date = addDays(today_num, 6);
                   NewShowDate = date;
                   break;
               case 2:
-                  date = addDays(LastShowDate, 2);
+                  date = addDays(today_num, 2);
                   NewShowDate = date;
                   break;
               default:
-                  date = addDays(LastShowDate, 1);
+                  date = addDays(today_num, 1);
                   NewShowDate = date;
           }          
         }
@@ -194,11 +197,7 @@ router.get('/', function(req, res, next){
                     NewShowDate = date;
             }              
           }
-        }
-
-        var today_obj = new Date();
-        var today_num = dateObjToDateNumber(today_obj);        
-        NewUpdateDate = addDays(today_num, 0);        
+        }     
         
         var _id = cards[0]._id;
         var m_data_json = {
@@ -213,7 +212,7 @@ router.get('/', function(req, res, next){
 
         console.log(m_data_json);
 
-        UserModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
+        UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
             if (err) return handleError(err);
 
             //标记完后返回下一张卡
