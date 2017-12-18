@@ -111,12 +111,14 @@ router.get('/', function(req, res, next){
     if(req.query.first_card){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       //去card表里查询卡的具体内容
-      var card_json = getNextCard(openID);
+      console.log('-----------------------------------------');
+      var card_json = sync.await(getNextCard(openID));
       console.log('return card_json           ' + card_json);
       res.json(card_json);
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
+      console.log('////////////////////////////////////////');
       var data_json =  {
         seconds: req.query.seconds,
         answerStatus: req.query.answerStatus,
