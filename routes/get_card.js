@@ -42,6 +42,7 @@ function getNextCard(openID){
     var today_num = dateObjToDateNumber(today_obj);
     var tomorrow = addDays( today_num, 1 );
     var today = addDays( today_num, 0);
+    var card_json = {};
     var query = {
       openID : openID,
       LastShowDate : {
@@ -72,7 +73,7 @@ function getNextCard(openID){
       var card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
         var json = JSON.stringify(card);
-        var card_json = {
+        card_json = {
           packageName: json.packageName,
           packageType: json.packageType,
           firstLine: json.firstLine,
