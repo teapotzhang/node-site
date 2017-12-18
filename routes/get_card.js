@@ -104,29 +104,9 @@ router.get('/', function(req, res, next){
     //获取openID 不暴漏用户
     var openID, card_unique_id;
     console.log('sessionID            ' + sessionID);
-
-
-    var today_obj = new Date();
-    var today_num = dateObjToDateNumber(today_obj);
-    var tomorrow = addDays( today_num, 1 );
-    var today = addDays( today_num, 0);
-    var card_json = {};
-    var l_query = {
-      openID : openID,
-      LastShowDate : {
-          $gt:  20000101,
-          $lt:  tomorrow
-      },
-      LastUpdateDate: {
-          $gt:  20000101,
-          $lt:  today
-      },
-      activated : true
-    };
-
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-      console.log('user            ' + user);
-      openID = user['openID'];
+    console.log('user            ' + user);
+    openID = user['openID'];
 
 
 
@@ -136,43 +116,9 @@ router.get('/', function(req, res, next){
       //去card表里查询卡的具体内容
       console.log('-----------------------------------------');
 
-      UserCardModel.findOne(l_query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
-        console.log('user_card       ' + user_card);
-      if( user_card == 'null' )
-      {
-        //当天没有可以刷的卡了
-        card_json = {
-          lastCard: true
-        }
-        res.json(card_json);
-      }
-      else
-      {
-        var card_unique_id = user_card.card_unique_id;
-        CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-          var json = JSON.stringify(card)
-          card_json = {
-            packageName: card['packageName'],
-            packageType: card['cardType'],
-            firstLine: card['firstLine'],
-            lastLine: card['lastLine'],
-            blueItem: card['blueItem'],
-            redItem: card['redItem'],
-            blueRight: card['rightItem'] % 2,
-            analysis: card['analysis'],
-            card_unique_id : card_unique_id,
-            lastCard : false     
-          }
-          var get_json = JSON.stringify(card_json);
-          console.log('card          '+card);
-          console.log('json          '+json);
-          console.log('card_json          '+card_json);
-          console.log('get_json          '+get_json);
-          res.json(get_json);
-        });
-      }
-      });
-
+      var card_json;
+      card_json = getNextCard(openID)
+      res.json(card_json);
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
@@ -241,46 +187,13 @@ router.get('/', function(req, res, next){
         var today_num = dateObjToDateNumber(today_obj);        
         card.LastUpdateDate = addDays(today_num, 0);
         card.save();
-
-        //标记完后返回下一张卡
-        UserCardModel.findOne(l_query, null, {sort: {LastShowDate: -1}}, function(err, user_card){
-          console.log('user_card       ' + user_card);
-        if( user_card == 'null' )
-        {
-          //当天没有可以刷的卡了
-          card_json = {
-            lastCard: true
-          }
-          res.json(card_json);
-        }
-        else
-        {
-          var card_unique_id = user_card.card_unique_id;
-          CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            var json = JSON.stringify(card)
-            card_json = {
-              packageName: card['packageName'],
-              packageType: card['cardType'],
-              firstLine: card['firstLine'],
-              lastLine: card['lastLine'],
-              blueItem: card['blueItem'],
-              redItem: card['redItem'],
-              blueRight: card['rightItem'] % 2,
-              analysis: card['analysis'],
-              card_unique_id : card_unique_id,
-              lastCard : false     
-            }
-            var get_json = JSON.stringify(card_json);
-            console.log('card          '+card);
-            console.log('json          '+json);
-            console.log('card_json          '+card_json);
-            console.log('get_json          '+get_json);
-            res.json(get_json);
-          });
-        }
-        });
-
       });
+
+      //标记完后返回下一张卡
+      var card_json;
+      card_json = getNextCard(openID)
+      res.json(card_json);
+
     }
 
 
