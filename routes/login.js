@@ -31,6 +31,7 @@ router.get('/', function(req, res, next){
       }
     }, (err, response, data) => {
       if (response.statusCode === 200) {
+      	console.log(data);
         user_open_id = data.openid;
         user_session_key = data.session_key;
 
@@ -108,7 +109,7 @@ router.get('/add_user', function(req, res, next){
 		console.log(data);
 
 		var data_json = {
-			'unionID' : data['unionID'],
+			'unionID' : data['unionId'],
 			'timestamp' : data['watermark']['timestamp'],
 			'session_key' : users[0].session_key,
 			'session_id': sessionID,
