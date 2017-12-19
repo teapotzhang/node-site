@@ -1,6 +1,6 @@
 var express = require('express');
 var request = require('request');
-var WXBizDataCrypt = require('./lib/WXBizDataCrypt')
+var WXBizDataCrypt = require('../lib/WXBizDataCrypt')
 var randomString = require('random-string');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
