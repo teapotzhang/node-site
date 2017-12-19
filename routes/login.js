@@ -103,7 +103,7 @@ router.get('/add_user', function(req, res, next){
 		var session_key = users[0].session_key;
 		var appid = 'wxf965e072652b2dc6';
 
-		var pc = new WXBizDataCrypt(appId, sessionKey);
+		var pc = new WXBizDataCrypt(appid, session_key);
 		var data = pc.decryptData(encryptedData , iv);
 		console.log(data);
 
