@@ -28,65 +28,81 @@ function dateCompare(){
   return diffDays;
 }
 
+function getTargetCents(openID, targetCents, cb){
+  var today_number, total_cards, total_cards_set, today_need;
+  var today_obj = new Date();
+  var today_num = dateObjToDateNumber(today_obj);
+  
+  //用户今天刷了多少张卡
+  UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
+    today_number = cards.length;
+
+    //用户一共刷了多少张卡
+    UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
+      total_cards = cards.length;
+
+      //用户距离司考还有多少天
+      var days = dateCompare();
+
+      switch(targetCents)
+      {
+      case 320:
+        total_cards_set = 10000;
+        break;
+      case 360:
+        total_cards_set = 25000;
+        break;
+      case 380:
+        total_cards_set = 35000;
+        break;
+      default:
+        total_cards_set = 50000;
+      }
+
+      today_need = Math.floor((total_cards_set - total_cards)/days);
+
+      var number_json = {
+        done : today_number,
+        all : today_need,
+        targetCents : targetCents
+      }
+
+      var get_json = JSON.stringify(number_json);
+      cb(get_json);
+    });
+
+  });
+}
+
 //加载小程序首页的时候，执行该路径，获取今日刷的卡数，以及用户的目标分数
 router.get('/', function(req, res, next){
-    var sessionID = req.query.sessionID; //确定用户
 
-    //获取openID 不暴漏用户
-    var openID, targetCents, today_number, total_cards, total_cards_set, today_need;
+  var sessionID = req.query.sessionID; //确定用户
 
-    var today_obj = new Date();
-    var today_num = dateObjToDateNumber(today_obj);
+  //获取openID 不暴漏用户
+  var openID;
 
-    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-      openID = user['openID'];
-      targetCents = user['targetCents'];
-      //确保获取了user后，进行接下来的操作
+  UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+    openID = user['openID'];
+    targetCents = user['targetCents'];
+    //确保获取了user后，进行接下来的操作
 
-      //用户今天刷了多少张卡
-      UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
-        today_number = cards.length;
+    var card_json;
 
-        //用户一共刷了多少张卡
-        UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
-          total_cards = cards.length;
-//          var get_json = JSON.stringify(number_json);
-//          res.json(get_json);
-
-            //用户距离司考还有多少天
-            var days = dateCompare();
-
-            switch(targetCents)
-            {
-            case 320:
-              total_cards_set = 10000;
-              break;
-            case 360:
-              total_cards_set = 25000;
-              break;
-            case 380:
-              total_cards_set = 35000;
-              break;
-            default:
-              total_cards_set = 50000;
-            }
-
-            today_need = Math.floor((total_cards_set - total_cards)/days);
-
-            var number_json = {
-              done : today_number,
-              all : today_need,
-              targetCents : targetCents
-            }
-
-            var get_json = JSON.stringify(number_json);
-            res.json(get_json);
-        });
-
-      });
-
+    var PromiseGetTargetCents = new Promise(function(resolve,reject){
+      getNextCard(openID, targetCents, function(result){
+        resolve(result);
+       });
     });
+
+    PromiseGetTargetCents.then(function(result){
+      card_json = result;
+      res.json(card_json);
+    });
+
+  });  
 });
+
 
 //用户更改目标分数时，执行该路径
 router.get('/upload_num', function(req, res, next){
@@ -110,6 +126,20 @@ router.get('/upload_num', function(req, res, next){
 
       UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
         if (err) return handleError(err);
+        
+        var card_json;
+
+        var PromiseGetTargetCents = new Promise(function(resolve,reject){
+          getNextCard(users[0].openID, targetCents, function(result){
+            resolve(result);
+           });
+        });
+
+        PromiseGetTargetCents.then(function(result){
+          card_json = result;
+          res.json(card_json);
+        });        
+
       });     
     });
 });
