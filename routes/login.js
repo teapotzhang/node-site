@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+var WXBizDataCrypt = require('./lib/WXBizDataCrypt')
 var randomString = require('random-string');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
@@ -13,7 +14,7 @@ router.get('/', function(req, res, next){
 
 	//wechat user login, get code
 	let code = req.query.code;
-	sessionID = req.query.sessionID;
+	sessionID = req.query.sessionID.toString();
 
     if(sessionID.length != 32){
 	   sessionID = randomString({length: 32});
@@ -106,12 +107,24 @@ router.get('/', function(req, res, next){
 
 router.get('/add_user', function(req, res, next){
 	let userInfo = JSON.parse(req.query.userInfo);
+	var encryptedData = req.query.encryptedData;
+	var iv = req.query.iv;
+
 	var sessionID = req.query.sessionID;
 
 	UserModel.find({'session_id' : sessionID}, function(err, users){
 		var _id = users[0]._id;
+		var session_key = users[0].session_key;
+		var appid = 'wxf965e072652b2dc6';
+
+		var pc = new WXBizDataCrypt(appId, sessionKey);
+		var data = pc.decryptData(encryptedData , iv);
+		console.log(data);
+
 		var data_json = {
 			'openID' : users[0].openID,
+			'unionID' : data['unionID'],
+			'timestamp' : data['watermark']['timestamp'],
 			'session_key' : users[0].session_key,
 			'session_id': sessionID,
 			'nickName': userInfo.nickName,
