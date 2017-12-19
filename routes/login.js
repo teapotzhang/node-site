@@ -33,23 +33,23 @@ router.get('/', function(req, res, next){
         user_open_id = data.openid;
         user_session_key = data.session_key;
 
-		var data_json = {
-			'session_id': sessionID,
-			'openID': user_open_id,
-			'session_key': user_session_key,
-			'nickName': "",
-			'gender': "",
-			'avartar_url': "",
-			'province': "",
-			'city': "",
-			'country': ""
-		};
-
-		var UserEntity = new UserModel(data_json);
-
 		UserModel.find({'openID' : user_open_id}, function(err, users){
 			if(users.length === 0){
 				//是新用户
+				var data_json = {
+					'session_id': sessionID,
+					'openID': user_open_id,
+					'session_key': user_session_key,
+					'nickName': "",
+					'gender': "",
+					'avartar_url': "",
+					'province': "",
+					'city': "",
+					'country': "",
+					'targetCents' : 380
+				};
+
+				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
 				//生成初始刷卡列表
 				var init_packages = ['介绍','三国法'];
@@ -74,6 +74,18 @@ router.get('/', function(req, res, next){
 			else{
 				//不是新用户 更新用户的sessionID以及别的信息
 				var _id = users[0]._id;
+				var data_json = {
+					'session_id': sessionID,
+					'openID': user_open_id,
+					'session_key': user_session_key,
+					'nickName': "",
+					'gender': "",
+					'avartar_url': "",
+					'province': "",
+					'city': "",
+					'country': "",
+					'targetCents' : users[0].targetCents
+				};
 			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
 			        if (err) return handleError(err);        
 			    });			
@@ -107,7 +119,8 @@ router.get('/add_user', function(req, res, next){
 			'avartar_url': userInfo.avatarUrl,
 			'province': userInfo.province,
 			'city': userInfo.city,
-			'country': userInfo.country
+			'country': userInfo.country,
+			'targetCents' : users[0].targetCents
 		};
 
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){

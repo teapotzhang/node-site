@@ -25,6 +25,8 @@ app.use(session({
 var login = require('./routes/login');
 var admin = require('./routes/admin');
 var get_card = require('./routes/get_card');
+var index = require('./routes/index');
+var package = require('./routes/package');
 
 var handlebars = require('express3-handlebars')
 				.create({ defaultLayout : 'main' });
@@ -51,6 +53,8 @@ app.get('/', function(req, res){
 app.use('/login', login);
 app.use('/admin', admin);
 app.use('/get_card', get_card);
+app.use('/index', index);
+app.use('/package', package);
 
 app.use(function(req, res){
 	res.status(404);

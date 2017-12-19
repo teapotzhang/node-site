@@ -17,7 +17,8 @@ var UserSchema = new Schema({
 	session_id: { type: String, index: { unique: true } },
 	province: String,
 	city: String,
-	country: String
+	country: String,
+	targetCents : Number
 });
 
 var UserModel = db.model('User', UserSchema);
