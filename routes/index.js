@@ -83,6 +83,7 @@ router.get('/', function(req, res, next){
   var openID;
 
   UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+    console.log(user);
     openID = user['openID'];
     targetCents = user['targetCents'];
     //确保获取了user后，进行接下来的操作
@@ -90,7 +91,7 @@ router.get('/', function(req, res, next){
     var card_json;
 
     var PromiseGetTargetCents = new Promise(function(resolve,reject){
-      getNextCard(openID, targetCents, function(result){
+      getTargetCents(openID, targetCents, function(result){
         resolve(result);
        });
     });
@@ -126,11 +127,11 @@ router.get('/upload_num', function(req, res, next){
 
       UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
         if (err) return handleError(err);
-        
+
         var card_json;
 
         var PromiseGetTargetCents = new Promise(function(resolve,reject){
-          getNextCard(users[0].openID, targetCents, function(result){
+          getTargetCents(users[0].openID, targetCents, function(result){
             resolve(result);
            });
         });
