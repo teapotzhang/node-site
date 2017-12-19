@@ -114,6 +114,8 @@ router.get('/upload_num', function(req, res, next){
       var _id = users[0]._id;
       var data_json = {
         'openID' : users[0].openID,
+        'unionID' : users[0].unionID,
+        'timestamp' : users[0].timestamp,        
         'session_key' : users[0].session_key,
         'session_id': sessionID,
         'nickName': users[0].nickName,

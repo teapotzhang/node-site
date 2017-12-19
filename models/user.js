@@ -12,6 +12,8 @@ var UserSchema = new Schema({
         type: String,
         required: true
     },
+	unionID : String,
+	timestamp : Number,    
 	gender: String,
 	avartar_url: String,
 	session_id: { type: String, index: { unique: true } },
