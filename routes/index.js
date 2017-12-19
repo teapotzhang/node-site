@@ -113,17 +113,6 @@ router.get('/upload_num', function(req, res, next){
     UserModel.find({'session_id' : sessionID}, function(err, users){
       var _id = users[0]._id;
       var data_json = {
-        'openID' : users[0].openID,
-        'unionID' : users[0].unionID,
-        'timestamp' : users[0].timestamp,        
-        'session_key' : users[0].session_key,
-        'session_id': sessionID,
-        'nickName': users[0].nickName,
-        'gender': users[0].gender,
-        'avartar_url': users[0].avatarUrl,
-        'province': users[0].province,
-        'city': users[0].city,
-        'country': users[0].country,
         'targetCents' : targetCents
       };
 

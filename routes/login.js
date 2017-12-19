@@ -41,12 +41,6 @@ router.get('/', function(req, res, next){
 					'session_id': sessionID,
 					'openID': user_open_id,
 					'session_key': user_session_key,
-					'nickName': "",
-					'gender': "",
-					'avartar_url': "",
-					'province': "",
-					'city': "",
-					'country': "",
 					'targetCents' : 380
 				};
 
@@ -77,15 +71,7 @@ router.get('/', function(req, res, next){
 				var _id = users[0]._id;
 				var data_json = {
 					'session_id': sessionID,
-					'openID': user_open_id,
-					'session_key': user_session_key,
-					'nickName': "",
-					'gender': "",
-					'avartar_url': "",
-					'province': "",
-					'city': "",
-					'country': "",
-					'targetCents' : users[0].targetCents
+					'session_key': user_session_key
 				};
 			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
 			        if (err) return handleError(err);        
@@ -122,7 +108,6 @@ router.get('/add_user', function(req, res, next){
 		console.log(data);
 
 		var data_json = {
-			'openID' : users[0].openID,
 			'unionID' : data['unionID'],
 			'timestamp' : data['watermark']['timestamp'],
 			'session_key' : users[0].session_key,
