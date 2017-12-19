@@ -44,7 +44,7 @@ function getTargetCents(openID, targetCents, cb){
       //用户距离司考还有多少天
       var days = dateCompare();
 
-      switch(targetCents)
+      switch(parseInt(targetCents))
       {
       case 320:
         total_cards_set = 10000;
