@@ -3,8 +3,9 @@ var db = require('../db');
 var Schema = mongoose.Schema;
 
 var UserPackageSchema = new Schema({
-	PurchasedPackages : Array,
-	ActivatedPackages : Array,
+	PackageName : String,
+	Purchased : Boolean,
+	Activated : Boolean,
 	openID : String
 });
 

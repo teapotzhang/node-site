@@ -104,7 +104,6 @@ router.get('/', function(req, res, next){
     if(req.query.first_card == 'true'){
       //是当天的第一张卡，直接去UserCard里，找到该用户的第一张卡
       //去card表里查询卡的具体内容
-      console.log('-----------------------------------------');
 
       var card_json;
 
@@ -121,7 +120,6 @@ router.get('/', function(req, res, next){
     }
     else{
       //不是当天的第一张卡，收到用户的刷卡情况，并且标记
-      console.log('////////////////////////////////////////');
       
       var seconds = parseInt(req.query.seconds);
       var answerStatus = req.query.answerStatus;
@@ -129,10 +127,6 @@ router.get('/', function(req, res, next){
       
 
       var tag;
-
-      console.log('answer we get seconds    ' + seconds);
-      console.log('answer we get answerStatus      ' + answerStatus);
-      console.log('answer we get card_unique_id     ' + card_unique_id);
 
       if( answerStatus == 'false' ){
         tag = 3; //回答错了
@@ -146,8 +140,6 @@ router.get('/', function(req, res, next){
         }
 
       }
-
-      console.log('answer we get tag     ' + tag);
 
       UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
         //更新LastShowDate, LastUpdateDate和usedStatus

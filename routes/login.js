@@ -5,10 +5,42 @@ var randomString = require('random-string');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
+var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
 var user_open_id, user_session_key, sessionID;
+
+function intersection() {
+  var result = [];
+  var lists;
+
+  if(arguments.length === 1) {
+    lists = arguments[0];
+  } else {
+    lists = arguments;
+  }
+
+  for(var i = 0; i < lists.length; i++) {
+    var currentList = lists[i];
+    for(var y = 0; y < currentList.length; y++) {
+        var currentValue = currentList[y];
+      if(result.indexOf(currentValue) === -1) {
+        var existsInAll = true;
+        for(var x = 0; x < lists.length; x++) {
+          if(lists[x].indexOf(currentValue) === -1) {
+            existsInAll = false;
+            break;
+          }
+        }
+        if(existsInAll) {
+          result.push(currentValue);
+        }
+      }
+    }
+  }
+  return result;
+}
 
 router.get('/', function(req, res, next){
 
@@ -47,9 +79,37 @@ router.get('/', function(req, res, next){
 
 				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
+				
+				var init_packages = ['介绍'];
+				var not_init_packages = ['三国法'];
+
+				//非初始卡包，需要购买激活
+				for( var i = 0; i < not_init_packages.length; i++ ){
+					
+					var data_json = {
+						PackageName : not_init_packages[i],
+						Purchased : false,
+						Activated : false,
+						openID : user_open_id						
+					}
+
+					var UserPackageEntity = new UserPackageModel(data_json);
+					UserPackageEntity.save();
+				}	
+
+
 				//生成初始刷卡列表
-				var init_packages = ['介绍','三国法'];
 				for( var i = 0; i < init_packages.length; i++ ){
+
+					var data_json = {
+						PackageName : init_packages[i],
+						Purchased : true,
+						Activated : true,
+						openID : user_open_id						
+					}
+					var UserPackageEntity = new UserPackageModel(data_json);
+					UserPackageEntity.save();
+					
 					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
 						for( var j = 0; j< cards.length; j++){
 							var data_json = {
@@ -84,8 +144,8 @@ router.get('/', function(req, res, next){
 
 
       } else {
-        console.log("[error]", err)
-        res.json(err)
+        console.log("[error]", err);
+        res.json(err);
       }
 
     });
