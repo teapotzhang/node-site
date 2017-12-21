@@ -20,7 +20,7 @@ router.get('/', function(req, res, next){
           var context = {
             userpackages : userpackages.map(function(card){
               return{
-                PackageName : card.Packagename,
+                PackageName : card.PackageName,
                 Purchased : card.Purchased,
                 Activated : card.Activated
               }
