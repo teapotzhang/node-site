@@ -13,7 +13,7 @@ var CardSchema = new Schema({
 	lastLine : String,
 	analysis : String,
 	yearNumber : Number,
-	reelNumber : Number,
+	reelNumber : String,
 	questionNumber : Number,
 	card_unique_id : { type: String, index: { unique: true } }
 });

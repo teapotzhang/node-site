@@ -129,9 +129,9 @@ router.post('/index', function(req, res){
 
         else if(jsonArrayobj[i].hasOwnProperty('expression')){
           expression = jsonArrayobj[i].expression;
-          yearNumber = jsonArrayobj[i].yearNumber;
+          yearNumber = parseInt(jsonArrayobj[i].yearNumber);
           reelNumber = jsonArrayobj[i].reelNumber;
-          questionNumber = jsonArrayobj[i].questionNumber;
+          questionNumber = parseInt(jsonArrayobj[i].questionNumber);
           cardType = 'Exam';
         }
 
@@ -140,7 +140,7 @@ router.post('/index', function(req, res){
         }      
 
         if(jsonArrayobj[i].hasOwnProperty('analysis')){
-          var analysis = jsonArrayobj[i].analysis;
+          analysis = jsonArrayobj[i].analysis;
         }
 
         var data_json = {
