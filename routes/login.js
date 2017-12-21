@@ -49,8 +49,8 @@ router.get('/', function(req, res, next){
 				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
 				
-				var init_packages = ['介绍', '2017年真题卡包'];
-				var not_init_packages = ['三国法'];
+				var init_packages = ['三国法', '2017年真题卡包'];
+				var not_init_packages = ['介绍'];
 
 				//非初始卡包，需要购买激活
 				for( var i = 0; i < not_init_packages.length; i++ ){
