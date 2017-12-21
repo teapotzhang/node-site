@@ -2,7 +2,7 @@ var express = require('express');
 var Promise = require("bluebird");
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
-var UserPackageModel = require('../models/UserPackage');
+var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
