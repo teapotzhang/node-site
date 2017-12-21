@@ -83,6 +83,10 @@ function getNextCard(openID, cb){
           redItem: card['redItem'],
           blueRight: card['rightItem'] % 2,
           analysis: card['analysis'],
+          expression : card['expression'],
+          yearNumber : card['yearNumber'],
+          reelNumber : card['reelNumber'],
+          questionNumber : card['questionNumber'],
           card_unique_id : card_unique_id,
           lastCard : false     
         }
