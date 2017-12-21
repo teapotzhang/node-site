@@ -104,53 +104,65 @@ router.post('/index', function(req, res){
 
       while(i < jsonArrayobj.length){
 
+        //定义卡片项
         var cardType;
+        var firstLine = ""; 
+        var lastLine = "";
+        var expression = ""; 
+        var yearNumber = ""; 
+        var reelNumber = "";
+        var questionNumber = "";
+        var blueItem = "";
+        var redItem = "";
+        var analysis = "";
+        var card_unique_id = packagename + '_' + i;
+        var rightItem = jsonArrayobj[i].rightItem;          
 
         if(jsonArrayobj[i].hasOwnProperty('whole_line')){
           var k = get_line(jsonArrayobj[i].whole_line);
-          var firstLine = k[0];
-          var lastLine = k[1];
+          firstLine = k[0];
+          lastLine = k[1];
+          blueItem = jsonArrayobj[i].blueItem;
+          redItem = jsonArrayobj[i].redItem;          
           cardType = 'Normal';        
         }
 
         else if(jsonArrayobj[i].hasOwnProperty('expression')){
-          var expression = jsonArrayobj[i].expression;
+          expression = jsonArrayobj[i].expression;
+          yearNumber = jsonArrayobj[i].yearNumber;
+          reelNumber = jsonArrayobj[i].reelNumber;
+          questionNumber = jsonArrayobj[i].questionNumber;
           cardType = 'Exam';
         }
 
-          var card_unique_id = packagename + '_' + i;
-          var rightItem = jsonArrayobj[i].rightItem;
-          var blueItem = jsonArrayobj[i].blueItem;
-          var redItem = jsonArrayobj[i].redItem;
-          var analysis = null;
+        if( packagename.indexOf('介绍') != -1){
+          cardType = 'Introduction';
+        }      
 
-          if(jsonArrayobj[i].hasOwnProperty('analysis')){
-            var analysis = jsonArrayobj[i].analysis;
-          }
+        if(jsonArrayobj[i].hasOwnProperty('analysis')){
+          var analysis = jsonArrayobj[i].analysis;
+        }
 
-          if( packagename.indexOf('介绍') != -1)
-          {
-            cardType = 'Introduction';
-          }
+        var data_json = {
+          'packageName' : packagename,
+          'cardType' : cardType,
+          'rightItem' : rightItem,
+          'expression' : expression,
+          'blueItem' : blueItem,
+          'redItem' : redItem,
+          'firstLine' : firstLine,
+          'lastLine' : lastLine,
+          'analysis' : analysis,
+          'yearNumber' : yearNumber,
+          'reelNumber' : reelNumber,
+          'questionNumber' : questionNumber,            
+          'card_unique_id' : card_unique_id
+        };
 
-          var data_json = {
-            'packageName' : packagename,
-            'cardType' : 'Normal',
-            'rightItem' : rightItem,
-            'expression' : null,
-            'blueItem' : blueItem,
-            'redItem' : redItem,
-            'firstLine' : firstLine,
-            'lastLine' : lastLine,
-            'analysis' : analysis,
-            'card_unique_id' : card_unique_id,
-            'activated': true        
-          };
+        var CardEntity = new CardModel(data_json);
+        CardEntity.save();
 
-          var CardEntity = new CardModel(data_json);
-          CardEntity.save();
-
-          i++;
+        i++;
       }
 
     });
@@ -173,6 +185,9 @@ router.get('/index/search', function(req, res){
             firstLine : card.firstLine,
             lastLine : card.lastLine,
             analysis : card.analysis,
+            yearNumber : card.yearNumber,
+            reelNumber : card.reelNumber,
+            questionNumber : card.questionNumber,             
             card_unique_id : card.card_unique_id
           }
         })

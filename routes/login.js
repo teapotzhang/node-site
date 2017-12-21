@@ -11,37 +11,6 @@ var router = express.Router();
 
 var user_open_id, user_session_key, sessionID;
 
-function intersection() {
-  var result = [];
-  var lists;
-
-  if(arguments.length === 1) {
-    lists = arguments[0];
-  } else {
-    lists = arguments;
-  }
-
-  for(var i = 0; i < lists.length; i++) {
-    var currentList = lists[i];
-    for(var y = 0; y < currentList.length; y++) {
-        var currentValue = currentList[y];
-      if(result.indexOf(currentValue) === -1) {
-        var existsInAll = true;
-        for(var x = 0; x < lists.length; x++) {
-          if(lists[x].indexOf(currentValue) === -1) {
-            existsInAll = false;
-            break;
-          }
-        }
-        if(existsInAll) {
-          result.push(currentValue);
-        }
-      }
-    }
-  }
-  return result;
-}
-
 router.get('/', function(req, res, next){
 
 	//wechat user login, get code
@@ -80,7 +49,7 @@ router.get('/', function(req, res, next){
 				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
 				
-				var init_packages = ['介绍'];
+				var init_packages = ['介绍', '2017年真题卡包'];
 				var not_init_packages = ['三国法'];
 
 				//非初始卡包，需要购买激活
