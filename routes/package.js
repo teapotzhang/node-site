@@ -17,8 +17,17 @@ router.get('/', function(req, res, next){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
-          var package_json = JSON.stringify(userpackages);
-          res.json(package_json);
+          var context = {
+            userpackages : userpackages.map(function(card){
+              return{
+                PackageName : card.Packagename,
+                Purchased : card.Purchased,
+                Activated : card.Activated
+              }
+            })
+          };
+          console.log(content);
+          res.json(context);
       });
     });
 });
