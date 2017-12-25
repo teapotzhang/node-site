@@ -16,7 +16,23 @@ router.get('/', function(req, res, next){
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
+
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
+          var resultArray = [];
+          for( var i = 0; i < userpackages.length; i++ ){
+            var PackagePrice;
+            PackageModel.find({packageName : userpackages[i].PackageName}, function(err, package){
+              PackagePrice = package[0].packagePrice;
+              var data_json = {
+                PackageName : userpackages[i].PackageName,
+                Purchased : userpackages[i].Purchased,
+                Activated : userpackages[i].Activated,
+                PackagePrice : PackagePrice         
+              }
+              resultArray.push(data_json);
+            });
+          }
+          console.log(resultArray);
           var context = {
             userpackages : userpackages.map(function(card){
               return{

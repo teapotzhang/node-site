@@ -1,5 +1,6 @@
 //Import the mongoose module
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 var opts = {
 	server:{
 		socketOptions: { keepAlive: 1 }
@@ -7,8 +8,6 @@ var opts = {
 };
 
 DB_URL ='mongodb://localhost:27017/memory';
-
-mongoose.Promise = global.Promise;
 
 //Set up default mongoose connection
 mongoose.connect(DB_URL, opts);
