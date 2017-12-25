@@ -84,7 +84,7 @@ router.get('/', function(req, res, next){
         <xml>
         */
         var body =  '<xml>' + 
-                    '<appid>' + 'wxf965e072652b2dc6' + '<appid>' + 
+                    '<appid>' + 'wxf965e072652b2dc6' + '</appid>' + 
                     '<mch_id>' + '1492751112' + '</mch_id>' +
                     '<body>' + '法考小卡片-' + packageName + '</body>' +
                     '<notify_url>' + 'https://jiyikapian.com/order/notify' + '</notify_url>' +
