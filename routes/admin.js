@@ -238,4 +238,51 @@ router.get('/index/update', function(req, res){
 
 });
 
+router.get('/index/update/package', function(req, res){
+
+    var data_json = {
+      'packageName' : req.query.packageName,
+      'packagePrice' : req.query.packagePrice
+    };
+
+    PackageModel.find({packageName : req.query.packageName}, function(err, packages){
+    if(packages.length === 0){
+      return res.render('admin/index');
+    }
+    else{
+      var _id = packages[0]._id;
+
+      data_json = {
+        'packageName' : req.query.packageName || packages[0].rightItem,
+        'packagePrice' : req.query.packagePrice || packages[0].packagePrice
+      };
+
+      PackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, packages){
+        if (err) return handleError(err);        
+      });
+    }
+
+    return res.render('admin/index');
+
+    });
+
+});
+
+router.get('/index/search/package', function(req, res){
+    var search_key = req.query.searchKey;
+    console.log(search_key);
+    PackageModel.find({packageName : search_key}, function(err, packages){
+      var context = {
+        packages : packages.map(function(package){
+          return{
+            packageName : package.packageName,
+            packagePrice : package.packagePrice
+          }
+        })
+      }
+      return res.render('admin/index', context); 
+    });
+});
+
+
 module.exports = router;
