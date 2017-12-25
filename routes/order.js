@@ -64,9 +64,6 @@ router.get('/', function(req, res, next){
         var UserOrderEntity = new UserOrderModel(data_json);        
         UserEntity.save();
 
-        var timestamp = Date.parse(new Date()); //时间戳
-        timestamp = timestamp / 1000;
-
         //拼签名
         var stringA="appid=wxf965e072652b2dc6&body=法考小卡片"+packageName+"&device_info=WEB&mch_id=1492751112&nonce_str="+nonce_str+"&key=e68999f635998f962f245ba78a6ba45d";
         var sign = MD5(stringA);
@@ -94,8 +91,23 @@ router.get('/', function(req, res, next){
             console.log(data);
             var prepay_id = data.prepay_id;
             //返回支付参数和签名
+            var str = 'prepay_id' + prepay_id;
+            var timestamp = Date.parse(new Date()); //时间戳
+            timestamp = (timestamp / 1000).toString();
 
+            //又拼签名
+            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=qazwsxedcrfvtgbyhnujmikolp111111";
+            var paySign = MD5(stringB);
 
+            var return_json = {
+              'timeStamp': timestamp,
+              'nonceStr': nonce_str,
+              'package': str,
+              'paySign': paySign
+            };
+            var get_json = JSON.stringify(return_json);
+            res.json(get_json);
+            
           } else {
             console.log(err);
             console.log("[error]", err);
