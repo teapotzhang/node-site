@@ -98,7 +98,6 @@ router.get('/', function(req, res, next){
         console.log(body);
 
         request.post({
-          headers: {'Content-Type' : 'text/xml'},
           url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
           body:    body
         }, (err, response, data) => {
