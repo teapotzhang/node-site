@@ -19,6 +19,7 @@ router.get('/', function(req, res, next){
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
           var resultArray = [];
+          console.log(userpackages);
           for( var i = 0; i < userpackages.length; i++ ){
             var PackagePrice;
             PackageModel.find({packageName : userpackages[i].PackageName}, function(err, package){
