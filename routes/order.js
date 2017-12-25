@@ -70,7 +70,7 @@ router.get('/', function(req, res, next){
         var sign = MD5(stringA);
 
         //调用微信的支付统一下单
-        request.get({
+        request.post({
           uri: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
           json: true,
           qs: {
