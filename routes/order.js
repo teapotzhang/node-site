@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+var MD5 = require('md5');
 var randomString = require('random-string');
 var randomNumber = require('random-number');
 var Promise = require("bluebird");
@@ -107,7 +108,7 @@ router.get('/', function(req, res, next){
             };
             var get_json = JSON.stringify(return_json);
             res.json(get_json);
-            
+
           } else {
             console.log(err);
             console.log("[error]", err);

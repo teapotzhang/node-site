@@ -1,6 +1,5 @@
 var express = require('express');
 var Promise = require("bluebird");
-var MD5 = require('md5');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
 var UserPackageModel = require('../models/userPackage');
