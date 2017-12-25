@@ -94,7 +94,8 @@ router.get('/', function(req, res, next){
                     '<trade_type>' + 'JSAPI' + '</trade_type>'
                     '<sign>' + sign + '</sign>' +
                     '</xml>';
-
+        console.log(body);
+        
         request.post({
           headers: {'content-type' : 'text/xml'},
           url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
