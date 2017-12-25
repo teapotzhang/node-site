@@ -18,12 +18,16 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
           var context = {
-            userpackages : userpackages.map(function(card){
-              return{
-                PackageName : card.PackageName,
-                Purchased : card.Purchased,
-                Activated : card.Activated
-              }
+            userpackages : userpackages.map(function(package){
+              var t = package;
+              PackageModel.findOne('packageName' : t.PackageName}, function(err, k){
+                return{
+                  PackageName : t.PackageName,
+                  PackagePrice : k.packagePrice,
+                  Purchased : t.Purchased,
+                  Activated : t.Activated
+                }
+              });
             })
           };
           console.log(context);
