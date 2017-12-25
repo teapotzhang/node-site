@@ -38,7 +38,7 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
 
       PackageModel.findOne({ 'packageName' : packageName }, function(err, package){
-        packagePrice = package['packageName'];
+        packagePrice = package['packagePrice'];
         var nonce_str = randomString({length: 32});
         var paySign;
 
@@ -52,7 +52,7 @@ router.get('/', function(req, res, next){
         var today_obj = new Date();
         var today_num = dateObjToDateNumber(today_obj);   
         
-        orderID = today_num + orderID;  
+        orderID = today_num.toString() + orderID.toString();  
 
         var data_json = {
           openID : openID,
@@ -91,11 +91,11 @@ router.get('/', function(req, res, next){
                     '<out_trade_no>' + orderID + '</out_trade_no>' +
                     '<spbill_create_ip>' + '140.143.136.128' + '</spbill_create_ip>' +
                     '<total_fee>' + packagePrice + '</<total_fee>' +
-                    '<trade_type>' + 'JSAPI' + '</trade_type>'
+                    '<trade_type>' + 'JSAPI' + '</trade_type>' +
                     '<sign>' + sign + '</sign>' +
                     '</xml>';
         console.log(body);
-        
+
         request.post({
           headers: {'content-type' : 'text/xml'},
           url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
