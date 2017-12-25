@@ -72,8 +72,7 @@ router.get('/', function(req, res, next){
         //调用微信的支付统一下单
         request.post({
           uri: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
-          json: true,
-          qs: {
+          form: {
             appid : 'wxf965e072652b2dc6',
             mch_id : '1492751112',
             device_info : "WEB",
