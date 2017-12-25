@@ -84,15 +84,15 @@ router.get('/', function(req, res, next){
         <xml>
         */
         var body =  '<xml>' + 
-                    '<appid>' + 'wxf965e072652b2dc6' + '</appid>' + 
-                    '<mch_id>' + '1492751112' + '</mch_id>' +
+                    '<appid>wxf965e072652b2dc6</appid>' + 
+                    '<mch_id>1492751112</mch_id>' +
                     '<nonce_str><![CDATA[' + nonce_str + ']]></nonce_str>' +
                     '<body>' + '法考小卡片-' + packageName + '</body>' +
-                    '<notify_url>' + 'https://jiyikapian.com/order/notify' + '</notify_url>' +
-                    '<out_trade_no>' + orderID + ']]></out_trade_no>' +
+                    '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
+                    '<out_trade_no><![CDATA[' + orderID + ']]></out_trade_no>' +
                     '<spbill_create_ip><![CDATA[140.143.136.128]]></spbill_create_ip>' +
                     '<total_fee>' + packagePrice + '</<total_fee>' +
-                    '<trade_type>' + 'JSAPI' + '</trade_type>' +
+                    '<trade_type>JSAPI</trade_type>' +
                     '<sign><![CDATA[' + sign + ']]></sign>' +
                     '</xml>';
         console.log(body);
