@@ -62,10 +62,10 @@ router.get('/', function(req, res, next){
         };
 
         var UserOrderEntity = new UserOrderModel(data_json);        
-        UserEntity.save();
+        UserOrderEntity.save();
 
         //拼签名
-        var stringA="appid=wxf965e072652b2dc6&body=法考小卡片"+packageName+"&device_info=WEB&mch_id=1492751112&nonce_str="+nonce_str+"&key=e68999f635998f962f245ba78a6ba45d";
+        var stringA="appid=wxf965e072652b2dc6&body=法考小卡片"+packageName+"&device_info=WEB&mch_id=1492751112&nonce_str="+nonce_str+"&key=1225fakaoxiaokapiankaishizhifule";
         var sign = MD5(stringA);
 
         //调用微信的支付统一下单
@@ -96,7 +96,7 @@ router.get('/', function(req, res, next){
             timestamp = (timestamp / 1000).toString();
 
             //又拼签名
-            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=qazwsxedcrfvtgbyhnujmikolp111111";
+            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
             var paySign = MD5(stringB);
 
             var return_json = {
