@@ -87,7 +87,7 @@ router.get('/', function(req, res, next){
                     '<appid>wxf965e072652b2dc6</appid>' + 
                     '<mch_id>1492751112</mch_id>' +
                     '<nonce_str>' + nonce_str + '</nonce_str>' +
-                    '<body>' + 'test' + '</body>' +
+                    '<body>' + '法考小卡片-' + packageName + '</body>' +
                     '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
                     '<out_trade_no>' + orderID + '</out_trade_no>' +
                     '<spbill_create_ip><![CDATA[140.143.136.128</spbill_create_ip>' +
@@ -99,7 +99,7 @@ router.get('/', function(req, res, next){
 
         request.post({
           url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
-          body:    body
+          body:    JSON.stringify(body)
         }, (err, response, data) => {
           if (response.statusCode === 200) {
             console.log(data);
