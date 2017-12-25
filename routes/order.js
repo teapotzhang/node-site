@@ -70,22 +70,35 @@ router.get('/', function(req, res, next){
         var sign = MD5(stringA);
 
         //调用微信的支付统一下单
+        /*
+        <xml>
+        <appid>wxf965e072652b2dc6</appid>
+        <mch_id>1492751112</mch_id>
+        <body>法考小卡片- + packageName</body>
+        <notify_url>https://jiyikapian.com/order/notify</notify_url>
+        <out_trade_no>orderID</out_trade_no>
+        <spbill_create_ip>140.143.136.128</spbill_create_ip>
+        <total_fee>packagePrice</<total_fee>
+        <trade_type>JSAPI</trade_type>
+        <sign>sign</sign>
+        <xml>
+        */
+        var body =  '<xml>' + 
+                    '<appid>' + 'wxf965e072652b2dc6' + '<appid>' + 
+                    '<mch_id>' + '1492751112' + '</mch_id>' +
+                    '<body>' + '法考小卡片-' + packageName + '</body>' +
+                    '<notify_url>' + 'https://jiyikapian.com/order/notify' + '</notify_url>' +
+                    '<out_trade_no>' + orderID + '</out_trade_no>' +
+                    '<spbill_create_ip>' + '140.143.136.128' + '</spbill_create_ip>' +
+                    '<total_fee>' + packagePrice + '</<total_fee>' +
+                    '<trade_type>' + 'JSAPI' + '</trade_type>'
+                    '<sign>' + sign + '</sign>' +
+                    '</xml>';
+
         request.post({
-          uri: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
-          form: {
-            appid : 'wxf965e072652b2dc6',
-            mch_id : '1492751112',
-            device_info : "WEB",
-            nonce_str : nonce_str,  //随机32位
-            sign_type : 'MD5',
-            body : '法考小卡片-' + packageName,
-            notify_url : 'https://jiyikapian.com/order/notify',
-            out_trade_no : orderID,  //自己的orderNumber
-            spbill_create_ip : '140.143.136.128',
-            total_fee : packagePrice,
-            trade_type: 'JSAPI',
-            sign : sign
-          }
+          headers: {'content-type' : 'text/xml'},
+          url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
+          body:    body
         }, (err, response, data) => {
           if (response.statusCode === 200) {
             console.log(data);
