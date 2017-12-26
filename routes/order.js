@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 var MD5 = require('md5');
 var utf8 = require('utf8');
+var WXPay = require('weixin-pay');
 var randomString = require('random-string');
 var randomNumber = require('random-number');
 var Promise = require("bluebird");
@@ -26,13 +27,19 @@ function dateObjToDateNumber(date_obj){
   return result;
 }
 
-//加载小程序package页面的时候，执行该路径
+//package页面下单的时候，执行该路径
 router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName; //确定用户下单的是哪个包
     var packagePrice; //确定下单金额
     //获取openID 不暴漏用户
     var openID;
+
+    var wxpay = WXPay({
+        appid: 'wxf965e072652b2dc6',
+        mch_id: '1492751112',
+        partner_key: '1225fakaoxiaokapiankaishizhifule' //微信商户平台API密钥 
+    });    
 
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
@@ -66,7 +73,20 @@ router.get('/', function(req, res, next){
         var UserOrderEntity = new UserOrderModel(data_json);        
         UserOrderEntity.save();
 
+
+        wxpay.createUnifiedOrder({
+            body: '支付测试',
+            out_trade_no: orderID,
+            total_fee: packagePrice,
+            spbill_create_ip: '140.143.136.128',
+            notify_url: 'https://jiyikapian.com/order/notify',
+            trade_type: 'JSAPI',
+        }, function(err, result){
+            console.log(result);
+        });
+
         //拼签名
+        /*
         var stringA="appid=wxf965e072652b2dc6&body=法考小卡片"+packageName+"&device_info=WEB&mch_id=1492751112&nonce_str="+nonce_str+"&key=1225fakaoxiaokapiankaishizhifule";
         var sign = MD5(stringA);
 
@@ -84,18 +104,19 @@ router.get('/', function(req, res, next){
         <sign>sign</sign>
         <xml>
         */
-        var body =  utf8.encode('<xml>' + 
+        /*
+        var body =  '<xml>' + 
                     '<appid>wxf965e072652b2dc6</appid>' + 
                     '<mch_id>1492751112</mch_id>' +
                     '<nonce_str>' + nonce_str + '</nonce_str>' +
-                    '<body>' + 'test' + '</body>' +
+                    '<body>' + '法考小卡片-' + packageName + '</body>' +
                     '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
                     '<out_trade_no>' + orderID + '</out_trade_no>' +
                     '<spbill_create_ip>140.143.136.128</spbill_create_ip>' +
                     '<total_fee>' + packagePrice + '</<total_fee>' +
                     '<trade_type>JSAPI</trade_type>' +
                     '<sign>' + sign + '</sign>' +
-                    '</xml>');
+                    '</xml>';
         console.log(body);
 
         request.post({
@@ -130,6 +151,8 @@ router.get('/', function(req, res, next){
 
         });
 
+
+      */
       });
 
     });
