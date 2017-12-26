@@ -74,14 +74,14 @@ router.get('/', function(req, res, next){
         UserOrderEntity.save();
 
 
-        wxpay.createUnifiedOrder({
+        wxpay.getBrandWCPayRequestParams({
             body: '法考小程序' + packageName,
             openid : openID,
             out_trade_no: orderID,
             total_fee: packagePrice,
             spbill_create_ip: '140.143.136.128',
             notify_url: 'https://jiyikapian.com/order/notify',
-            trade_type: 'JSAPI',
+            trade_type: 'JSAPI'
         }, function(err, data){
             console.log(data);
             var prepay_id = data.prepay_id;
