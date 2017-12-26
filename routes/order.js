@@ -73,8 +73,8 @@ router.get('/', function(req, res, next){
         var UserOrderEntity = new UserOrderModel(data_json);        
         UserOrderEntity.save();
 
-
-        wxpay.getBrandWCPayRequestParams({
+        console.log('packagePrice' + packagePrice);
+        wxpay.createUnifiedOrder({
             body: '法考小程序' + packageName,
             openid : openID,
             out_trade_no: orderID,
