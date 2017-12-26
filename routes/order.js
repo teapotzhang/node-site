@@ -86,7 +86,7 @@ router.get('/', function(req, res, next){
             console.log(data);
             var prepay_id = data.prepay_id;
             //返回支付参数和签名
-            var str = 'prepay_id' + prepay_id;
+            var str = 'prepay_id=' + prepay_id;
             var timestamp = Date.parse(new Date()); //时间戳
             timestamp = (timestamp / 1000).toString();
 
