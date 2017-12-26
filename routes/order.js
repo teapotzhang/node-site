@@ -88,7 +88,7 @@ router.get('/', function(req, res, next){
                     '<appid>wxf965e072652b2dc6</appid>' + 
                     '<mch_id>1492751112</mch_id>' +
                     '<nonce_str>' + nonce_str + '</nonce_str>' +
-                    '<body>' + '法考小卡片-' + packageName + '</body>' +
+                    '<body>' + 'test' + '</body>' +
                     '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
                     '<out_trade_no>' + orderID + '</out_trade_no>' +
                     '<spbill_create_ip>140.143.136.128</spbill_create_ip>' +
