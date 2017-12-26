@@ -180,7 +180,7 @@ router.get('/', function(req, res, next){
 
 
 //收微信返回的数据
-router.use('/notify', WXPay.useWXCallback(function(msg, req, res, next){
+router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑 
     console.log(msg);
     console.log(req);
