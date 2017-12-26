@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var MD5 = require('md5');
+var utf8 = require('utf8');
 var randomString = require('random-string');
 var randomNumber = require('random-number');
 var Promise = require("bluebird");
@@ -83,7 +84,7 @@ router.get('/', function(req, res, next){
         <sign>sign</sign>
         <xml>
         */
-        var body =  '<xml>' + 
+        var body =  utf8.encode('<xml>' + 
                     '<appid>wxf965e072652b2dc6</appid>' + 
                     '<mch_id>1492751112</mch_id>' +
                     '<nonce_str>' + nonce_str + '</nonce_str>' +
@@ -94,7 +95,7 @@ router.get('/', function(req, res, next){
                     '<total_fee>' + packagePrice + '</<total_fee>' +
                     '<trade_type>JSAPI</trade_type>' +
                     '<sign>' + sign + '</sign>' +
-                    '</xml>';
+                    '</xml>');
         console.log(body);
 
         request.post({
