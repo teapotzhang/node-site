@@ -88,7 +88,7 @@ router.get('/', function(req, res, next){
             var str = 'prepay_id=' + prepay_id;
             var nonce_str = data.nonce_str;
             var timestamp = Date.parse(new Date()); //时间戳
-            timestamp = (timestamp / 1000).toString();
+            timestamp = (timestamp / 1000);
 
             //又拼签名
             var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
