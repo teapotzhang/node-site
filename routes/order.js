@@ -27,19 +27,19 @@ function dateObjToDateNumber(date_obj){
   return result;
 }
 
+var wxpay = WXPay({
+    appid: 'wxf965e072652b2dc6',
+    mch_id: '1492751112',
+    partner_key: '1225fakaoxiaokapiankaishizhifule' //微信商户平台API密钥 
+}); 
+
 //package页面下单的时候，执行该路径
 router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName; //确定用户下单的是哪个包
     var packagePrice; //确定下单金额
     //获取openID 不暴漏用户
-    var openID;
-
-    var wxpay = WXPay({
-        appid: 'wxf965e072652b2dc6',
-        mch_id: '1492751112',
-        partner_key: '1225fakaoxiaokapiankaishizhifule' //微信商户平台API密钥 
-    });    
+    var openID;   
 
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
@@ -67,7 +67,7 @@ router.get('/', function(req, res, next){
           orderID : orderID,
           packageName : packageName,
           packagePrice : packagePrice,
-          created_time : ''
+          created_time : today_num
         };
 
         var UserOrderEntity = new UserOrderModel(data_json);        
@@ -180,7 +180,7 @@ router.get('/', function(req, res, next){
 
 
 //收微信返回的数据
-router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
+router.use('/notify', WXPay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑 
     console.log(msg);
     console.log(req);
