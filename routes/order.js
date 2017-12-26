@@ -82,9 +82,31 @@ router.get('/', function(req, res, next){
             spbill_create_ip: '140.143.136.128',
             notify_url: 'https://jiyikapian.com/order/notify',
             trade_type: 'JSAPI',
-        }, function(err, result){
-            console.log(result);
-        });
+        }, function(err, data){
+            console.log(data);
+            var prepay_id = data.prepay_id;
+            //返回支付参数和签名
+            var str = 'prepay_id' + prepay_id;
+            var timestamp = Date.parse(new Date()); //时间戳
+            timestamp = (timestamp / 1000).toString();
+
+            //又拼签名
+            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
+            var paySign = MD5(stringB);
+
+            var return_json = {
+              'timeStamp': timestamp,
+              'nonceStr': nonce_str,
+              'package': str,
+              'paySign': paySign
+            };
+            var get_json = JSON.stringify(return_json);
+            res.json(get_json);
+
+          } else {
+            console.log(err);
+            console.log("[error]", err);
+          });
 
         //拼签名
         /*
@@ -161,9 +183,13 @@ router.get('/', function(req, res, next){
 
 
 //收微信返回的数据
-router.get('/notify', function(req, res, next){
-
-});
+router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
+    // 处理商户业务逻辑 
+    console.log(msg);
+    console.log(req);
+    // res.success() 向微信返回处理成功信息，res.fail()返回失败信息。 
+    res.success();
+}));
 
 
 module.exports = router;
