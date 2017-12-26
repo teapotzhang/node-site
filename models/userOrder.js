@@ -7,7 +7,8 @@ var UserOrderSchema = new Schema({
 	orderID : { type: String, index: { unique: true } },
 	packageName : String,
 	packagePrice : String,
-	created_time : String
+	created_time : String,
+	status : String
 });
 
 var UserOrderModel = db.model('UserOrder', UserOrderSchema);

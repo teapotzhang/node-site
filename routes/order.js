@@ -8,6 +8,7 @@ var randomNumber = require('random-number');
 var Promise = require("bluebird");
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
+var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
 var UserOrderModel = require('../models/userOrder');
 var router = express.Router();
@@ -66,15 +67,16 @@ router.get('/', function(req, res, next){
           orderID : orderID,
           packageName : packageName,
           packagePrice : packagePrice,
-          created_time : today_num
+          created_time : today_num,
+          status : 'START'
         };
 
         var UserOrderEntity = new UserOrderModel(data_json);        
         UserOrderEntity.save();
 
-        console.log('packagePrice' + packagePrice);
         wxpay.createUnifiedOrder({
             body: '法考小程序' + packageName,
+            attach: packageName,
             openid : openID,
             sign_type : 'MD5',
             out_trade_no: orderID,
@@ -83,7 +85,6 @@ router.get('/', function(req, res, next){
             notify_url: 'https://jiyikapian.com/order/notify',
             trade_type: 'JSAPI'
         }, function(err, data){
-            console.log(data);
             var prepay_id = data.prepay_id;
             //返回支付参数和签名
             var str = 'prepay_id=' + prepay_id;
@@ -91,16 +92,9 @@ router.get('/', function(req, res, next){
             var timestamp = Date.parse(new Date()); //时间戳
             timestamp = parseInt(timestamp / 1000);
 
-            console.log(timestamp);
-
             //又拼签名
             var stringB="appId=wxf965e072652b2dc6&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
-            console.log(stringB);
-
             var paySign = MD5(stringB).toUpperCase();
-            console.log(paySign);
-
-
             var timeStamp = timestamp.toString();
             var return_json = {
               'timeStamp': timeStamp,
@@ -112,75 +106,6 @@ router.get('/', function(req, res, next){
             res.json(get_json);
 
         });
-
-        //拼签名
-        /*
-        var stringA="appid=wxf965e072652b2dc6&body=法考小卡片"+packageName+"&device_info=WEB&mch_id=1492751112&nonce_str="+nonce_str+"&key=1225fakaoxiaokapiankaishizhifule";
-        var sign = MD5(stringA);
-
-        //调用微信的支付统一下单
-        /*
-        <xml>
-        <appid>wxf965e072652b2dc6</appid>
-        <mch_id>1492751112</mch_id>
-        <body>法考小卡片- + packageName</body>
-        <notify_url>https://jiyikapian.com/order/notify</notify_url>
-        <out_trade_no>orderID</out_trade_no>
-        <spbill_create_ip>140.143.136.128</spbill_create_ip>
-        <total_fee>packagePrice</<total_fee>
-        <trade_type>JSAPI</trade_type>
-        <sign>sign</sign>
-        <xml>
-        */
-        /*
-        var body =  '<xml>' + 
-                    '<appid>wxf965e072652b2dc6</appid>' + 
-                    '<mch_id>1492751112</mch_id>' +
-                    '<nonce_str>' + nonce_str + '</nonce_str>' +
-                    '<body>' + '法考小卡片-' + packageName + '</body>' +
-                    '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
-                    '<out_trade_no>' + orderID + '</out_trade_no>' +
-                    '<spbill_create_ip>140.143.136.128</spbill_create_ip>' +
-                    '<total_fee>' + packagePrice + '</<total_fee>' +
-                    '<trade_type>JSAPI</trade_type>' +
-                    '<sign>' + sign + '</sign>' +
-                    '</xml>';
-        console.log(body);
-
-        request.post({
-          url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
-          body:    body
-        }, (err, response, data) => {
-          if (response.statusCode === 200) {
-            console.log(data);
-            var prepay_id = data.prepay_id;
-            //返回支付参数和签名
-            var str = 'prepay_id' + prepay_id;
-            var timestamp = Date.parse(new Date()); //时间戳
-            timestamp = (timestamp / 1000).toString();
-
-            //又拼签名
-            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
-            var paySign = MD5(stringB);
-
-            var return_json = {
-              'timeStamp': timestamp,
-              'nonceStr': nonce_str,
-              'package': str,
-              'paySign': paySign
-            };
-            var get_json = JSON.stringify(return_json);
-            res.json(get_json);
-
-          } else {
-            console.log(err);
-            console.log("[error]", err);
-          }
-
-        });
-
-
-      */
       });
 
     });
@@ -191,9 +116,50 @@ router.get('/', function(req, res, next){
 router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑 
     console.log(msg);
-    console.log(req);
-    // res.success() 向微信返回处理成功信息，res.fail()返回失败信息。 
-    res.success();
+    if( msg.return_code == 'SUCCESS' && msg.result_code == 'SUCCESS'){
+      //用户微信下单成功啦
+      UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
+          var _id = order['_id'];
+          var data_json = {
+            'status': 'SUCCESS'
+          };          
+          UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
+            UserPackageModel.find({'openID' : msg.openid, 'PackageName' : msg.attach}, function(err, userpackages){
+              //先在userpackage里标注为不激活
+
+              var _id = userpackages[0]._id;
+              var data_json = {
+                'Purchased' : true,
+                'Activated' : true
+              };
+
+              UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+                  //更新userpackage后，更新usercard
+
+                UserCardModel.update({'openID' : msg.openid, 'PackageName' : msg.attach}, {activated: true}, {multi: true},function(err) { 
+                    res.success();
+                });
+
+              });
+              
+            });
+          });
+
+      });      
+    }
+    else{
+      UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
+          var _id = order['_id'];
+          var data_json = {
+            'status': 'FAILED'
+          };          
+          UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
+
+          });
+
+      }); 
+    }
+    
 }));
 
 
