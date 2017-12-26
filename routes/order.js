@@ -103,10 +103,7 @@ router.get('/', function(req, res, next){
             var get_json = JSON.stringify(return_json);
             res.json(get_json);
 
-          } else {
-            console.log(err);
-            console.log("[error]", err);
-          });
+        });
 
         //拼签名
         /*
