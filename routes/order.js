@@ -94,7 +94,7 @@ router.get('/', function(req, res, next){
             console.log(timestamp);
 
             //又拼签名
-            var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
+            var stringB="appId=wxf965e072652b2dc6&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
             console.log(stringB);
 
             var paySign = MD5(stringB).toUpperCase();
