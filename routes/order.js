@@ -8,6 +8,7 @@ var randomNumber = require('random-number');
 var Promise = require("bluebird");
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
+var CardModel = require('../models/card');
 var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
 var UserOrderModel = require('../models/userOrder');
@@ -115,51 +116,58 @@ router.get('/', function(req, res, next){
 //收微信返回的数据
 router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑 
-    console.log(msg);
-    if( msg.return_code == 'SUCCESS' && msg.result_code == 'SUCCESS'){
-      //用户微信下单成功啦
-      UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
-          var _id = order['_id'];
-          var data_json = {
-            'status': 'SUCCESS'
-          };          
-          UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
-            UserPackageModel.find({'openID' : msg.openid, 'PackageName' : msg.attach}, function(err, userpackages){
-              //先在userpackage里标注为不激活
+  console.log(msg);
+  if( msg.return_code == 'SUCCESS' && msg.result_code == 'SUCCESS'){
+    //用户微信下单成功啦
+    UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
+      var _id = order['_id'];
+      if( order['status'] != 'SUCCESS' ){   //避免重复添加卡片
+        var data_json = {
+          'status': 'SUCCESS'
+        };          
+        UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
+          UserPackageModel.find({'openID' : msg.openid, 'PackageName' : msg.attach}, function(err, userpackages){
+            var _id = userpackages[0]._id;
+            var data_json = {
+              'Purchased' : true,
+              'Activated' : true
+            };
 
-              var _id = userpackages[0]._id;
-              var data_json = {
-                'Purchased' : true,
-                'Activated' : true
-              };
-
-              UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-                  //更新userpackage后，更新usercard
-
-                UserCardModel.update({'openID' : msg.openid, 'PackageName' : msg.attach}, {activated: true}, {multi: true},function(err) { 
-                    res.success();
-                });
-
+            UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+              //更新userpackage后，更新usercard
+              CardModel.find({'packageName' : msg.attach}, function(err, cards){
+                for( var j = 0; j< cards.length; j++){
+                  var data_json = {
+                    card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+                    PackageName : cards[j].packageName, //卡片包
+                    LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                    LastUpdateDate : 20000102,
+                    openID : msg.openid,   //确定是谁
+                    Showed: false,   //是否出现过
+                    usedStatus: [],
+                    activated: true               
+                  };
+                  var UserCardEntity = new UserCardModel(data_json);
+                  UserCardEntity.save();
+                }
               });
-              
-            });
+            }); 
           });
+        });
+      }
+    });      
+  }
+  else{
+    UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
+      var _id = order['_id'];
+      var data_json = {
+        'status': 'FAILED'
+      };                
+      UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
 
-      });      
-    }
-    else{
-      UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
-          var _id = order['_id'];
-          var data_json = {
-            'status': 'FAILED'
-          };          
-          UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
-
-          });
-
-      }); 
-    }
-    
+      });
+    }); 
+  }
 }));
 
 
