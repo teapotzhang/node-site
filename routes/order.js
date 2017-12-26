@@ -90,7 +90,7 @@ router.get('/', function(req, res, next){
                     '<body>' + '法考小卡片-' + packageName + '</body>' +
                     '<notify_url>https://jiyikapian.com/order/notify</notify_url>' +
                     '<out_trade_no>' + orderID + '</out_trade_no>' +
-                    '<spbill_create_ip><![CDATA[140.143.136.128</spbill_create_ip>' +
+                    '<spbill_create_ip>140.143.136.128</spbill_create_ip>' +
                     '<total_fee>' + packagePrice + '</<total_fee>' +
                     '<trade_type>JSAPI</trade_type>' +
                     '<sign>' + sign + '</sign>' +
@@ -99,7 +99,7 @@ router.get('/', function(req, res, next){
 
         request.post({
           url:     'https://api.mch.weixin.qq.com/pay/unifiedorder',
-          body:    JSON.stringify(body)
+          body:    body
         }, (err, response, data) => {
           if (response.statusCode === 200) {
             console.log(data);
