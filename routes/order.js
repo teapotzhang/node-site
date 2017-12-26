@@ -75,7 +75,8 @@ router.get('/', function(req, res, next){
 
 
         wxpay.createUnifiedOrder({
-            body: '支付测试',
+            body: '法考小程序' + packageName,
+            openID : openID,
             out_trade_no: orderID,
             total_fee: packagePrice,
             spbill_create_ip: '140.143.136.128',
