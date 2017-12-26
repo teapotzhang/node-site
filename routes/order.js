@@ -99,8 +99,10 @@ router.get('/', function(req, res, next){
             var paySign = MD5(stringB).toUpperCase();
             console.log(paySign);
 
+
+            var timeStamp = timestamp.toString();
             var return_json = {
-              'timeStamp': timestamp,
+              'timeStamp': timeStamp,
               'nonceStr': nonce_str,
               'package': str,
               'paySign': paySign
