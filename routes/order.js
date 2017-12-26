@@ -90,9 +90,14 @@ router.get('/', function(req, res, next){
             var timestamp = Date.parse(new Date()); //时间戳
             timestamp = parseInt(timestamp / 1000);
 
+            console.log(timestamp);
+
             //又拼签名
             var stringB="appId=wxd678efh567hg6787&nonceStr="+nonce_str+"&package=" + str + "&signType=MD5&timeStamp=" + timestamp + "&key=1225fakaoxiaokapiankaishizhifule";
+            console.log(stringB);
+
             var paySign = MD5(stringB).toUpperCase();
+            console.log(paySign);
 
             var return_json = {
               'timeStamp': timestamp,
