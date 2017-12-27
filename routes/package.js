@@ -1,5 +1,6 @@
 var express = require('express');
 var Promise = require("bluebird");
+var async = require('async');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
 var UserPackageModel = require('../models/userPackage');
@@ -12,35 +13,32 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID;
+    var array = [];
 
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
-          var array = [];
-          var context = {
-            userpackages : userpackages.map(function(card){
-              var price;
-              var current_card = card;
-              PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
-                console.log('!!!!!!!!!!!!!!!!!!!!');
-                console.log(current_card);
-                price = packages[0].packagePrice;
-                var data_json = {
-                  PackageName : current_card.PackageName,
-                  Purchased : current_card.Purchased,
-                  Activated : current_card.Activated,
-                  PackagePrice : price
-                };
-                console.log('---------------------')
-                console.log(data_json);
-                array.push(data_json);
-              });
-            })
-          };
+        async.map(userpackages, function(card){
+          var price;
+          var current_card = card;
+          PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
+            price = packages[0].packagePrice;
+            var data_json ={
+              PackageName : current_card.PackageName,
+              Purchased : current_card.Purchased,
+              Activated : current_card.Activated,
+              PackagePrice : price
+            };
+            array.push(data_json);
+          });
+        }, function(err, resultes){
           res.json(array);
+        });
+        
       });
+
     });
 });
 
