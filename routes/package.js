@@ -20,14 +20,25 @@ router.get('/', function(req, res, next){
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
           var context = {
             userpackages : userpackages.map(function(card){
-              return{
-                PackageName : card.PackageName,
-                Purchased : card.Purchased,
-                Activated : card.Activated
-              }
+              var price;
+              var current_card = card;
+              console.log(current_card);
+              PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
+                console.log('!!!!!!!!!!!!!!!!!!!!');
+                console.log(current_card);
+                price = packages[0].packagePrice;
+                return{
+                  PackageName : current_card.PackageName,
+                  Purchased : current_card.Purchased,
+                  Activated : current_card.Activated,
+                  PackagePrice : price
+                }                
+              });
             })
           };
-          console.log(context);
+
+
+          
           res.json(context);
       });
     });
