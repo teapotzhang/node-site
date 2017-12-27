@@ -67,6 +67,7 @@
 <form ref="updateForm" id="updateForm" method="get" action="/admin/index/update/package">
     <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
     <input type='text' name='packagePrice' placeholder='packagePrice 单位是分'/>
+    <input type='number' name='packageId' placeholder='packageId 用来进行列表排序'/>
     <input type='submit' value='更新'>
 </form>
 
@@ -74,11 +75,13 @@
   <tr>
     <th>包名字</th>
     <th>包价格</th>
+    <th>包ID</th>
   </tr>
   {{#each packages}}
   <tr>
     <td>{{packageName}}</td>
-    <td>{{packagePrice}}</td>                           
+    <td>{{packagePrice}}</td>
+    <td>{{packageId}}</td>                         
   </tr>
   {{/each}}
 </table>

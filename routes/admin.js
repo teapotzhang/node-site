@@ -92,7 +92,8 @@ router.post('/index', function(req, res){
         if( packages.length === 0 ){
           var data_json = {
             packageName : packagename,
-            packagePrice : 0.00
+            packagePrice : 0.00,
+            packageId : packageId
           };
 
           var PackageEntity = new PackageModel(data_json);
@@ -242,6 +243,7 @@ router.get('/index/update/package', function(req, res){
 
     var data_json = {
       'packageName' : req.query.packageName,
+      'packageId' : req.query.packageId,
       'packagePrice' : req.query.packagePrice
     };
 
@@ -254,7 +256,8 @@ router.get('/index/update/package', function(req, res){
 
       data_json = {
         'packageName' : req.query.packageName || packages[0].rightItem,
-        'packagePrice' : req.query.packagePrice || packages[0].packagePrice
+        'packagePrice' : req.query.packagePrice || packages[0].packagePrice,
+        'packageId' : req.query.packageId || packages[0].packageId
       };
 
       PackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, packages){
@@ -276,7 +279,8 @@ router.get('/index/search/package', function(req, res){
         packages : packages.map(function(package){
           return{
             packageName : package.packageName,
-            packagePrice : package.packagePrice
+            packagePrice : package.packagePrice,
+            packageId : package.packageId
           }
         })
       }

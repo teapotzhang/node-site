@@ -8,6 +8,13 @@ var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
 //加载小程序package页面的时候，执行该路径
+
+function sortBy(field) {
+    return function(a,b) {
+        return a[field] - b[field];
+    }
+}
+
 router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
@@ -21,29 +28,23 @@ router.get('/', function(req, res, next){
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
         async.each(userpackages, function(card, cb){
-          var price;
+          var price, packageId;
           var current_card = card;
-          console.log(current_card);
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
             price = packages[0].packagePrice;
+            packageId = packages[0].packageId;
             var data_json ={
               PackageName : current_card.PackageName,
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
+              packageId : packageId,
               PackagePrice : price
             };
-            array.push(data_json);
-            console.log('888888888');
-            console.log(data_json);
-            console.log('666666666');
-            console.log(array);            
+            array.push(data_json);           
             cb(null, data_json);
           });
         }, function(err, results){
-          console.log('333333333');
-          console.log(array);
-          console.log('111111111');
-          console.log(results);
+          array.sort(sortBy("packageId"));          
           res.json(array);
         });
 
