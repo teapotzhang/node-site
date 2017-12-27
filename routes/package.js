@@ -22,17 +22,19 @@ router.get('/', function(req, res, next){
             userpackages : userpackages.map(function(card){
               var price;
               var current_card = card;
-              console.log(current_card);
               PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
                 console.log('!!!!!!!!!!!!!!!!!!!!');
                 console.log(current_card);
                 price = packages[0].packagePrice;
-                return{
+                var data_json = {
                   PackageName : current_card.PackageName,
                   Purchased : current_card.Purchased,
                   Activated : current_card.Activated,
                   PackagePrice : price
-                }                
+                };
+                console.log('---------------------')
+                console.log(data_json);
+                return data_json         
               });
             })
           };
