@@ -35,7 +35,7 @@ router.get('/', function(req, res, next){
                 Activated : Activated,
                 packagePrice : packagePrice
               }
-              console.log(result[i]['PackageName']);
+              console.log(PackageName);
               context.push(data_json);              
             });
           }
