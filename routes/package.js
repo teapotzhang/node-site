@@ -20,9 +20,10 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
-        async.each(userpackages, function(card){
+        async.each(userpackages, function(card, cb){
           var price;
           var current_card = card;
+          console.log(current_card);
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
             price = packages[0].packagePrice;
             var data_json ={
@@ -32,9 +33,16 @@ router.get('/', function(req, res, next){
               PackagePrice : price
             };
             array.push(data_json);
+            console.log('888888888');
+            console.log(data_json);
+            console.log('666666666');
+            console.log(array);            
+            cb(null, data_json);
           });
-        }, function(err, resultes){
+        }, function(err, results){
+          console.log('333333333');
           console.log(array);
+          console.log('111111111');
           console.log(resultes)
           res.json(array);
         });
