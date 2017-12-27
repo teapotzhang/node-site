@@ -22,17 +22,17 @@ router.get('/', function(req, res, next){
           for( var i = 0; i < userpackages.length; i++ ){
             PackageModel.find({'packageName' : userpackages[i]['PackageName']},function(err, packages){
               packagePrice = packages[0]['packagePrice'];
+              PackageName = userpackages[i]['PackageName'];
+              Purchased = userpackages[i]['Purchased'];
+              Activated = userpackages[i]['Activated'];
+              var data_json = {
+                PackageName : PackageName,
+                Purchased : Purchased,
+                Activated : Activated,
+                packagePrice : packagePrice
+              }
+              context.push(data_json);              
             });
-            PackageName = userpackages[i]['PackageName'];
-            Purchased = userpackages[i]['Purchased'];
-            Activated = userpackages[i]['Activated'];
-            var data_json = {
-              PackageName : PackageName,
-              Purchased : Purchased,
-              Activated : Activated,
-              packagePrice : packagePrice
-            }
-            context.push(data_json);
           }
           res.json(context);
       });
