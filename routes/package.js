@@ -22,18 +22,20 @@ router.get('/', function(req, res, next){
           var result = userpackages;
           console.log('--------------');
           for( var i = 0; i < result.length; i++ ){
-            console.log(result[i]['PackageName']);
+            PackageName = result[i]['PackageName'];
+            Purchased = result[i]['Purchased'];
+            Activated = result[i]['Activated'];
             PackageModel.find({'packageName' : result[i]['PackageName']},function(err, packages){
               packagePrice = packages[0]['packagePrice'];
-              PackageName = result[i]['PackageName'];
-              Purchased = result[i]['Purchased'];
-              Activated = result[i]['Activated'];
+              console.log(packagePrice);
+              console.log('!!!!!!!!!!!');
               var data_json = {
                 PackageName : PackageName,
                 Purchased : Purchased,
                 Activated : Activated,
                 packagePrice : packagePrice
               }
+              console.log(result[i]['PackageName']);
               context.push(data_json);              
             });
           }
