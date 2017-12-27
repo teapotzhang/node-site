@@ -116,7 +116,6 @@ router.get('/', function(req, res, next){
 //收微信返回的数据
 router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑 
-  console.log(msg);
   if( msg.return_code == 'SUCCESS' && msg.result_code == 'SUCCESS'){
     //用户微信下单成功啦
     UserOrderModel.findOne({orderID : msg.out_trade_no}, function(err, order){
