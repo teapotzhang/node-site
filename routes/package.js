@@ -18,6 +18,7 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
+          var array = [];
           var context = {
             userpackages : userpackages.map(function(card){
               var price;
@@ -34,14 +35,11 @@ router.get('/', function(req, res, next){
                 };
                 console.log('---------------------')
                 console.log(data_json);
-                return data_json         
+                array.push(data_json);
               });
             })
           };
-
-
-          
-          res.json(context);
+          res.json(array);
       });
     });
 });
