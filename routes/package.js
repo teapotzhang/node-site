@@ -21,13 +21,16 @@ router.get('/', function(req, res, next){
       var context = {
         userpackages : userpackages.map(function(card){
           PackageModel.find({'packageName' : card.PackageName},function(err, packages){
-            packagePrice = packages[0]['packagePrice'];             
+            packagePrice = packages[0]['packagePrice'];   
+              console.log(packagePrice);    
               return{
                 PackageName : card.PackageName,
                 PackagePrice : packagePrice,
                 Purchased : card.Purchased,
                 Activated : card.Activated
               }
+              console.log(card);
+              console.log(card.PackageName);
           })
         })
       }
