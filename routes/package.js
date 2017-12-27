@@ -19,7 +19,7 @@ router.get('/', function(req, res, next){
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
           var context = {
-            userpackages.map(function(card){
+            userpackages : userpackages.map(function(card){
               return{
                 PackageName : card.PackageName,
                 Purchased : card.Purchased,
