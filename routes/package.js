@@ -19,7 +19,10 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
+          console.log(userpackages);
+          console.log('--------------');
           for( var i = 0; i < userpackages.length; i++ ){
+            console.log(userpackages[i]['PackageName']);
             PackageModel.find({'packageName' : userpackages[i]['PackageName']},function(err, packages){
               packagePrice = packages[0]['packagePrice'];
               PackageName = userpackages[i]['PackageName'];
