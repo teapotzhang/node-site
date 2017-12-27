@@ -43,7 +43,7 @@ router.get('/', function(req, res, next){
           console.log('333333333');
           console.log(array);
           console.log('111111111');
-          console.log(resultes)
+          console.log(results);
           res.json(array);
         });
 
