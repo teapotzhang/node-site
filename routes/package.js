@@ -11,35 +11,28 @@ router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
     //获取openID 不暴漏用户
-    var openID, packagePrice, PackageName, Purchased, Activated;
-    var context = [];
+    var openID, packagePrice;
 
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
-          var result = userpackages;
-          console.log('--------------');
-          for( var i = 0; i < result.length; i++ ){
-            PackageName = result[i]['PackageName'];
-            Purchased = result[i]['Purchased'];
-            Activated = result[i]['Activated'];
-            PackageModel.find({'packageName' : result[i]['PackageName']},function(err, packages){
-              packagePrice = packages[0]['packagePrice'];
-              console.log(packagePrice);
-              console.log('!!!!!!!!!!!');
-              var data_json = {
-                PackageName : PackageName,
-                Purchased : Purchased,
-                Activated : Activated,
-                packagePrice : packagePrice
-              }
-              console.log(PackageName);
-              context.push(data_json);              
+        var context = {
+          userpackages : userpackages.map(function(card){
+            PackageModel.find({'packageName' : card.PackageName},function(err, packages){
+              packagePrice = packages[0]['packagePrice'];             
+                return{
+                  PackageName : card.PackageName,
+                  PackagePrice : packagePrice,
+                  Purchased : card.Purchased,
+                  Activated : card.Activated
+                }
+              })
             });
-          }
-          res.json(context);
+        }
+        console.log(context);
+        res.json(context);
       });
     });
 });
