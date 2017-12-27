@@ -8,37 +8,29 @@ var router = express.Router();
 
 //加载小程序package页面的时候，执行该路径
 router.get('/', function(req, res, next){
-  var sessionID = req.query.sessionID; //确定用户
+    var sessionID = req.query.sessionID; //确定用户
 
-  //获取openID 不暴漏用户
-  var openID, packagePrice;
+    //获取openID 不暴漏用户
+    var openID;
 
-  UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-    openID = user['openID'];
-    //确保获取了user后，进行接下来的操作
+    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+      openID = user['openID'];
+      //确保获取了user后，进行接下来的操作
 
-    UserPackageModel.find({'openID' : openID}, function(err, userpackages){
-      var context = {
-        userpackages : userpackages.map(function(card){
-          PackageModel.find({'packageName' : card.PackageName},function(err, packages){
-            packagePrice = packages[0]['packagePrice'];
-          }).then(function(){
-            console.log(packagePrice);    
-            return{
-              PackageName : card.PackageName,
-              PackagePrice : packagePrice,
-              Purchased : card.Purchased,
-              Activated : card.Activated
-            }
-            console.log(card);
-            console.log(card.PackageName);
-          });
-        })
-      }
-      console.log(context);
-      res.json(context);
-    })
-  })
+      UserPackageModel.find({'openID' : openID}, function(err, userpackages){
+          var context = {
+            userpackages.map(function(card){
+              return{
+                PackageName : card.PackageName,
+                Purchased : card.Purchased,
+                Activated : card.Activated
+              }
+            })
+          };
+          console.log(context);
+          res.json(context);
+      });
+    });
 });
 
 
