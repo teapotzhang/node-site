@@ -80,7 +80,7 @@ router.get('/', function(req, res, next){
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();
 					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
-				        var randomNumber = randomNumber({
+				        var random_number = randomNumber({
 				          min : 10000,
 				          max : 99999,
 				          integer : true
@@ -95,7 +95,7 @@ router.get('/', function(req, res, next){
 								Showed: false,   //是否出现过
 								usedStatus: [],
 								activated: true,
-								randomNumber : randomNumber,
+								randomNumber : random_number,
 							};
 							var UserCardEntity = new UserCardModel(data_json);
 							UserCardEntity.save();

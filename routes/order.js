@@ -135,7 +135,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
             UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
               //更新userpackage后，更新usercard
               CardModel.find({'packageName' : msg.attach}, function(err, cards){
-                var randomNumber = randomNumber({
+                var random_number = randomNumber({
                   min : 10000,
                   max : 99999,
                   integer : true
@@ -149,7 +149,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
                     openID : msg.openid,   //确定是谁
                     Showed: false,   //是否出现过
                     usedStatus: [],
-                    randomNumber : randomNumber,
+                    randomNumber : random_number,
                     activated: true               
                   };
                   var UserCardEntity = new UserCardModel(data_json);
