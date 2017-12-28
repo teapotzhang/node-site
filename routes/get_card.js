@@ -44,7 +44,8 @@ function getNextCard(openID, cb){
     var tomorrow = addDays( today_num, 1 );
     var today = addDays( today_num, 0);
     var card_json = {};
-    var query = {
+    var card_unique_id;
+    var query_showed_cards = {
       openID : openID,
       LastShowDate : {
           $gt:  20000101,
@@ -54,24 +55,70 @@ function getNextCard(openID, cb){
           $gt:  20000101,
           $lt:  today
       },
-      activated : true
+      activated : true,
+      Showed : true
     };
 
-    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
-      console.log(user_card);
+    var query_unshowed_cards = {
+      openID : openID,
+      LastShowDate : {
+          $gt:  20000101,
+          $lt:  tomorrow
+      },
+      LastUpdateDate: {
+          $gt:  20000101,
+          $lt:  today
+      },
+      activated : true,
+      Showed : true
+    };    
+
+    UserCardModel.findOne(query_showed_cards, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
+    console.log(user_card);
     if( user_card == null )
     {
-      //当天没有可以刷的卡了
-      console.log(user_card);
-      card_json = {
-        lastCard: true
-      }
-      var get_json = JSON.stringify(card_json);
-      cb(get_json);
+      //所有的卡都是新卡，或者当天没有可以刷的卡了
+      //随机找一张没有出现过的卡片
+      UserCardModel.findOneRandom(query_unshowed_cards, null, {sort: {LastShowDate: -1}}, function(err, new_user_card) {
+        console.log(new_user_card);
+        if( new_user_card == null ){
+          //完全没卡能刷
+          card_json = {
+            lastCard: true
+          }
+          var get_json = JSON.stringify(card_json);
+          cb(get_json);
+        }
+        else{
+          //有没刷过的新卡哦
+          card_unique_id = new_user_card.card_unique_id;
+          CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
+            var json = JSON.stringify(card)
+            card_json = {
+              packageName: card['packageName'],
+              packageType: card['cardType'],
+              firstLine: card['firstLine'],
+              lastLine: card['lastLine'],
+              blueItem: card['blueItem'],
+              redItem: card['redItem'],
+              blueRight: card['rightItem'] % 2,
+              analysis: card['analysis'],
+              expression : card['expression'],
+              yearNumber : card['yearNumber'],
+              reelNumber : card['reelNumber'],
+              questionNumber : card['questionNumber'],
+              card_unique_id : card_unique_id,
+              lastCard : false     
+            }
+            var get_json = JSON.stringify(card_json);
+            cb(get_json);
+          });          
+        }
+      });
     }
     else
     {
-      var card_unique_id = user_card.card_unique_id;
+      card_unique_id = user_card.card_unique_id;
       CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
         var json = JSON.stringify(card)
         card_json = {
@@ -92,7 +139,7 @@ function getNextCard(openID, cb){
         }
         var get_json = JSON.stringify(card_json);
         cb(get_json);
-      });
+      });      
     }
   });
 }
