@@ -79,13 +79,13 @@ router.get('/', function(req, res, next){
 					}
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();
-					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
-				        var random_number = randomNumber({
-				          min : 10000,
-				          max : 99999,
-				          integer : true
-				        });						
+					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){						
 						for( var j = 0; j< cards.length; j++){
+					        var random_number = randomNumber({
+					          min : 10000,
+					          max : 99999,
+					          integer : true
+					        });							
 							var data_json = {
 								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
 								PackageName : cards[j].packageName, //卡片包
@@ -95,7 +95,7 @@ router.get('/', function(req, res, next){
 								Showed: false,   //是否出现过
 								usedStatus: [],
 								activated: true,
-								randomNumber : random_number,
+								randomNumber : random_number
 							};
 							var UserCardEntity = new UserCardModel(data_json);
 							UserCardEntity.save();

@@ -113,7 +113,7 @@ router.get('/', function(req, res, next){
       var card_json;
 
       var PromiseGetNextCard = new Promise(function(resolve,reject){
-        getNextCard(openID, false, function(result){
+        getNextCard(openID, function(result){
           resolve(result);
          });
       });
