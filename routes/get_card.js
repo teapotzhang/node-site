@@ -70,7 +70,7 @@ function getNextCard(openID, cb){
           $lt:  today
       },
       activated : true,
-      Showed : true
+      Showed : false
     };    
 
     UserCardModel.findOne(query_showed_cards, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
