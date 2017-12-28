@@ -135,6 +135,11 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
             UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
               //更新userpackage后，更新usercard
               CardModel.find({'packageName' : msg.attach}, function(err, cards){
+                var randomNumber = randomNumber({
+                  min : 10000,
+                  max : 99999,
+                  integer : true
+                });                
                 for( var j = 0; j< cards.length; j++){
                   var data_json = {
                     card_unique_id : cards[j].card_unique_id,  //确定卡片的id
@@ -144,6 +149,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
                     openID : msg.openid,   //确定是谁
                     Showed: false,   //是否出现过
                     usedStatus: [],
+                    randomNumber : randomNumber,
                     activated: true               
                   };
                   var UserCardEntity = new UserCardModel(data_json);

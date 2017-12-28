@@ -38,14 +38,14 @@ function addDays(date, days) {
   return result;
 }
 
-function getNextCard(openID, card_flag, cb){
+function getNextCard(openID, cb){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);
     var tomorrow = addDays( today_num, 1 );
     var today = addDays( today_num, 0);
     var card_json = {};
     var card_unique_id;
-    var query_showed_cards = {
+    var query = {
       openID : openID,
       LastShowDate : {
           $gt:  20000101,
@@ -55,111 +55,22 @@ function getNextCard(openID, card_flag, cb){
           $gt:  20000101,
           $lt:  today
       },
-      activated : true,
-      Showed : true
+      activated : true
     };
-
-    var query_unshowed_cards = {
-      openID : openID,
-      LastShowDate : {
-          $gt:  20000101,
-          $lt:  tomorrow
-      },
-      LastUpdateDate: {
-          $gt:  20000101,
-          $lt:  today
-      },
-      activated : true,
-      Showed : false
-    };
-
-    if( card_flag ){
-      UserCardModel.findOneRandom(query_unshowed_cards, null, {sort: {LastShowDate: -1}}, function(err, new_user_card) {
-        console.log(new_user_card);
-        if( new_user_card == null ){
-          //完全没卡能刷
-          card_json = {
-            lastCard: true
-          }
-          var get_json = JSON.stringify(card_json);
-          cb(get_json);
+    
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1, randomNumber: -1}}, function(err, new_user_card) {
+      console.log(new_user_card);
+      if( new_user_card == null ){
+        //完全没卡能刷
+        card_json = {
+          lastCard: true
         }
-        else{
-          //有没刷过的新卡哦
-          card_unique_id = new_user_card.card_unique_id;
-          CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            var json = JSON.stringify(card)
-            card_json = {
-              packageName: card['packageName'],
-              packageType: card['cardType'],
-              firstLine: card['firstLine'],
-              lastLine: card['lastLine'],
-              blueItem: card['blueItem'],
-              redItem: card['redItem'],
-              blueRight: card['rightItem'] % 2,
-              analysis: card['analysis'],
-              expression : card['expression'],
-              yearNumber : card['yearNumber'],
-              reelNumber : card['reelNumber'],
-              questionNumber : card['questionNumber'],
-              card_unique_id : card_unique_id,
-              new_card : true,
-              lastCard : false     
-            }
-            var get_json = JSON.stringify(card_json);
-            cb(get_json);
-          });          
-        }
-      });      
-    }
-    else{
-      UserCardModel.findOne(query_showed_cards, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
-      console.log(user_card);
-      if( user_card == null )
-      {
-        //所有的卡都是新卡，或者当天没有可以刷的卡了
-        //随机找一张没有出现过的卡片
-        UserCardModel.findOneRandom(query_unshowed_cards, null, {sort: {LastShowDate: -1}}, function(err, new_user_card) {
-          console.log(new_user_card);
-          if( new_user_card == null ){
-            //完全没卡能刷
-            card_json = {
-              lastCard: true
-            }
-            var get_json = JSON.stringify(card_json);
-            cb(get_json);
-          }
-          else{
-            //有没刷过的新卡哦
-            card_unique_id = new_user_card.card_unique_id;
-            CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-              var json = JSON.stringify(card)
-              card_json = {
-                packageName: card['packageName'],
-                packageType: card['cardType'],
-                firstLine: card['firstLine'],
-                lastLine: card['lastLine'],
-                blueItem: card['blueItem'],
-                redItem: card['redItem'],
-                blueRight: card['rightItem'] % 2,
-                analysis: card['analysis'],
-                expression : card['expression'],
-                yearNumber : card['yearNumber'],
-                reelNumber : card['reelNumber'],
-                questionNumber : card['questionNumber'],
-                card_unique_id : card_unique_id,
-                new_card : false,
-                lastCard : false     
-              }
-              var get_json = JSON.stringify(card_json);
-              cb(get_json);
-            });          
-          }
-        });
+        var get_json = JSON.stringify(card_json);
+        cb(get_json);
       }
-      else
-      {
-        card_unique_id = user_card.card_unique_id;
+      else{
+        //有卡可以刷哦
+        card_unique_id = new_user_card.card_unique_id;
         CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
           var json = JSON.stringify(card)
           card_json = {
@@ -180,10 +91,9 @@ function getNextCard(openID, card_flag, cb){
           }
           var get_json = JSON.stringify(card_json);
           cb(get_json);
-        });      
+        });          
       }
     });
-  }
 }
 
 router.get('/', function(req, res, next){
@@ -219,9 +129,7 @@ router.get('/', function(req, res, next){
       var seconds = parseInt(req.query.seconds);
       var answerStatus = req.query.answerStatus;
       var card_unique_id = req.query.card_unique_id;
-      var new_card = req.query.new_card;
       
-
       var tag;
 
       if( answerStatus == 'false' ){
@@ -302,7 +210,7 @@ router.get('/', function(req, res, next){
             var card_json;
 
             var PromiseGetNextCard = new Promise(function(resolve,reject){
-              getNextCard(openID, new_card, function(result){
+              getNextCard(openID, function(result){
                 resolve(result);
                });
             });
@@ -311,7 +219,6 @@ router.get('/', function(req, res, next){
               card_json = result;
               res.json(card_json);
             });
-
 
         });        
       });

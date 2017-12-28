@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 var WXBizDataCrypt = require('../lib/WXBizDataCrypt')
 var randomString = require('random-string');
+var randomNumber = require('random-number');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
@@ -78,8 +79,12 @@ router.get('/', function(req, res, next){
 					}
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();
-
 					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){
+				        var randomNumber = randomNumber({
+				          min : 10000,
+				          max : 99999,
+				          integer : true
+				        });						
 						for( var j = 0; j< cards.length; j++){
 							var data_json = {
 								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
@@ -89,7 +94,8 @@ router.get('/', function(req, res, next){
 								openID : user_open_id,   //确定是谁
 								Showed: false,   //是否出现过
 								usedStatus: [],
-								activated: true								
+								activated: true,
+								randomNumber : randomNumber,
 							};
 							var UserCardEntity = new UserCardModel(data_json);
 							UserCardEntity.save();
