@@ -13,7 +13,5 @@ var UserCardSchema = new Schema({
 	activated: Boolean
 });
 
-UserCardSchema.plugin(random);
-
 var UserCardModel = db.model('UserCard', UserCardSchema);
 module.exports = UserCardModel;
