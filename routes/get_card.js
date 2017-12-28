@@ -57,7 +57,7 @@ function getNextCard(openID, cb){
       activated : true
     };
 
-    UserCardModel.findOneRandom(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1}}, function(err, user_card) {
       console.log(user_card);
     if( user_card == null )
     {

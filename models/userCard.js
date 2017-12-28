@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var random =require('mongoose-simple-random');
 var db = require('../db');
 var Schema = mongoose.Schema;
 
