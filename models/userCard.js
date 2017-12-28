@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var random =require('mongoose-simple-random');
 var db = require('../db');
 var Schema = mongoose.Schema;
 
@@ -12,6 +13,8 @@ var UserCardSchema = new Schema({
 	usedStatus: Array,
 	activated: Boolean
 });
+
+UserCardSchema.plugin(random);
 
 var UserCardModel = db.model('UserCard', UserCardSchema);
 module.exports = UserCardModel;
