@@ -129,6 +129,7 @@ router.get('/', function(req, res, next){
       var seconds = parseInt(req.query.seconds);
       var answerStatus = req.query.answerStatus;
       var card_unique_id = req.query.card_unique_id;
+      var card_type = req.query.card_type;
       
       var tag;
 
@@ -136,13 +137,32 @@ router.get('/', function(req, res, next){
         tag = 3; //回答错了
       } 
       else{
-        if(seconds <= 8){
-          tag = 1; //简单
+        if(card_type == "Exam")
+        {
+          if(seconds <= 20){
+            tag = 1; //简单
+          }
+          else{
+            tag = 2; //模糊
+          }
         }
-        else{
-          tag = 2; //模糊
-        }
-
+        if(card_type == "Normal")
+        {
+          if(seconds <= 8){
+            tag = 1; //简单
+          }
+          else{
+            tag = 2; //模糊
+          }
+        }   
+        if(card_type == "Introduction"){
+           if(seconds <= 8){
+            tag = 1; //简单
+          }
+          else{
+            tag = 2; //模糊
+          }         
+        }     
       }
 
       UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
