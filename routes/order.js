@@ -196,7 +196,7 @@ router.get('/query', function(req, res, next){
   }, function(err, data){
     console.log(data);
 
-    wxpay.queryRefundOrder({
+    wxpay.refund({
       out_trade_no : '20180102477060'
     }, function(err, data){
       console.log(data);
