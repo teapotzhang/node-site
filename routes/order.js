@@ -192,7 +192,7 @@ router.get('/download', function(req, res, next){
 
 router.get('/query', function(req, res, next){
   wxpay.queryOrder({
-    out_trade_no : '20180102317573'
+    out_trade_no : '20180102588273'
   }, function(err, data){
     console.log(data);
   });
@@ -200,8 +200,8 @@ router.get('/query', function(req, res, next){
 
 router.get('/refund', function(req, res, next){
   wxpay.queryRefundOrder({
-    out_trade_no : '20180102317573',
-    out_refund_no : '3423423423434',
+    out_trade_no : '20180102588273',
+    out_refund_no : '55656565656565',
     total_fee : 552,
     refund_fee : 551
   }, function(err, data){
@@ -211,7 +211,7 @@ router.get('/refund', function(req, res, next){
 
 router.get('/refundquery', function(req, res, next){
   wxpay.queryRefundOrder({
-    out_trade_no : '20180102317573'
+    out_trade_no : '20180102588273'
   }, function(err, data){
     console.log(data);
   });
