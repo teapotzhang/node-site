@@ -192,18 +192,18 @@ router.get('/download', function(req, res, next){
 
 router.get('/query', function(req, res, next){
   wxpay.queryOrder({
-    out_trade_no : '20180102597067'
+    out_trade_no : '20180102827312'
   }, function(err, data){
     console.log(data);
 
     wxpay.queryRefundOrder({
-      out_trade_no : '20180102597067'
+      out_trade_no : '20180102827312'
     }, function(err, data){
       console.log(data);
 
 
         wxpay.queryRefundOrder({
-          out_trade_no : '20180102597067'
+          out_trade_no : '20180102827312'
         }, function(err, data){
           console.log(data);
         });
