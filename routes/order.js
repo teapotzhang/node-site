@@ -15,9 +15,9 @@ var UserOrderModel = require('../models/userOrder');
 var router = express.Router();
 
 function dateObjToDateNumber(date_obj){
-    var year = date_obj.getFullYear().toString();
-    var month = (date_obj.getMonth() + 1).toString();
-    var date_n = date_obj.getDate().toString();
+  var year = date_obj.getFullYear().toString();
+  var month = (date_obj.getMonth() + 1).toString();
+  var date_n = date_obj.getDate().toString();
   if( date_n < 10 ){
     date_n = '0' + date_n;
   }
@@ -32,7 +32,7 @@ function dateObjToDateNumber(date_obj){
 var wxpay = WXPay({
     appid: 'wxf965e072652b2dc6',
     mch_id: '1492751112',
-    partner_key: '1225fakaoxiaokapiankaishizhifule' //微信商户平台API密钥 
+    partner_key: '2ab6d60ceb3af586cbb8ad6000164bb6' //微信商户平台API密钥 
 }); 
 
 //package页面下单的时候，执行该路径
@@ -171,7 +171,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
       UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
 
       });
-    }); 
+    });
   }
 }));
 
@@ -189,5 +189,6 @@ router.get('/download', function(req, res, next){
   });
 
 });
+
 
 module.exports = router;
