@@ -32,7 +32,7 @@ function dateObjToDateNumber(date_obj){
 var wxpay = WXPay({
     appid: 'wxf965e072652b2dc6',
     mch_id: '1492751112',
-    partner_key: '2ab6d60ceb3af586cbb8ad6000164bb6' //微信商户平台API密钥 
+    partner_key: 'a953b911c6e6d99917801490af0c20b4' //微信商户平台API密钥 
 }); 
 
 //package页面下单的时候，执行该路径
