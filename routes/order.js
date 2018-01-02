@@ -175,5 +175,19 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
   }
 }));
 
+router.get('/download', function(req, res, next){
+
+  wxpay.download({
+    bill_type : 'valid',
+    start_time : '201801010100',
+    end_time: '201801020000',
+    page_num: 1,
+    page_size: 100,
+    version: '1.0'
+  }, function(err, data){
+    console.log(data);
+  });
+
+});
 
 module.exports = router;
