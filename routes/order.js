@@ -200,7 +200,10 @@ router.get('/query', function(req, res, next){
 
 router.get('/refund', function(req, res, next){
   wxpay.queryRefundOrder({
-    out_trade_no : '20180102532707'
+    out_trade_no : '20180102532707',
+    out_refund_no : '3423423423434',
+    total_fee : 552,
+    refund_fee : 551
   }, function(err, data){
     console.log(data);
   });
