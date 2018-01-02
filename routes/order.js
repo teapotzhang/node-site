@@ -192,7 +192,7 @@ router.get('/download', function(req, res, next){
 
 router.get('/query', function(req, res, next){
   wxpay.queryOrder({
-    out_trade_no : '20180102677945';
+    out_trade_no : '20180102677945'
   }, function(err, data){
     console.log(data);
   });
