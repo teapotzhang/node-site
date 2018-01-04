@@ -263,12 +263,11 @@ router.get('/index/update/package', function(req, res){
 
     var data_json = {
       'packageName' : req.query.packageName,
-      'subPackageName' : req.query.subPackageName,
       'packageId' : req.query.packageId,
       'packagePrice' : req.query.packagePrice
     };
 
-    PackageModel.find({packageName : req.query.packageName, SubPackageName: req.query.subPackageName}, function(err, packages){
+    PackageModel.find({packageName : req.query.packageName}, function(err, packages){
     if(packages.length === 0){
       return res.render('admin/index');
     }
@@ -276,14 +275,12 @@ router.get('/index/update/package', function(req, res){
       var _id = packages[0]._id;
 
       data_json = {
-        'packageName' : req.query.packageName || packages[0].rightItem,
+        'packageName' : req.query.packageName || packages[0].packageName,
         'packagePrice' : req.query.packagePrice || packages[0].packagePrice,
-        'subPackageName' : req.query.subPackageName || packages[0].SubPackageName,
         'packageId' : req.query.packageId || packages[0].packageId
       };
 
-      PackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, packages){
-        if (err) return handleError(err);        
+      PackageModel.update({'packageName' : req.query.packageName}, data_json, {multi: true}, function(err, userpackages){
       });
     }
 
