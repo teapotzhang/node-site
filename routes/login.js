@@ -75,10 +75,12 @@ router.get('/', function(req, res, next){
 
 				//生成初始刷卡列表
 				for( var i = 0; i < init_packages.length; i++ ){
-					PackageModel.find({packageName : init_packages[i]}, function(err, subpackages){  
+					var current_pacakge = init_packages[i];
+					console.log(current_pacakge);
+					PackageModel.find({packageName : current_pacakge}, function(err, subpackages){  
 						for(var j = 0; j < subpackages.length; j++){
 							var data_json = {
-								PackageName : init_packages[i],
+								PackageName : current_pacakge,
 								SubPackageName : subpackages[j]['SubPackageName'],
 								Purchased : true,
 								Activated : true,
@@ -87,18 +89,18 @@ router.get('/', function(req, res, next){
 							console.log(data_json);
 							var UserPackageEntity = new UserPackageModel(data_json);
 							UserPackageEntity.save();
-							CardModel.find({'packageName' : init_packages[i], 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
+							CardModel.find({'packageName' : current_pacakge, 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
 								console.log('------------');
-								for( var j = 0; j< cards.length; j++){
+								for( var k = 0; k < cards.length; k++){
 							        var random_number = randomNumber({
 							          min : 10000,
 							          max : 99999,
 							          integer : true
 							        });							
 									var data_json = {
-										card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-										PackageName : cards[j].packageName, //卡片包
-										SubPackageName : cards[j].SubPackageName,  //子卡包
+										card_unique_id : cards[k].card_unique_id,  //确定卡片的id
+										PackageName : cards[k].packageName, //卡片包
+										SubPackageName : cards[k].SubPackageName,  //子卡包
 										LastShowDate : 20000102,   //确定这张卡下次出现的时间
 										LastUpdateDate : 20000102,
 										openID : user_open_id,   //确定是谁
