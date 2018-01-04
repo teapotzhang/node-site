@@ -56,15 +56,16 @@ router.get('/', function(req, res, next){
 				//非初始卡包，需要购买激活
 				for( var i = 0; i < not_init_packages.length; i++ ){
 
-					PackageModel.find({packageName : init_packages[i]}, function(err, subpackages){  
+					PackageModel.find({packageName : not_init_packages[i]}, function(err, subpackages){  
 						for(var j = 0; j < subpackages.length; j++){					
 							var data_json = {
-								PackageName : init_packages[i],
+								PackageName : not_init_packages[i],
 								SubPackageName : subpackages[j]['SubPackageName'],
 								Purchased : false,
 								Activated : false,
 								openID : user_open_id	
 							}
+							console.log(data_json);
 							var UserPackageEntity = new UserPackageModel(data_json);
 							UserPackageEntity.save();
 						}
@@ -83,9 +84,11 @@ router.get('/', function(req, res, next){
 								Activated : true,
 								openID : user_open_id	
 							}
+							console.log(data_json);
 							var UserPackageEntity = new UserPackageModel(data_json);
 							UserPackageEntity.save();
 							CardModel.find({'packageName' : init_packages[i], 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
+								console.log('------------');
 								for( var j = 0; j< cards.length; j++){
 							        var random_number = randomNumber({
 							          min : 10000,
