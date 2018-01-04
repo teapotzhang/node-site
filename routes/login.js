@@ -89,7 +89,7 @@ router.get('/', function(req, res, next){
 							var data_json = {
 								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
 								PackageName : cards[j].packageName, //卡片包
-								SubPackageName : cards[j].SubPackageName  //子卡包
+								SubPackageName : cards[j].SubPackageName,  //子卡包
 								LastShowDate : 20000102,   //确定这张卡下次出现的时间
 								LastUpdateDate : 20000102,
 								openID : user_open_id,   //确定是谁
