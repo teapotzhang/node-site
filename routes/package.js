@@ -33,17 +33,17 @@ router.get('/', function(req, res, next){
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
             price = packages[0].packagePrice;
             packageId = packages[0].packageId;
-            for(var i = 0; i < packages.length; i++){
-              var data_json ={
-                PackageName : current_card.PackageName,
-                SubPackageName : packages[i].SubPackageName,
-                Purchased : current_card.Purchased,
-                Activated : current_card.Activated,
-                packageId : packageId,
-                PackagePrice : price
-              };
-              array.push(data_json); 
-            }
+            
+            var data_json ={
+              PackageName : current_card.PackageName,
+              SubPackageName : current_card.SubPackageName,
+              Purchased : current_card.Purchased,
+              Activated : current_card.Activated,
+              packageId : packageId,
+              PackagePrice : price
+            };
+            array.push(data_json); 
+            
             cb(null, data_json);
           });
         }, function(err, results){
