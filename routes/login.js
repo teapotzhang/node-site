@@ -70,36 +70,40 @@ router.get('/', function(req, res, next){
 
 				//生成初始刷卡列表
 				for( var i = 0; i < init_packages.length; i++ ){
-
-					var data_json = {
-						PackageName : init_packages[i],
-						Purchased : true,
-						Activated : true,
-						openID : user_open_id						
-					}
-					var UserPackageEntity = new UserPackageModel(data_json);
-					UserPackageEntity.save();
-					CardModel.find({'packageName' : init_packages[i]}, function(err, cards){						
-						for( var j = 0; j< cards.length; j++){
-					        var random_number = randomNumber({
-					          min : 10000,
-					          max : 99999,
-					          integer : true
-					        });							
+					PackageModel.find({packageName : init_packages[i]}, function(err, subpackages){  
+						for(var j = 0; j < subpackages.length; j++){
 							var data_json = {
-								card_unique_id : cards[j].card_unique_id,  //确定卡片的id
-								PackageName : cards[j].packageName, //卡片包
-								SubPackageName : cards[j].SubPackageName,  //子卡包
-								LastShowDate : 20000102,   //确定这张卡下次出现的时间
-								LastUpdateDate : 20000102,
-								openID : user_open_id,   //确定是谁
-								Showed: false,   //是否出现过
-								usedStatus: [],
-								activated: true,
-								randomNumber : random_number
-							};
-							var UserCardEntity = new UserCardModel(data_json);
-							UserCardEntity.save();
+								PackageName : init_packages[i],
+								SubPackageName : subpackages[j]['SubPackageName'];
+								Purchased : true,
+								Activated : true,
+								openID : user_open_id	
+								var UserPackageEntity = new UserPackageModel(data_json);
+								UserPackageEntity.save();
+								CardModel.find({'packageName' : init_packages[i], 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
+									for( var j = 0; j< cards.length; j++){
+								        var random_number = randomNumber({
+								          min : 10000,
+								          max : 99999,
+								          integer : true
+								        });							
+										var data_json = {
+											card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+											PackageName : cards[j].packageName, //卡片包
+											SubPackageName : cards[j].SubPackageName,  //子卡包
+											LastShowDate : 20000102,   //确定这张卡下次出现的时间
+											LastUpdateDate : 20000102,
+											openID : user_open_id,   //确定是谁
+											Showed: false,   //是否出现过
+											usedStatus: [],
+											activated: true,
+											randomNumber : random_number
+										};
+										var UserCardEntity = new UserCardModel(data_json);
+										UserCardEntity.save();
+									}
+								});								
+							}							
 						}
 					});
 				}
