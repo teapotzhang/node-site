@@ -139,6 +139,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
                   });
                   var data_json = {
                     card_unique_id : cards[j].card_unique_id,  //确定卡片的id
+                    SubPackageName : cards[j].SubPackageName,
                     PackageName : cards[j].packageName, //卡片包
                     LastShowDate : 20000102,   //确定这张卡下次出现的时间
                     LastUpdateDate : 20000102,
