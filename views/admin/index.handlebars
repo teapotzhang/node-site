@@ -75,12 +75,14 @@
 <table>
   <tr>
     <th>包名字</th>
+    <th>里面的包的名字</th>
     <th>包价格</th>
     <th>包ID</th>
   </tr>
   {{#each packages}}
   <tr>
     <td>{{packageName}}</td>
+    <td>{{subPackageName}}</td>
     <td>{{packagePrice}}</td>
     <td>{{packageId}}</td>                         
   </tr>
