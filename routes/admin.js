@@ -89,6 +89,7 @@ router.post('/index', function(req, res){
       //读取.csv文件
       var packagename_whole = cardFile.name.split(".")[0];
       var packagename, subpackagename;
+      var packageId = 0;
 
       if( packagename_whole.indexOf('-') == -1 ){
         //这是一个独立的卡包
