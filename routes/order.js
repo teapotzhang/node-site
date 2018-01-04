@@ -125,14 +125,10 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
           'status': 'SUCCESS'
         };          
         UserOrderModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, userorders){
-          UserPackageModel.find({'openID' : msg.openid, 'PackageName' : msg.attach}, function(err, userpackages){
-            var _id = userpackages[0]._id;
-            var data_json = {
+          UserPackageModel.update({'openID' : msg.openid, 'PackageName' : msg.attach},{
               'Purchased' : true,
               'Activated' : true
-            };
-
-            UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+            }, {multi: true}, function(err, userpackages){
               //更新userpackage后，更新usercard
               CardModel.find({'packageName' : msg.attach}, function(err, cards){                
                 for( var j = 0; j< cards.length; j++){
