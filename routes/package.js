@@ -35,6 +35,7 @@ router.get('/', function(req, res, next){
             packageId = packages[0].packageId;
             var data_json ={
               PackageName : current_card.PackageName,
+              SubPackageName : current_card.SubPackageName,
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
               packageId : packageId,
@@ -58,6 +59,7 @@ router.get('/', function(req, res, next){
 router.get('/activate_change', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName;
+    var subPackageName = req.query.subPackageName;
     var activate_flag = req.query.activated.toString();
     if( activate_flag == 'true' ){ activate_flag = true }else{ activate_flag = false };
 
@@ -67,7 +69,7 @@ router.get('/activate_change', function(req, res, next){
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
-      UserPackageModel.find({'openID' : openID, 'PackageName' : packageName}, function(err, userpackages){
+      UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
         //先在userpackage里标注为不激活
 
         var _id = userpackages[0]._id;
@@ -80,7 +82,7 @@ router.get('/activate_change', function(req, res, next){
 
             //更新userpackage后，更新usercard
 
-          UserCardModel.update({'openID' : openID, 'PackageName' : packageName}, {activated: activate_flag}, {multi: true},function(err) { 
+          UserCardModel.update({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, {activated: activate_flag}, {multi: true},function(err) { 
               if (err) return res.json(err);
               res.json({success: true});
           });

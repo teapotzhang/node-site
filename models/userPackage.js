@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var UserPackageSchema = new Schema({
 	PackageName : String,
+	SubPackageName : String,
 	Purchased : Boolean,
 	Activated : Boolean,
 	openID : String

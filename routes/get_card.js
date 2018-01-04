@@ -75,6 +75,7 @@ function getNextCard(openID, cb){
           var json = JSON.stringify(card)
           card_json = {
             packageName: card['packageName'],
+            SubPackageName : card['SubPackageName'],
             packageType: card['cardType'],
             firstLine: card['firstLine'],
             lastLine: card['lastLine'],

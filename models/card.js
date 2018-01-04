@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var CardSchema = new Schema({
 	packageName : String,
+	SubPackageName : String,
 	cardType : String,
 	rightItem : Number,
 	expression : String,

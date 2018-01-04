@@ -86,9 +86,23 @@ router.post('/index', function(req, res){
     .fromFile(file_link)
     .on("end_parsed" , function(jsonArrayobj){
 
-      var packagename = cardFile.name.split(".")[0];
+      //读取.csv文件
+      var packagename_whole = cardFile.name.split(".")[0];
+      var packagename, subpackagename;
+
+      if( packagename_whole.indexOf('-') == -1 ){
+        //这是一个独立的卡包
+        packagename = packagename_whole;
+        subpackagename = '';
+      }
+      else{
+        //它是集合中的卡包
+        packagename = packagename_whole.split("-")[0];
+        subpackagename = packagename_whole.split("-")[1];
+      }
 
       PackageModel.find({packageName : packagename}, function(err, packages){
+        //这是一个没出现过的集合
         if( packages.length === 0 ){
           var data_json = {
             packageName : packagename,
@@ -97,7 +111,7 @@ router.post('/index', function(req, res){
           };
 
           var PackageEntity = new PackageModel(data_json);
-          PackageEntity.save();            
+          PackageEntity.save();
         }
       });
 
@@ -116,7 +130,7 @@ router.post('/index', function(req, res){
         var blueItem = "";
         var redItem = "";
         var analysis = "";
-        var card_unique_id = packagename + '_' + i;
+        var card_unique_id = packagename + '_' + subpackagename + '_' + i;
         var rightItem = jsonArrayobj[i].rightItem;          
 
         if(jsonArrayobj[i].hasOwnProperty('whole_line')){
@@ -146,6 +160,7 @@ router.post('/index', function(req, res){
 
         var data_json = {
           'packageName' : packagename,
+          'SubPackageName' : subpackagename,  //卡片属于哪个子卡包
           'cardType' : cardType,
           'rightItem' : rightItem,
           'expression' : expression,
@@ -178,6 +193,7 @@ router.get('/index/search', function(req, res){
         cards : cards.map(function(card){
           return{
             packageName : card.packagename,
+            SubPackageName : card.SubPackageName,
             cardType : card.cardType,
             rightItem : card.rightItem,
             expression : card.expression,
@@ -239,6 +255,8 @@ router.get('/index/update', function(req, res){
 
 });
 
+
+//更新集合的价格和排序
 router.get('/index/update/package', function(req, res){
 
     var data_json = {
@@ -271,6 +289,8 @@ router.get('/index/update/package', function(req, res){
 
 });
 
+
+//搜索目前有哪些集合
 router.get('/index/search/package', function(req, res){
     var search_key = req.query.searchKey;
     console.log(search_key);
