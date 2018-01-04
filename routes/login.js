@@ -51,7 +51,7 @@ router.get('/', function(req, res, next){
 				UserEntity.save();
 				
 				var init_packages = ['三国法-国际经济法', '三国法-国际私法', '三国法-国际公法', '2017年真题卡包-'];
-				var not_init_packages = ['介绍-'];
+				var not_init_packages = ['介绍-', '行政法-基础理论', '行政法-行政监督法', '行政法-行政行为法', '行政法-行政组织法', '民法-担保法', '民法-婚姻继承法', '民法-侵权责任法', '民法-物权法', '民法-债与合同法', '民法-总则'];
 
 				//非初始卡包，需要购买激活
 				for( var i = 0; i < not_init_packages.length; i++ ){

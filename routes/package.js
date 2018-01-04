@@ -47,7 +47,8 @@ router.get('/', function(req, res, next){
             cb(null, data_json);
           });
         }, function(err, results){
-          array.sort(sortBy("packageId"));          
+          var new_array = [];
+          array.sort(sortBy("packageId"));       
           res.json(array);
         });
 
