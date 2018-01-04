@@ -50,71 +50,58 @@ router.get('/', function(req, res, next){
 				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
 				
-				var init_packages = ['三国法', '2017年真题卡包'];
-				var not_init_packages = ['介绍'];
+				var init_packages = ['三国法-国际经济法', '三国法-国际私法', '三国法-国际公法', '2017年真题卡包-'];
+				var not_init_packages = ['介绍-'];
 
 				//非初始卡包，需要购买激活
 				for( var i = 0; i < not_init_packages.length; i++ ){
-
-					PackageModel.find({packageName : not_init_packages[i]}, function(err, subpackages){  
-						for(var j = 0; j < subpackages.length; j++){					
-							var data_json = {
-								PackageName : not_init_packages[i],
-								SubPackageName : subpackages[j]['SubPackageName'],
-								Purchased : false,
-								Activated : false,
-								openID : user_open_id	
-							}
-							console.log(data_json);
-							var UserPackageEntity = new UserPackageModel(data_json);
-							UserPackageEntity.save();
-						}
-					});
-
+					var data_json = {
+						PackageName : not_init_packages[i].split("-")[0],
+						SubPackageName : not_init_packages[i].split("-")[1],
+						Purchased : false,
+						Activated : false,
+						openID : user_open_id	
+					}
+					console.log(data_json);
+					var UserPackageEntity = new UserPackageModel(data_json);
+					UserPackageEntity.save();
 				}
 
 				//生成初始刷卡列表
 				for( var i = 0; i < init_packages.length; i++ ){
-					var current_pacakge = init_packages[i];
-					console.log(current_pacakge);
-					PackageModel.find({packageName : current_pacakge}, function(err, subpackages){  
-						for(var j = 0; j < subpackages.length; j++){
+					var data_json = {
+						PackageName : init_packages[i].split("-")[0],
+						SubPackageName : init_packages[i].split("-")[1],
+						Purchased : true,
+						Activated : true,
+						openID : user_open_id	
+					}
+					console.log(data_json);
+					var UserPackageEntity = new UserPackageModel(data_json);
+					UserPackageEntity.save();
+					CardModel.find({'packageName' : current_pacakge, 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
+						for( var k = 0; k < cards.length; k++){
+					        var random_number = randomNumber({
+					          min : 10000,
+					          max : 99999,
+					          integer : true
+					        });							
 							var data_json = {
-								PackageName : current_pacakge,
-								SubPackageName : subpackages[j]['SubPackageName'],
-								Purchased : true,
-								Activated : true,
-								openID : user_open_id	
-							}
-							console.log(data_json);
-							var UserPackageEntity = new UserPackageModel(data_json);
-							UserPackageEntity.save();
-							CardModel.find({'packageName' : current_pacakge, 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
-								console.log('------------');
-								for( var k = 0; k < cards.length; k++){
-							        var random_number = randomNumber({
-							          min : 10000,
-							          max : 99999,
-							          integer : true
-							        });							
-									var data_json = {
-										card_unique_id : cards[k].card_unique_id,  //确定卡片的id
-										PackageName : cards[k].packageName, //卡片包
-										SubPackageName : cards[k].SubPackageName,  //子卡包
-										LastShowDate : 20000102,   //确定这张卡下次出现的时间
-										LastUpdateDate : 20000102,
-										openID : user_open_id,   //确定是谁
-										Showed: false,   //是否出现过
-										usedStatus: [],
-										activated: true,
-										randomNumber : random_number
-									};
-									var UserCardEntity = new UserCardModel(data_json);
-									UserCardEntity.save();
-								}
-							});						
+								card_unique_id : cards[k].card_unique_id,  //确定卡片的id
+								PackageName : cards[k].packageName, //卡片包
+								SubPackageName : cards[k].SubPackageName,  //子卡包
+								LastShowDate : 20000102,   //确定这张卡下次出现的时间
+								LastUpdateDate : 20000102,
+								openID : user_open_id,   //确定是谁
+								Showed: false,   //是否出现过
+								usedStatus: [],
+								activated: true,
+								randomNumber : random_number
+							};
+							var UserCardEntity = new UserCardModel(data_json);
+							UserCardEntity.save();
 						}
-					});
+					});	
 				}
 			}
 			else{
