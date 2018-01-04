@@ -278,7 +278,7 @@ router.get('/index/update/package', function(req, res){
       data_json = {
         'packageName' : req.query.packageName || packages[0].rightItem,
         'packagePrice' : req.query.packagePrice || packages[0].packagePrice,
-        'subPackageName' : req.query.subPackageName || packages[0].subPackageName,
+        'subPackageName' : req.query.subPackageName || packages[0].SubPackageName,
         'packageId' : req.query.packageId || packages[0].packageId
       };
 
@@ -304,7 +304,7 @@ router.get('/index/search/package', function(req, res){
           return{
             packageName : package.packageName,
             packagePrice : package.packagePrice,
-            subPackageName : package.subPackageName,
+            subPackageName : package.SubPackageName,
             packageId : package.packageId
           }
         })
