@@ -102,11 +102,12 @@ router.post('/index', function(req, res){
         subpackagename = packagename_whole.split("-")[1];
       }
 
-      PackageModel.find({packageName : packagename}, function(err, packages){
+      PackageModel.find({packageName : packagename, SubPackageName : subpackagename}, function(err, packages){
         //这是一个没出现过的集合
         if( packages.length === 0 ){
           var data_json = {
             packageName : packagename,
+            SubPackageName : subpackagename,
             packagePrice : 0.00,
             packageId : packageId
           };
