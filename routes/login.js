@@ -79,7 +79,7 @@ router.get('/', function(req, res, next){
 					console.log(data_json);
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();
-					CardModel.find({'packageName' : current_pacakge, 'SubPackageName' : subpackages[j]['SubPackageName']}, function(err, cards){
+					CardModel.find({'packageName' : init_packages[i].split("-")[0], 'SubPackageName' : init_packages[i].split("-")[1]}, function(err, cards){
 						for( var k = 0; k < cards.length; k++){
 					        var random_number = randomNumber({
 					          min : 10000,
