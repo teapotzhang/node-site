@@ -60,7 +60,7 @@ router.get('/', function(req, res, next){
 						for(var j = 0; j < subpackages.length; j++){					
 							var data_json = {
 								PackageName : init_packages[i],
-								SubPackageName : subpackages[j]['SubPackageName'];
+								SubPackageName : subpackages[j]['SubPackageName'],
 								Purchased : false,
 								Activated : false,
 								openID : user_open_id	
@@ -78,7 +78,7 @@ router.get('/', function(req, res, next){
 						for(var j = 0; j < subpackages.length; j++){
 							var data_json = {
 								PackageName : init_packages[i],
-								SubPackageName : subpackages[j]['SubPackageName'];
+								SubPackageName : subpackages[j]['SubPackageName'],
 								Purchased : true,
 								Activated : true,
 								openID : user_open_id	

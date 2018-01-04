@@ -152,8 +152,7 @@ router.use('/notify', wxpay.useWXCallback(function(msg, req, res, next){
                   UserCardEntity.save();
                 }
               });
-            }); 
-          });
+          }); 
         });
       }
     });      
