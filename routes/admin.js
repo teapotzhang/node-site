@@ -263,7 +263,6 @@ router.get('/index/update/package', function(req, res){
 
     var data_json = {
       'packageName' : req.query.packageName,
-      'packageId' : req.query.packageId,
       'packagePrice' : req.query.packagePrice
     };
 
@@ -277,7 +276,6 @@ router.get('/index/update/package', function(req, res){
       data_json = {
         'packageName' : req.query.packageName || packages[0].packageName,
         'packagePrice' : req.query.packagePrice || packages[0].packagePrice,
-        'packageId' : req.query.packageId || packages[0].packageId
       };
 
       PackageModel.update({'packageName' : req.query.packageName}, data_json, {multi: true}, function(err, userpackages){
@@ -297,8 +295,7 @@ router.get('/index/update/packageOrder', function(req, res){
     var data_json = {
       'packageName' : req.query.packageName,
       'subPackageName' : req.query.subPackageName,
-      'packageId' : req.query.packageId,
-      'packagePrice' : req.query.packagePrice
+      'packageId' : req.query.packageId
     };
 
     PackageModel.find({packageName : req.query.packageName, SubPackageName: req.query.subPackageName}, function(err, packages){
