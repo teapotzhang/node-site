@@ -57,15 +57,27 @@
 
 <br />
 
-<h1>修改卡片包的价格</h1>
+<h1>修改卡片包</h1>
 
 <form ref="searchForm" id="searchForm" method="get" action="/admin/index/search/package">
     <input type='text' name='searchKey' placeholder='packageName'/>
     <input type='submit' value='搜索'>
 </form>
 
+<h2>修改卡片包的价格</h2>
+
 <form ref="updateForm" id="updateForm" method="get" action="/admin/index/update/package">
     <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
+    <input type='text' name='packagePrice' placeholder='packagePrice 单位是分'/>
+    <input type='number' name='packageId' placeholder='packageId 用来进行列表排序'/>
+    <input type='submit' value='更新'>
+</form>
+
+<h2>修改卡片包的排序</h2>
+
+<form ref="updateForm" id="updateForm" method="get" action="/admin/index/update/packageOrder">
+    <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
+    <input type='text' name='subPackageName' placeholder='subPackageName 用来进行查询' required/>
     <input type='text' name='packagePrice' placeholder='packagePrice 单位是分'/>
     <input type='number' name='packageId' placeholder='packageId 用来进行列表排序'/>
     <input type='submit' value='更新'>
