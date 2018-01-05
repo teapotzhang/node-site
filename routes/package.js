@@ -11,7 +11,7 @@ var router = express.Router();
 
 function sortBy(field) {
     return function(a,b) {
-        return a[field] - b[field];
+        return  b[field] - a[field];
     }
 }
 
