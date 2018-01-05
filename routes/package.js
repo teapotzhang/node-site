@@ -33,7 +33,13 @@ router.get('/', function(req, res, next){
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
             price = packages[0].packagePrice;
             packageId = packages[0].packageId;
-            
+
+            for( var i = 0; i < packages.length; i ++ ){
+              if( current_card.SubPackageName == packages[i]['SubPackageName'] ){
+                packageId = packages[i]['packageId'];
+              }
+            }
+
             var data_json ={
               PackageName : current_card.PackageName,
               SubPackageName : current_card.SubPackageName,
