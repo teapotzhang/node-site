@@ -202,7 +202,7 @@ router.post('/index_package', function(req, res){
 
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
-    CardModel.find({  {"$or": [{"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} }]}, function(err, cards){
+    CardModel.find({  {"$or": [ {"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} } ], function(err, cards){
       var context = {
         cards : cards.map(function(card){
           return{
