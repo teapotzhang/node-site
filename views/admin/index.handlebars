@@ -1,3 +1,31 @@
+
+<script>
+    function firm(card_unique_id) {  
+        console.log(card_unique_id);
+        if(confirm('涉及用户数据，确定删除吗？')){
+            var theUrl = "/admin/index/delete?card_unique_id="+card_unique_id
+
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() { 
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    var status = xmlHttp.responseText;
+                    if( status.indexOf('success') != -1 ){
+                        alert('真的删除成功了');
+                        window.location.href='/admin/index'
+                    }
+                    else{
+                        alert('删除失败了');
+                    }
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+            xmlHttp.send(null);
+
+        }else{
+
+        }  
+    }  
+</script>
+
 <div style="margin: 0px 30px;">
 
 <h1>后台管理界面</h1>
@@ -47,7 +75,7 @@
     <td>{{reelNumber}}</td>
     <td>{{questionNumber}}</td>    
     <td><a href="/admin/index/update?card_unique_id={{card_unique_id}}">更改</a></td>
-    <td><a href="/admin/index/delete?card_unique_id={{card_unique_id}}">删除</a></td>
+    <td><input type="button" style="color: red" id="{{card_unique_id}}" onclick="firm(this.id)" value="删除"/></td>
   </tr>
   {{/each}}
 </table>
