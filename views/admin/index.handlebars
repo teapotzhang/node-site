@@ -5,17 +5,8 @@
 <h2>卡片搜索</h2>
 
 <form ref="searchForm" id="searchForm" method="get" action="/admin/index/search">
-    <input type='text' name='searchKey' placeholder='输入的关键词，仅限于红蓝题型非红蓝选项部分，或者真题题型的题面部分' style="width: 80%;"/>
-    <br />
-    <h3>必选</h3>
-    <input type='radio' name='card_type' value='Exam'>真题
-    <input type='radio' name='card_type' value='Normal'>红蓝题型
-    <br />
-    <h3>如果是红蓝题型，必须选择搜索的是红蓝选项前的前半段还是后半段，真题题型可以不选择</h3>
-    <input type='radio' name='which_line' value='firstLine'>前半段表述
-    <input type='radio' name='which_line' value='lastLine'>后半段表述
-    <br />
-    <br />
+    <input type='text' name='searchKey' placeholder='输入一个关键词' style="width: 80%;"/>
+    <br /><br />
     <input type='submit' value='搜索'>
 </form>
 
@@ -55,6 +46,7 @@
     <td>{{reelNumber}}</td>
     <td>{{questionNumber}}</td>    
     <td><a href="/admin/index/update?card_unique_id={{card_unique_id}}">更改</a></td>
+    <td><a href="/admin/index/delete?card_unique_id={{card_unique_id}}">删除</a></td>
   </tr>
   {{/each}}
 </table>

@@ -1,6 +1,7 @@
 var express = require('express');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
+var UserCardModel = require('../models/userCard');
 var PackageModel = require('../models/package');
 var csv = require('csvtojson');
 var randomString = require('random-string');
@@ -201,18 +202,10 @@ router.post('/index_package', function(req, res){
 
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
-    var card_type = req.query.card_type;
-    var which_line = req.query.which_line;
-
-    if( card_type == 'Exam'){
-
-    CardModel.find({expression : {$regex:search_key}, cardType : 'Exam'}, function(err, cards){
+    CardModel.find({  {"$or": [{"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} }]}, function(err, cards){
       var context = {
         cards : cards.map(function(card){
           return{
-            packageName : card.packagename,
-            SubPackageName : card.SubPackageName,
-            cardType : card.cardType,
             rightItem : card.rightItem,
             expression : card.expression,
             blueItem : card.blueItem,
@@ -227,75 +220,43 @@ router.get('/index/search', function(req, res){
           }
         })
       }
-      return res.render('admin/index', context); 
+      return res.render('admin/index', context);
     });
 
-  }
-
-  else{
-
-    if(which_line == 'firstLine'){
-
-    CardModel.find({firstLine : {$regex:search_key}, cardType : 'Normal'}, function(err, cards){
-      var context = {
-        cards : cards.map(function(card){
-          return{
-            packageName : card.packagename,
-            SubPackageName : card.SubPackageName,
-            cardType : card.cardType,
-            rightItem : card.rightItem,
-            expression : card.expression,
-            blueItem : card.blueItem,
-            redItem : card.redItem,
-            firstLine : card.firstLine,
-            lastLine : card.lastLine,
-            analysis : card.analysis,
-            yearNumber : card.yearNumber,
-            reelNumber : card.reelNumber,
-            questionNumber : card.questionNumber,             
-            card_unique_id : card.card_unique_id
-          }
-        })
-      }
-      return res.render('admin/index', context); 
-    });
-
-  }
-
-  else
-  {
-
-    CardModel.find({lastLine : {$regex:search_key}, cardType : 'Normal'}, function(err, cards){
-      var context = {
-        cards : cards.map(function(card){
-          return{
-            packageName : card.packagename,
-            SubPackageName : card.SubPackageName,
-            cardType : card.cardType,
-            rightItem : card.rightItem,
-            expression : card.expression,
-            blueItem : card.blueItem,
-            redItem : card.redItem,
-            firstLine : card.firstLine,
-            lastLine : card.lastLine,
-            analysis : card.analysis,
-            yearNumber : card.yearNumber,
-            reelNumber : card.reelNumber,
-            questionNumber : card.questionNumber,             
-            card_unique_id : card.card_unique_id
-          }
-        })
-      }
-      return res.render('admin/index', context); 
-    });
-
-  }
-
-  }
-});
+}); 
 
 router.get('/index/update', function(req, res){
   return res.render('admin/update_form');
+});
+
+router.get('/index/delete', function(req, res){
+  CardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
+    UserCardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
+      CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
+        var context = {
+          cards : cards.map(function(card){
+            return{
+              packageName : card.packagename,
+              SubPackageName : card.SubPackageName,
+              cardType : card.cardType,
+              rightItem : card.rightItem,
+              expression : card.expression,
+              blueItem : card.blueItem,
+              redItem : card.redItem,
+              firstLine : card.firstLine,
+              lastLine : card.lastLine,
+              analysis : card.analysis,
+              yearNumber : card.yearNumber,
+              reelNumber : card.reelNumber,
+              questionNumber : card.questionNumber,             
+              card_unique_id : card.card_unique_id
+            }
+          })
+        }
+        return res.render('admin/index', context); 
+      });
+    });
+  });
 });
 
 router.post('/index/update', function(req, res){
