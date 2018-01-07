@@ -231,7 +231,7 @@ router.get('/index/update', function(req, res){
 
 router.get('/index/delete', function(req, res){
   CardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
-    UserCardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
+    UserCardModel.remove({card_unique_id : req.query.card_unique_id}, {multi: true}, function(err, cards){
       CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
         var context = {
           cards : cards.map(function(card){
