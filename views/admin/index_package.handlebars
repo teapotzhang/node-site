@@ -1,0 +1,48 @@
+<br />
+
+<h1>修改卡片包</h1>
+
+<form ref="searchForm" id="searchForm" method="get" action="/admin/index_package/search/package">
+    <input type='text' name='searchKey' placeholder='packageName'/>
+    <input type='submit' value='搜索'>
+</form>
+
+<h2>修改卡片包的价格</h2>
+
+<form ref="updateForm" id="updateForm" method="get" action="/admin/index_package/update/package">
+    <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
+    <input type='text' name='packagePrice' placeholder='packagePrice 单位是分'/>
+    <input type='submit' value='更新'>
+</form>
+
+<h2>修改卡片包的排序</h2>
+
+<form ref="updateForm" id="updateForm" method="get" action="/admin/index_package/update/packageOrder">
+    <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
+    <input type='text' name='subPackageName' placeholder='subPackageName 用来进行查询'/>
+    <input type='number' name='packageId' placeholder='packageId 用来进行列表排序'/>
+    <input type='submit' value='更新'>
+</form>
+
+<table>
+  <tr>
+    <th>包名字</th>
+    <th>里面的包的名字</th>
+    <th>包价格</th>
+    <th>包ID</th>
+  </tr>
+  {{#each packages}}
+  <tr>
+    <td>{{packageName}}</td>
+    <td>{{subPackageName}}</td>
+    <td>{{packagePrice}}</td>
+    <td>{{packageId}}</td>                         
+  </tr>
+  {{/each}}
+</table>
+
+
+<form ref="uploadForm" id="uploadForm" method="post" encType="multipart/form-data">
+        <input type="file" name="cardFile" />
+        <input type='submit' value='上传' />	
+</form>

@@ -3,43 +3,37 @@
 <h2>卡片列表</h2>
 
 <form ref="searchForm" id="searchForm" method="get" action="/admin/index/search">
-    <input type='text' name='searchKey' placeholder='card_unique_id'/>
+    <input type='text' name='searchKey' placeholder='输入的关键词，仅限于红蓝题型非红蓝选项部分，或者真题题型的题面部分' style="width: 80%;"/>
+    <br />
+    <h3>必选</h3>
+    <input type='radio' name='card_type' value='Exam'>真题
+    <input type='radio' name='card_type' value='Normal'>红蓝题型
+    <br />
+    <h3>如果是红蓝题型，必须选择搜索的是红蓝选项前的前半段还是后半段，真题题型可以不选择</h3>
+    <input type='radio' name='which_line' value='firstLine'>前半段表述
+    <input type='radio' name='which_line' value='lastLine'>后半段表述
+    <br />
     <input type='submit' value='搜索'>
 </form>
 
-<form ref="updateForm" id="updateForm" method="get" action="/admin/index/update">
-    <input type='text' name='card_unique_id' placeholder='card_unique_id 用来进行查询' required/>
-    <input type='text' name='blueItem' placeholder='blueItem'/>
-    <input type='text' name='redItem' placeholder='redItem'/>
-    <input type='text' name='analysis' placeholder='analysis'/>
-    <input type='text' name='expression' placeholder='expression'/>
-    <input type='text' name='rightItem' placeholder='rightItem'/>
-    <input type='text' name='whole_line' placeholder='whole_line'/>
-    <input type='submit' value='更新'>
-</form>
+<br />
 
 <table>
   <tr>
-    <th>卡包名字</th>
-    <th>卡包价格</th>
-    <th>卡的类型</th>
-    <th>正确项</th>
-    <th>真题表述</th>
+    <th>正确项（1 代表 真题表述是对的 或者 红蓝题蓝色项正确）</th>
+    <th>真题题面（仅真题项有）</th>
     <th>蓝色项</th>
     <th>红色项</th>
-    <th>前面的表述</th>
-    <th>后面的表述</th>
+    <th>前面的表述（红蓝题型，红蓝选项的前半段描述）</th>
+    <th>后面的表述（红蓝题型，红蓝选项的后半段描述）</th>
     <th>分析</th>
     <th>真题年份</th>
     <th>真题卷号</th>
     <th>真题题目号</th>
-    <th>卡的唯一ID</th>
+    <th>更改按钮</th>
   </tr>
   {{#each cards}}
   <tr>
-    <td>{{packageName}}</td>
-    <td>{{packagePrice}}</td>
-    <td>{{cardType}}</td>
     <td>{{rightItem}}</td>
     <td>{{expression}}</td>
     <td>{{blueItem}}</td>
@@ -50,56 +44,7 @@
     <td>{{yearNumber}}</td>
     <td>{{reelNumber}}</td>
     <td>{{questionNumber}}</td>    
-    <td>{{card_unique_id}}</td>	    	    	    	    
+    <td><a href="/admin/index/update?card_unique_id={{card_unique_id}}">更改</a></td>
   </tr>
   {{/each}}
 </table>
-
-<br />
-
-<h1>修改卡片包</h1>
-
-<form ref="searchForm" id="searchForm" method="get" action="/admin/index/search/package">
-    <input type='text' name='searchKey' placeholder='packageName'/>
-    <input type='submit' value='搜索'>
-</form>
-
-<h2>修改卡片包的价格</h2>
-
-<form ref="updateForm" id="updateForm" method="get" action="/admin/index/update/package">
-    <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
-    <input type='text' name='packagePrice' placeholder='packagePrice 单位是分'/>
-    <input type='submit' value='更新'>
-</form>
-
-<h2>修改卡片包的排序</h2>
-
-<form ref="updateForm" id="updateForm" method="get" action="/admin/index/update/packageOrder">
-    <input type='text' name='packageName' placeholder='packageName 用来进行查询' required/>
-    <input type='text' name='subPackageName' placeholder='subPackageName 用来进行查询'/>
-    <input type='number' name='packageId' placeholder='packageId 用来进行列表排序'/>
-    <input type='submit' value='更新'>
-</form>
-
-<table>
-  <tr>
-    <th>包名字</th>
-    <th>里面的包的名字</th>
-    <th>包价格</th>
-    <th>包ID</th>
-  </tr>
-  {{#each packages}}
-  <tr>
-    <td>{{packageName}}</td>
-    <td>{{subPackageName}}</td>
-    <td>{{packagePrice}}</td>
-    <td>{{packageId}}</td>                         
-  </tr>
-  {{/each}}
-</table>
-
-
-<form ref="uploadForm" id="uploadForm" method="post" encType="multipart/form-data">
-        <input type="file" name="cardFile" />
-        <input type='submit' value='上传' />	
-</form>

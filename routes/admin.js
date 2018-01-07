@@ -61,10 +61,19 @@ router.get('/index', function (req, res) {
    else{
       return res.redirect('/admin/login');
    }
-
 });
 
-router.post('/index', function(req, res){
+router.get('/index_package', function(req, res){
+   sess = req.session;
+   if( sess.authenticated ){
+    return res.render('admin/index'); 
+   }
+   else{
+      return res.redirect('/admin/login');
+   }
+});
+
+router.post('/index_package', function(req, res){
 
   let cardFile = req.files.cardFile;
 
@@ -132,7 +141,9 @@ router.post('/index', function(req, res){
         var blueItem = "";
         var redItem = "";
         var analysis = "";
-        var card_unique_id = packagename + '_' + subpackagename + '_' + i;
+
+        var card_unique_id = randomString({length: 32});
+
         var rightItem = jsonArrayobj[i].rightItem;          
 
         if(jsonArrayobj[i].hasOwnProperty('whole_line')){
@@ -185,12 +196,17 @@ router.post('/index', function(req, res){
 
     });
 
-    return res.render('admin/index')
+    return res.render('admin/index_package')
 });
 
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
-    CardModel.find({card_unique_id : search_key}, function(err, cards){
+    var card_type = req.query.card_type;
+    var which_line = req.query.which_line;
+
+    if( card_type == 'Exam'){
+
+    CardModel.find({expression : {$regex:search_key}, cardType : 'Exam'}, function(err, cards){
       var context = {
         cards : cards.map(function(card){
           return{
@@ -213,20 +229,85 @@ router.get('/index/search', function(req, res){
       }
       return res.render('admin/index', context); 
     });
+
+  }
+
+  else{
+
+    if(which_line == 'firstLine'){
+
+    CardModel.find({firstLine : {$regex:search_key}, cardType : 'Normal'}, function(err, cards){
+      var context = {
+        cards : cards.map(function(card){
+          return{
+            packageName : card.packagename,
+            SubPackageName : card.SubPackageName,
+            cardType : card.cardType,
+            rightItem : card.rightItem,
+            expression : card.expression,
+            blueItem : card.blueItem,
+            redItem : card.redItem,
+            firstLine : card.firstLine,
+            lastLine : card.lastLine,
+            analysis : card.analysis,
+            yearNumber : card.yearNumber,
+            reelNumber : card.reelNumber,
+            questionNumber : card.questionNumber,             
+            card_unique_id : card.card_unique_id
+          }
+        })
+      }
+      return res.render('admin/index', context); 
+    });
+
+  }
+
+  else
+  {
+
+    CardModel.find({lastLine : {$regex:search_key}, cardType : 'Normal'}, function(err, cards){
+      var context = {
+        cards : cards.map(function(card){
+          return{
+            packageName : card.packagename,
+            SubPackageName : card.SubPackageName,
+            cardType : card.cardType,
+            rightItem : card.rightItem,
+            expression : card.expression,
+            blueItem : card.blueItem,
+            redItem : card.redItem,
+            firstLine : card.firstLine,
+            lastLine : card.lastLine,
+            analysis : card.analysis,
+            yearNumber : card.yearNumber,
+            reelNumber : card.reelNumber,
+            questionNumber : card.questionNumber,             
+            card_unique_id : card.card_unique_id
+          }
+        })
+      }
+      return res.render('admin/index', context); 
+    });
+
+  }
+
+  }
 });
 
 router.get('/index/update', function(req, res){
+  return res.render('admin/update_form');
+});
 
-    var k = get_line(req.query.whole_line);
+router.post('/index/update', function(req, res){
 
     var data_json = {
-      'rightItem' : req.query.rightItem,
-      'expression' : req.query.expression,
-      'blueItem' : req.query.blueItem,
-      'redItem' : req.query.redItem,
-      'firstLine' : k[0],
-      'lastLine' : k[1],
-      'analysis' : req.query.analysis
+      'rightItem' : req.body.rightItem,
+      'expression' : req.body.expression,
+      'blueItem' : req.body.blueItem,
+      'redItem' : req.body.redItem,
+      'firstLine' : req.body.firstLine,
+      'lastLine' : req.body.lastLine,
+      'analysis' : req.body.analysis
     };
 
     CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
@@ -237,29 +318,52 @@ router.get('/index/update', function(req, res){
       var _id = cards[0]._id;
 
       data_json = {
-        'rightItem' : req.query.rightItem || cards[0].rightItem,
-        'expression' : req.query.expression || cards[0].expression,
-        'blueItem' : req.query.blueItem || cards[0].blueItem,
-        'redItem' : req.query.redItem || cards[0].redItem,
-        'firstLine' : k[0] || cards[0].firstLine,
-        'lastLine' : k[1] || cards[0].lastLine,
-        'analysis' : req.query.analysis  || cards[0].analysis
+        'rightItem' : req.body.rightItem || cards[0].rightItem,
+        'expression' : req.body.expression || cards[0].expression,
+        'blueItem' : req.body.blueItem || cards[0].blueItem,
+        'redItem' : req.body.redItem || cards[0].redItem,
+        'firstLine' : req.body.firstLine || cards[0].firstLine,
+        'lastLine' : req.body.lastLine || cards[0].lastLine,
+        'analysis' : req.body.analysis  || cards[0].analysis,
+        'yearNumber' : req.body.yearNumber || cards[0].yearNumber,
+        'reelNumber' : req.body.reelNumber || cards[0].reelNumber,
+        'questionNumber' : req.body.questionNumber || cards[0].questionNumber 
       };
 
-      CardModel.findByIdAndUpdate(_id, { $set: data_json}, {new: true}, function(err, cards){
-        if (err) return handleError(err);        
+      CardModel.findByIdAndUpdate(_id, { $set: data_json}, function(err, cards){
+        CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
+          var context = {
+            cards : cards.map(function(card){
+              return{
+                packageName : card.packagename,
+                SubPackageName : card.SubPackageName,
+                cardType : card.cardType,
+                rightItem : card.rightItem,
+                expression : card.expression,
+                blueItem : card.blueItem,
+                redItem : card.redItem,
+                firstLine : card.firstLine,
+                lastLine : card.lastLine,
+                analysis : card.analysis,
+                yearNumber : card.yearNumber,
+                reelNumber : card.reelNumber,
+                questionNumber : card.questionNumber,             
+                card_unique_id : card.card_unique_id
+              }
+            })
+          }
+          return res.render('admin/index', context); 
+        });
       });
     }
-
-    return res.render('admin/index');
-
     });
 
 });
 
 
 //更新集合的价格
-router.get('/index/update/package', function(req, res){
+
+router.get('/index_package/update/package', function(req, res){
 
     var data_json = {
       'packageName' : req.query.packageName,
@@ -268,7 +372,7 @@ router.get('/index/update/package', function(req, res){
 
     PackageModel.find({packageName : req.query.packageName}, function(err, packages){
     if(packages.length === 0){
-      return res.render('admin/index');
+      return res.render('admin/index_package');
     }
     else{
       var _id = packages[0]._id;
@@ -282,7 +386,7 @@ router.get('/index/update/package', function(req, res){
       });
     }
 
-    return res.render('admin/index');
+    return res.render('admin/index_package');
 
     });
 
@@ -290,7 +394,7 @@ router.get('/index/update/package', function(req, res){
 
 
 //更新集合的排序
-router.get('/index/update/packageOrder', function(req, res){
+router.get('/index_package/update/packageOrder', function(req, res){
 
     var data_json = {
       'packageName' : req.query.packageName,
@@ -300,7 +404,7 @@ router.get('/index/update/packageOrder', function(req, res){
 
     PackageModel.find({packageName : req.query.packageName, SubPackageName: req.query.subPackageName}, function(err, packages){
     if(packages.length === 0){
-      return res.render('admin/index');
+      return res.render('admin/index_package');
     }
     else{
       var _id = packages[0]._id;
@@ -313,7 +417,7 @@ router.get('/index/update/packageOrder', function(req, res){
       });
     }
 
-    return res.render('admin/index');
+    return res.render('admin/index_package');
 
     });
 
@@ -321,7 +425,7 @@ router.get('/index/update/packageOrder', function(req, res){
 
 
 //搜索目前有哪些集合
-router.get('/index/search/package', function(req, res){
+router.get('/index_package/search/package', function(req, res){
     var search_key = req.query.searchKey;
     console.log(search_key);
     PackageModel.find({packageName : search_key}, function(err, packages){
@@ -335,7 +439,7 @@ router.get('/index/search/package', function(req, res){
           }
         })
       }
-      return res.render('admin/index', context); 
+      return res.render('admin/index_package', context); 
     });
 });
 
