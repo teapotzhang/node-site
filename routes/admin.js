@@ -202,7 +202,7 @@ router.post('/index_package', function(req, res){
 
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
-    CardModel.find({"$or": [ {"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} } ]}, function(err, cards){
+    CardModel.find({"$or": [ {"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} } ]},{limit: 20}, function(err, cards){
       var context = {
         cards : cards.map(function(card){
           return{
@@ -230,33 +230,17 @@ router.get('/index/update', function(req, res){
 });
 
 router.get('/index/delete', function(req, res){
+  console.log(req.query.card_unique_id);
   CardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
-    UserCardModel.remove({card_unique_id : req.query.card_unique_id}, {multi: true}, function(err, cards){
-      CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
-        var context = {
-          cards : cards.map(function(card){
-            return{
-              packageName : card.packagename,
-              SubPackageName : card.SubPackageName,
-              cardType : card.cardType,
-              rightItem : card.rightItem,
-              expression : card.expression,
-              blueItem : card.blueItem,
-              redItem : card.redItem,
-              firstLine : card.firstLine,
-              lastLine : card.lastLine,
-              analysis : card.analysis,
-              yearNumber : card.yearNumber,
-              reelNumber : card.reelNumber,
-              questionNumber : card.questionNumber,             
-              card_unique_id : card.card_unique_id
-            }
-          })
-        }
-        return res.render('admin/index', context); 
-      });
+
+    UserCardModel.remove({card_unique_id : req.query.card_unique_id}, {multi: true}, function(err, usercards){
+
+      return res.render('admin/index');
+
     });
+
   });
+
 });
 
 router.post('/index/update', function(req, res){
