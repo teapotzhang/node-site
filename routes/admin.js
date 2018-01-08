@@ -68,7 +68,7 @@ router.get('/index', function (req, res) {
 router.get('/index_package', function(req, res){
    sess = req.session;
    if( sess.authenticated ){
-    return res.render('admin/index'); 
+    return res.render('admin/index_package'); 
    }
    else{
       return res.redirect('/admin/login');
