@@ -30,15 +30,6 @@ router.get('/login', function(req, res, next){
 
 router.post('/login', function(req,res, next){
 
-  var data_json ={
-    username : 'admin',
-    password : 'ka@ka2017Kfca39d'
-  }
-
-  AdminEntity = new AdminModel(data_json);
-
-  AdminEntity.save();
-
   sess = req.session;
 
   AdminModel.find({username: req.body.username}, function(err, admins){
