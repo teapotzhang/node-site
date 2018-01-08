@@ -75,7 +75,9 @@ router.get('/index_package', function(req, res){
    }
 });
 
-router.post('/index', function(req, res){
+router.post('/index_package', function(req, res){
+
+  console.log('posting');
 
   let cardFile = req.files.cardFile;
 
