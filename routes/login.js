@@ -84,8 +84,7 @@ router.get('/', function(req, res, next){
 
 				async.each(init_packages, function(whole_package, callback){
 					CardModel.find({'packageName' : whole_package.split("-")[0], 'SubPackageName' : whole_package.split("-")[1]}, function(err, cards){
-						for( var k = 0; k < cards.length; k++){
-
+						async.each(cards, function(card, cb){
 							var random_number;
 
 							if( whole_package.split("-")[0].indexOf('介绍') == -1 ){
@@ -104,9 +103,9 @@ router.get('/', function(req, res, next){
 							}
 
 							var	data_json = {
-									card_unique_id : cards[k].card_unique_id,  //确定卡片的id
-									PackageName : cards[k].packageName, //卡片包
-									SubPackageName : cards[k].SubPackageName,  //子卡包
+									card_unique_id : card.card_unique_id,  //确定卡片的id
+									PackageName : card.packageName, //卡片包
+									SubPackageName : card.SubPackageName,  //子卡包
 									LastShowDate : 20000102,   //确定这张卡下次出现的时间
 									LastUpdateDate : 20000102,
 									openID : user_open_id,   //确定是谁
@@ -117,11 +116,12 @@ router.get('/', function(req, res, next){
 								}
 							
 							var UserCardEntity = new UserCardModel(data_json);
-							console.log(UserCardEntity);
 		                    UserCardEntity.save(function(err, usercard){
-		                      callback();
-		                    });						
-						}
+		                      cb();
+		                    });
+						}, function(){
+							callback();
+						});
 					});
 
 				}, function(err){
