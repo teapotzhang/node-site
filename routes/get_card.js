@@ -58,7 +58,7 @@ function getNextCard(openID, cb){
       activated : true
     };
     
-    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1, randomNumber: -1}}, function(err, new_user_card) {
+    UserCardModel.findOne(query, null, {sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_card) {
       console.log(new_user_card);
       if( new_user_card == null ){
         //完全没卡能刷
