@@ -95,9 +95,9 @@ router.get('/activate_change', function(req, res, next){
 
           UserCardModel.find(thequery, function(err, usercards){
             if(usercards.length === 0){
-              async.each(init_packages, function(whole_package, callback){
+              
                 CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
-                  for( var k = 0; k < cards.length; k++){
+                  async.each(cards, function(card, callback){
                     var random_number = randomNumber({
                           min : 10000,
                           max : 99999,
@@ -105,9 +105,9 @@ router.get('/activate_change', function(req, res, next){
                         });
 
                     var data_json = {
-                        card_unique_id : cards[k].card_unique_id,  //确定卡片的id
-                        PackageName : cards[k].packageName, //卡片包
-                        SubPackageName : cards[k].SubPackageName,  //子卡包
+                        card_unique_id : card.card_unique_id,  //确定卡片的id
+                        PackageName : card.packageName, //卡片包
+                        SubPackageName : card.SubPackageName,  //子卡包
                         LastShowDate : 20000102,   //确定这张卡下次出现的时间
                         LastUpdateDate : 20000102,
                         openID : openID,   //确定是谁
@@ -116,15 +116,13 @@ router.get('/activate_change', function(req, res, next){
                         activated: true,
                         randomNumber : random_number
                       }
-                    
                     var UserCardEntity = new UserCardModel(data_json);
                     UserCardEntity.save();              
-                  }
+                  },function(){
+                    res.json({success: true});
+                  });
+                
                 });
-
-              }, function(err){
-                res.json({success: true});
-              });
             }
             else{
               UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {

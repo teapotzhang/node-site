@@ -117,6 +117,7 @@ router.get('/', function(req, res, next){
 								}
 							
 							var UserCardEntity = new UserCardModel(data_json);
+							console.log(UserCardEntity);
 							UserCardEntity.save();							
 						}
 					});
