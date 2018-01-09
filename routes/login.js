@@ -88,7 +88,7 @@ router.get('/', function(req, res, next){
 
 							var random_number;
 
-							if( whole_package.split("-")[0].indexOf('介绍') != -1 ){
+							if( whole_package.split("-")[0].indexOf('介绍') == -1 ){
 								random_number = randomNumber({
 						          min : 10000,
 						          max : 99999,
