@@ -82,17 +82,28 @@ router.get('/', function(req, res, next){
 					UserPackageEntity.save();
 				}
 
-				async.each(whole_packages, function(whole_package, callback){ 
+				async.each(init_packages, function(whole_package, callback){
 					CardModel.find({'packageName' : whole_package.split("-")[0], 'SubPackageName' : whole_package.split("-")[1]}, function(err, cards){
 						for( var k = 0; k < cards.length; k++){
-							var random_number = randomNumber({
-					          min : 10000,
-					          max : 99999,
-					          integer : true
-					        });
-					        var data_json = {};
-							if( (whole_package.indexOf('三国法') != -1) || (whole_package.indexOf('2017年真题包') != -1) || (whole_package.indexOf('介绍') != -1)){
-								data_json = {
+
+							var random_number;
+
+							if( whole_package.split("-")[0].indexOf('介绍') != -1 ){
+								random_number = randomNumber({
+						          min : 10000,
+						          max : 99999,
+						          integer : true
+						        });
+							}
+							else{
+								random_number = randomNumber({
+						          min : 100,
+						          max : 999,
+						          integer : true
+						        });
+							}
+
+							var	data_json = {
 									card_unique_id : cards[k].card_unique_id,  //确定卡片的id
 									PackageName : cards[k].packageName, //卡片包
 									SubPackageName : cards[k].SubPackageName,  //子卡包
@@ -104,21 +115,7 @@ router.get('/', function(req, res, next){
 									activated: true,
 									randomNumber : random_number
 								}
-							}
-							else{
-								data_json = {
-									card_unique_id : cards[k].card_unique_id,  //确定卡片的id
-									PackageName : cards[k].packageName, //卡片包
-									SubPackageName : cards[k].SubPackageName,  //子卡包
-									LastShowDate : 20000102,   //确定这张卡下次出现的时间
-									LastUpdateDate : 20000102,
-									openID : user_open_id,   //确定是谁
-									Showed: false,   //是否出现过
-									usedStatus: [],
-									activated: false,
-									randomNumber : random_number
-								}
-							}
+							
 							var UserCardEntity = new UserCardModel(data_json);
 							UserCardEntity.save();							
 						}
@@ -127,7 +124,6 @@ router.get('/', function(req, res, next){
 				}, function(err){
 					res.json({'sessionID' : sessionID});
 				});
-				
 
 			}
 			else{

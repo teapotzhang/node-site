@@ -5,6 +5,8 @@ var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
 var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
+var CardModel = require('../models/card');
+var async = require('async');
 var router = express.Router();
 
 //加载小程序package页面的时候，执行该路径
@@ -27,6 +29,7 @@ router.get('/', function(req, res, next){
       //确保获取了user后，进行接下来的操作
 
       UserPackageModel.find({'openID' : openID}, function(err, userpackages){
+
         async.each(userpackages, function(card, cb){
           var price, packageId;
           var current_card = card;
@@ -87,15 +90,49 @@ router.get('/activate_change', function(req, res, next){
         };
 
         UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-          if (err) return res.json(err);
+          //更新userpackage后，更新usercard
+          var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
 
-            //更新userpackage后，更新usercard
+          UserCardModel.find(thequery, function(err, usercards){
+            if(usercards.length === 0){
+              async.each(init_packages, function(whole_package, callback){
+                CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
+                  for( var k = 0; k < cards.length; k++){
+                    var random_number = randomNumber({
+                          min : 10000,
+                          max : 99999,
+                          integer : true
+                        });
 
-          UserCardModel.update({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, {activated: activate_flag}, {multi: true},function(err) { 
-              if (err) return res.json(err);
-              res.json({success: true});
+                    var data_json = {
+                        card_unique_id : cards[k].card_unique_id,  //确定卡片的id
+                        PackageName : cards[k].packageName, //卡片包
+                        SubPackageName : cards[k].SubPackageName,  //子卡包
+                        LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                        LastUpdateDate : 20000102,
+                        openID : openID,   //确定是谁
+                        Showed: false,   //是否出现过
+                        usedStatus: [],
+                        activated: true,
+                        randomNumber : random_number
+                      }
+                    
+                    var UserCardEntity = new UserCardModel(data_json);
+                    UserCardEntity.save();              
+                  }
+                });
+
+              }, function(err){
+                res.json({success: true});
+              });
+            }
+            else{
+              UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
+                if (err) return res.json(err);
+                res.json({success: true});
+              });
+            }
           });
-
         });
         
       });
