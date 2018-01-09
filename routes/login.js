@@ -8,9 +8,11 @@ var UserModel = require('../models/user');
 var PackageModel = require('../models/package');
 var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
+var async = require('async');
 var router = express.Router();
 
 var user_open_id, user_session_key, sessionID;
+
 
 router.get('/', function(req, res, next){
 
@@ -83,9 +85,8 @@ router.get('/', function(req, res, next){
 					UserPackageEntity.save();
 				}
 
-				for( i = 0; i < whole_packages.length; i++ ){
-					var j = i;
-					CardModel.find({'packageName' : whole_packages[i].split("-")[0], 'SubPackageName' : whole_packages[i].split("-")[1]}, function(err, cards){
+				async.each(whole_packages, function(whole_package, callback){ 
+					CardModel.find({'packageName' : whole_package.split("-")[0], 'SubPackageName' : whole_package.split("-")[1]}, function(err, cards){
 						for( var k = 0; k < cards.length; k++){
 							var random_number = randomNumber({
 					          min : 10000,
@@ -93,7 +94,7 @@ router.get('/', function(req, res, next){
 					          integer : true
 					        });
 					        var data_json = {};
-							if( j <= 4 ){
+							if( (whole_package.indexOf('三国法') != -1) || (whole_package.indexOf('2017年真题包') != -1) || (whole_package.indexOf('介绍') != -1)){
 								data_json = {
 									card_unique_id : cards[k].card_unique_id,  //确定卡片的id
 									PackageName : cards[k].packageName, //卡片包
@@ -125,7 +126,11 @@ router.get('/', function(req, res, next){
 							UserCardEntity.save();							
 						}
 					});
-				}
+
+				}, function(err){
+					res.json({'sessionID' : sessionID});
+				});
+				
 
 			}
 			else{
@@ -136,12 +141,10 @@ router.get('/', function(req, res, next){
 					'session_key': user_session_key
 				};
 			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-			        if (err) return handleError(err);        
+			    	res.json({'sessionID' : sessionID});       
 			    });
 			}
 		});
-
-		res.json({'sessionID' : sessionID, "openid" : user_open_id});
 
       } else {
         console.log("[error]", err);
