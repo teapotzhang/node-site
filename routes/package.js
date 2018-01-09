@@ -6,6 +6,7 @@ var PackageModel = require('../models/package');
 var UserPackageModel = require('../models/userPackage');
 var UserCardModel = require('../models/userCard');
 var CardModel = require('../models/card');
+var randomNumber = require('random-number');
 var async = require('async');
 var router = express.Router();
 
