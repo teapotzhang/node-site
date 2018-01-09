@@ -94,6 +94,8 @@ router.get('/activate_change', function(req, res, next){
           //更新userpackage后，更新usercard
           var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
 
+          console.log(thequery);
+
           UserCardModel.find(thequery, function(err, usercards){
             if(usercards.length === 0){
               
@@ -118,7 +120,9 @@ router.get('/activate_change', function(req, res, next){
                         randomNumber : random_number
                       }
                     var UserCardEntity = new UserCardModel(data_json);
-                    UserCardEntity.save();              
+                    UserCardEntity.save(function(err, usercard){
+                      callback();
+                    });
                   },function(){
                     res.json({success: true});
                   });
