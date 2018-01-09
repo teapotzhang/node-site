@@ -35,7 +35,6 @@ router.get('/', function(req, res, next){
       }
     }, (err, response, data) => {
       if (response.statusCode === 200) {
-      	console.log(data);
         user_open_id = data.openid;
         user_session_key = data.session_key;
 
@@ -66,7 +65,6 @@ router.get('/', function(req, res, next){
 						Activated : false,
 						openID : user_open_id	
 					}
-					console.log(data_json);
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();				
 			    }
@@ -80,7 +78,6 @@ router.get('/', function(req, res, next){
 						Activated : true,
 						openID : user_open_id	
 					}
-					console.log(data_json);
 					var UserPackageEntity = new UserPackageModel(data_json);
 					UserPackageEntity.save();
 				}
@@ -147,7 +144,6 @@ router.get('/', function(req, res, next){
 		});
 
       } else {
-        console.log("[error]", err);
         res.json(err);
       }
 
@@ -169,7 +165,6 @@ router.get('/add_user', function(req, res, next){
 
 		var pc = new WXBizDataCrypt(appid, session_key);
 		var data = pc.decryptData(encryptedData , iv);
-		console.log(data);
 
 		var data_json = {
 			'unionID' : data['unionId'],
