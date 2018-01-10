@@ -128,7 +128,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringfy(result);  
+          card_json = JSON.stringify(result);  
           console.log('!!!!!!!!!!!!!');
           console.log(card_json);
           console.log('!!!!!!!!!!!!!');        
@@ -254,7 +254,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringfy(result);  
+          card_json = JSON.stringify(result);  
           console.log('bbbbbbbbbbbbb');
           console.log(card_json);
           console.log('bbbbbbbbbbbbb');        
