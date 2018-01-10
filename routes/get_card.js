@@ -110,10 +110,9 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID, card_unique_id;
+    console.log(req.query);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     openID = user['openID'];
-
-    console.log(req.query);
 
     if(req.query.first_card == 'true'){
       //是当天的头一百张卡
