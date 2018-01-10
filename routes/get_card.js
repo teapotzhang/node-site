@@ -59,7 +59,7 @@ function getNextCard(openID){
       activated : true
     };
     
-    UserCardModel.find(query, null, {limit:10, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
+    UserCardModel.find(query, null, {limit:5, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
         card_json = [{
@@ -92,10 +92,14 @@ function getNextCard(openID){
               card_unique_id : card_unique_id,
               lastCard : false     
             }
-            array.push(card_json)
+            array.push(card_json);
+            console.log(array);
+            console.log('***********')
             callback(null, card_json);
           });          
         },function(err, results){
+          console.log(array);
+          console.log(results);
           return array;
         });       
       }
