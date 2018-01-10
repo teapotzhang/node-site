@@ -59,7 +59,7 @@ function getNextCard(openID){
       activated : true
     };
     
-    UserCardModel.find(query, {limit:100}, {sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
+    UserCardModel.find(query, null, {limit:100}, {sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
       console.log(new_user_cards);
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
@@ -75,6 +75,7 @@ function getNextCard(openID){
         async.each(new_user_cards, function(user_new_card, callback){
           var card_unique_id = user_new_card.card_unique_id;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
+            console.log(card);
             var json = JSON.stringify(card)
             var card_json = {
               packageName: card['packageName'],
