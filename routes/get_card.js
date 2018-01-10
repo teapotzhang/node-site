@@ -93,13 +93,12 @@ function getNextCard(openID){
               lastCard : false     
             }
             array.push(card_json);
-            console.log(array);
-            console.log('***********')
             callback(null, card_json);
           });          
         },function(err, results){
+          console.log('----------------');
           console.log(array);
-          console.log(results);
+          console.log('----------------');
           return array;
         });       
       }
@@ -122,7 +121,9 @@ router.get('/', function(req, res, next){
       //去card表里查询卡的具体内容
 
       var card_json = getNextCard(openID);
+      console.log('!!!!!!!!!!!!!');
       console.log(card_json);
+      console.log('!!!!!!!!!!!!!');
       res.json(card_json);
 
     }
@@ -237,7 +238,9 @@ router.get('/', function(req, res, next){
       }, function(err, results){
         //标记完后返回下一堆张卡
       var card_json = getNextCard(openID);
+      console.log('bbbbbbbbbbbbb');
       console.log(card_json);
+      console.log('bbbbbbbbbbbbb');
       res.json(card_json);
       });
     }
