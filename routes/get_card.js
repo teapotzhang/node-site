@@ -96,9 +96,6 @@ function getNextCard(openID, cb){
             callback(null, card_json);
           });          
         },function(err, results){
-          console.log('----------------');
-          console.log(array);
-          console.log('----------------');
           cb(array);
         });       
       }
@@ -128,10 +125,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringify(result);  
-          console.log('!!!!!!!!!!!!!');
-          console.log(card_json);
-          console.log('!!!!!!!!!!!!!');        
+          card_json = JSON.stringify(result);        
           res.json(card_json);    
         });
 
@@ -141,7 +135,7 @@ router.get('/', function(req, res, next){
 
       //回传的用户刷卡详情数组
       var memoryData = req.query.memoryData;
-
+      console.log(memoryData);
       async.each(memoryData, function(singleMemoryData, callback){
         var seconds = parseInt(singleMemoryData.seconds);
         var answerStatus = singleMemoryData.answerStatus;
