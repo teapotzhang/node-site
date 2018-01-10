@@ -37,7 +37,7 @@ router.get('/', function(req, res, next){
       if (response.statusCode === 200) {
         user_open_id = data.openid;
         user_session_key = data.session_key;
-
+        
 		UserModel.find({'openID' : user_open_id}, function(err, users){
 			if(users.length === 0){
 				//是新用户
