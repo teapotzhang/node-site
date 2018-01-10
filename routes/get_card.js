@@ -238,6 +238,7 @@ router.get('/', function(req, res, next){
               console.log('err   ' + err);
             }
             console.log(cards);
+            callback();
           });        
         });
       }, function(err, results){
