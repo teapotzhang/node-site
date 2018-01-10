@@ -60,12 +60,11 @@ function getNextCard(openID){
     };
     
     UserCardModel.find(query, null, {limit:100, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
-      console.log(new_user_cards);
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
         card_json = [{
           lastCard: true
-        }]
+        }];
         return card_json;
       }
       else{
@@ -119,6 +118,7 @@ router.get('/', function(req, res, next){
       //去card表里查询卡的具体内容
 
       var card_json = getNextCard(openID);
+      console.log(card_json);
       res.json(card_json);
 
     }
@@ -233,6 +233,7 @@ router.get('/', function(req, res, next){
       }, function(err, results){
         //标记完后返回下一堆张卡
       var card_json = getNextCard(openID);
+      console.log(card_json);
       res.json(card_json);
       });
     }
