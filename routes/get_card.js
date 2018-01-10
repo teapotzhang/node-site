@@ -134,7 +134,7 @@ router.get('/', function(req, res, next){
       //用户有回传的需要处理的数据
 
       //回传的用户刷卡详情数组
-      var memoryData = req.query.memoryData;
+      var memoryData = req.query.memoryData.toArray();
       console.log(memoryData);
       async.each(memoryData, function(singleMemoryData, callback){
         var seconds = parseInt(singleMemoryData.seconds);
