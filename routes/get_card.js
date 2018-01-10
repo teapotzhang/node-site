@@ -187,22 +187,18 @@ router.get('/', function(req, res, next){
           NewUpdateDate = addDays(today_num, 0);        
           NewArray.push(tag);
           if( cards[0].Showed == false ){
-            console.log(tag);
             switch(tag) {
                 case 1:
                     date = addDays(today_num, 6);
                     NewShowDate = date;
-                    console.log(NewShowDate);
                     break; 
                 case 2:
                     date = addDays(today_num, 2);
                     NewShowDate = date;
-                    console.log(NewShowDate);
                     break;
                 default:
                     date = addDays(today_num, 1);
                     NewShowDate = date;
-                    console.log(NewShowDate);
             }          
           }
           else{
@@ -238,7 +234,6 @@ router.get('/', function(req, res, next){
             if (err){
               console.log('err   ' + err);
             }
-            console.log(cards);
             callback();
           });        
         });
@@ -253,7 +248,6 @@ router.get('/', function(req, res, next){
           
         PromiseGetNextCard.then(function(result){   
           card_json = JSON.stringify(result);       
-          console.log('biubiubiu');   
           res.json(card_json);    
         });
       });
