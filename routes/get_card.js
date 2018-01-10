@@ -39,7 +39,7 @@ function addDays(date, days) {
   return result;
 }
 
-function getNextCard(openID){
+function getNextCard(openID, cb){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);
     var tomorrow = addDays( today_num, 1 );
@@ -65,7 +65,7 @@ function getNextCard(openID){
         card_json = [{
           lastCard: true
         }];
-        return card_json;
+        cb(card_json);
       }
       else{
         //有卡可以刷哦
@@ -99,7 +99,7 @@ function getNextCard(openID){
           console.log('----------------');
           console.log(array);
           console.log('----------------');
-          return array;
+          cb(array);
         });       
       }
     });
@@ -120,11 +120,20 @@ router.get('/', function(req, res, next){
       //是当天的头一百张卡
       //去card表里查询卡的具体内容
 
-      var card_json = getNextCard(openID);
-      console.log('!!!!!!!!!!!!!');
-      console.log(card_json);
-      console.log('!!!!!!!!!!!!!');
-      res.json(card_json);
+        var card_json;
+        var PromiseGetNextCard = new Promise(function(resolve,reject){   
+          getNextCard(openID, function(result){   
+            resolve(result);    
+           });    
+        });   
+          
+        PromiseGetNextCard.then(function(result){   
+          card_json = JSON.stringfy(result);  
+          console.log('!!!!!!!!!!!!!');
+          console.log(card_json);
+          console.log('!!!!!!!!!!!!!');        
+          res.json(card_json);    
+        });
 
     }
     else{
@@ -237,11 +246,20 @@ router.get('/', function(req, res, next){
         });
       }, function(err, results){
         //标记完后返回下一堆张卡
-      var card_json = getNextCard(openID);
-      console.log('bbbbbbbbbbbbb');
-      console.log(card_json);
-      console.log('bbbbbbbbbbbbb');
-      res.json(card_json);
+        var card_json;
+        var PromiseGetNextCard = new Promise(function(resolve,reject){   
+          getNextCard(openID, function(result){   
+            resolve(result);    
+           });    
+        });   
+          
+        PromiseGetNextCard.then(function(result){   
+          card_json = JSON.stringfy(result);  
+          console.log('bbbbbbbbbbbbb');
+          console.log(card_json);
+          console.log('bbbbbbbbbbbbb');        
+          res.json(card_json);    
+        });
       });
     }
     });  
