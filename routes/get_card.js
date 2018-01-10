@@ -59,7 +59,7 @@ function getNextCard(openID, cb){
       activated : true
     };
     
-    UserCardModel.find(query, null, {limit:5, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
+    UserCardModel.find(query, null, {limit:100, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
         card_json = [{
@@ -73,7 +73,6 @@ function getNextCard(openID, cb){
         async.each(new_user_cards, function(user_new_card, callback){
           var card_unique_id = user_new_card.card_unique_id;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            console.log(card);
             var json = JSON.stringify(card)
             var card_json = {
               packageName: card['packageName'],
@@ -109,7 +108,6 @@ router.get('/', function(req, res, next){
 
     //获取openID 不暴漏用户
     var openID, card_unique_id;
-    console.log(req.query);
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     openID = user['openID'];
 
@@ -135,7 +133,6 @@ router.get('/', function(req, res, next){
 
       //回传的用户刷卡详情数组
       var memoryData = JSON.parse(req.query.memoryData);
-      console.log(memoryData);
       async.each(memoryData, function(singleMemoryData, callback){
         var seconds = parseInt(singleMemoryData.seconds);
         var answerStatus = singleMemoryData.answerStatus;
@@ -248,10 +245,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringify(result);  
-          console.log('bbbbbbbbbbbbb');
-          console.log(card_json);
-          console.log('bbbbbbbbbbbbb');        
+          card_json = JSON.stringify(result);          
           res.json(card_json);    
         });
       });
