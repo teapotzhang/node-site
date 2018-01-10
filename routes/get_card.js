@@ -133,6 +133,7 @@ router.get('/', function(req, res, next){
 
       //回传的用户刷卡详情数组
       var memoryData = JSON.parse(req.query.memoryData);
+
       async.each(memoryData, function(singleMemoryData, callback){
         var seconds = parseInt(singleMemoryData.seconds);
         var answerStatus = singleMemoryData.answerStatus;
@@ -237,7 +238,6 @@ router.get('/', function(req, res, next){
               console.log('err   ' + err);
             }
             console.log(cards);
-            callback(null, cards);
           });        
         });
       }, function(err, results){
