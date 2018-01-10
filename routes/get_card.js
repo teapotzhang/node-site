@@ -39,7 +39,7 @@ function addDays(date, days) {
   return result;
 }
 
-function getNextCard(openID, cb){
+function getNextCard(openID){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);
     var tomorrow = addDays( today_num, 1 );
@@ -97,7 +97,7 @@ function getNextCard(openID, cb){
             callback(null, card_json);
           });          
         },function(err, results){
-          cb(array);
+          return array;
         });       
       }
     });
@@ -113,22 +113,15 @@ router.get('/', function(req, res, next){
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     openID = user['openID'];
 
+    console.log(req.query);
+
     if(req.query.first_card == 'true'){
       //是当天的头一百张卡
       //去card表里查询卡的具体内容
 
-      var card_json;
+      var card_json = getNextCard(openID);
+      res.json(card_json);
 
-      var PromiseGetNextCard = new Promise(function(resolve,reject){
-        getNextCard(openID, function(result){
-          resolve(result);
-         });
-      });
-
-      PromiseGetNextCard.then(function(result){
-        card_json = result;
-        res.json(card_json);
-      });
     }
     else{
       //用户有回传的需要处理的数据
@@ -240,18 +233,8 @@ router.get('/', function(req, res, next){
         });
       }, function(err, results){
         //标记完后返回下一堆张卡
-        var card_json;
-
-        var PromiseGetNextCard = new Promise(function(resolve,reject){
-          getNextCard(openID, function(result){
-            resolve(result);
-           });
-        });
-
-        PromiseGetNextCard.then(function(result){
-          card_json = result;
-          res.json(card_json);
-        });
+      var card_json = getNextCard(openID);
+      res.json(card_json);
       });
     }
     });  
