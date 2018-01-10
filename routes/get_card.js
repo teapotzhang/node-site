@@ -63,11 +63,10 @@ function getNextCard(openID){
       console.log(new_user_cards);
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
-        card_json = {
+        card_json = [{
           lastCard: true
-        }
-        var get_json = JSON.stringify(card_json);
-        return get_json;
+        }]
+        return card_json;
       }
       else{
         //有卡可以刷哦
@@ -98,7 +97,7 @@ function getNextCard(openID){
             callback(null, card_json);
           });          
         },function(err, results){
-          return JSON.stringify(array);
+          return array;
         });       
       }
     });
