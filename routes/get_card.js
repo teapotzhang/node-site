@@ -176,7 +176,6 @@ router.get('/', function(req, res, next){
         UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
           //更新LastShowDate, LastUpdateDate和usedStatus
           var LastShowDate = cards[0]['LastShowDate'];
-          console.log(LastShowDate);
           var date = LastShowDate;
           var NewShowDate;
           var NewArray = [];
@@ -186,18 +185,22 @@ router.get('/', function(req, res, next){
           NewUpdateDate = addDays(today_num, 0);        
           NewArray.push(tag);
           if( cards[0].Showed == false ){
+            console.log(tag);
             switch(tag) {
                 case 1:
                     date = addDays(today_num, 6);
                     NewShowDate = date;
+                    console.log(NewShowDate);
                     break; 
                 case 2:
                     date = addDays(today_num, 2);
                     NewShowDate = date;
+                    console.log(NewShowDate);
                     break;
                 default:
                     date = addDays(today_num, 1);
                     NewShowDate = date;
+                    console.log(NewShowDate);
             }          
           }
           else{
