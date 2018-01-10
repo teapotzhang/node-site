@@ -176,6 +176,7 @@ router.get('/', function(req, res, next){
         UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
           //更新LastShowDate, LastUpdateDate和usedStatus
           var LastShowDate = cards[0]['LastShowDate'];
+          console.log(LastShowDate);
           var date = LastShowDate;
           var NewShowDate;
           var NewArray = [];
@@ -229,10 +230,11 @@ router.get('/', function(req, res, next){
           };
 
           UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
-              if (err){
-                console.log('err   ' + err);
-              }
-              callback();
+            if (err){
+              console.log('err   ' + err);
+            }
+            console.log(cards);
+            callback(null, singleMemoryData);
           });        
         });
       }, function(err, results){
@@ -245,7 +247,8 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringify(result);          
+          card_json = JSON.stringify(result);       
+          console.log('biubiubiu');   
           res.json(card_json);    
         });
       });
