@@ -67,7 +67,7 @@ function getNextCard(openID){
           lastCard: true
         }
         var get_json = JSON.stringify(card_json);
-        cb(get_json);
+        return get_json;
       }
       else{
         //有卡可以刷哦
@@ -97,7 +97,7 @@ function getNextCard(openID){
             callback(null, card_json);
           });          
         },function(err, results){
-          return array;
+          return JSON.stringify(array);
         });       
       }
     });
