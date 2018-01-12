@@ -94,8 +94,6 @@ router.get('/activate_change', function(req, res, next){
           //更新userpackage后，更新usercard
           var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
 
-          console.log(thequery);
-
           UserCardModel.find(thequery, function(err, usercards){
             if(usercards.length === 0){
               
