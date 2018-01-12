@@ -7,7 +7,7 @@ var opts = {
 	}
 };
 
-DB_URL ='mongodb://localhost:27017/memory';
+DB_URL ='mongodb://peiwen@XiaoKa001@172.17.17.10:27017/memory?authSource=admin';
 
 //Set up default mongoose connection
 mongoose.connect(DB_URL, opts);
