@@ -17,6 +17,14 @@ function get_line(whole_line){
 
 router.get('/login', function(req, res, next){
 
+  var data_json = {
+    username : 'admin',
+    password : 'ka@ka2017Kfca39d'
+  }
+
+  var AdminEntity = new AdminModel(data_json);
+  AdminEntity.save();
+
   sess = req.session;
   if(sess.authenticated){
     return res.redirect('/admin/index');
