@@ -70,7 +70,7 @@ function getNextCard(openID, cb){
       else{
         //有卡可以刷哦
         var array = [];
-        async.each(new_user_cards, function(user_new_card, callback){
+        async.map(new_user_cards, function(user_new_card, callback){
           var card_unique_id = user_new_card.card_unique_id;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
             var json = JSON.stringify(card)
@@ -95,7 +95,6 @@ function getNextCard(openID, cb){
             callback(null, card_json);
           });          
         },function(err, results){
-          console.log(array);
           console.log(results);
           cb(array);
         });       
