@@ -180,7 +180,8 @@ router.get('/add_user', function(req, res, next){
 		};
 
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-	        if (err) return handleError(err);
+	        if (err) return console.log(err);
+	        res.json({'success' : true}); 
 	    });			
 	});
 });
