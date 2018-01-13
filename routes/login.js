@@ -143,7 +143,7 @@ router.get('/', function(req, res, next){
 		});
 
       } else {
-        res.json(err);
+        res.json({'fail' : true});
       }
 
     });
