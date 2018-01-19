@@ -23,7 +23,6 @@ router.get('/', function(req, res, next){
     if(sessionID.length != 32){
 	   sessionID = randomString({length: 32});
     }
-
     request.get({
       uri: 'https://api.weixin.qq.com/sns/jscode2session',
       json: true,
@@ -51,8 +50,8 @@ router.get('/', function(req, res, next){
 				var UserEntity = new UserModel(data_json);				
 				UserEntity.save();
 				
-				var init_packages = ['三国法-国际经济法', '三国法-国际私法', '三国法-国际公法', '2017年真题包-', '介绍-'];
-				var not_init_packages = ['行政法-基础理论', '行政法-行政监督法', '行政法-行政行为法', '行政法-行政组织法', '民法-担保法', '民法-婚姻继承法', '民法-侵权责任法', '民法-物权法', '民法-债与合同法', '民法-总则', '2011至2016真题包-理论法', '2011至2016真题包-民法', '2011至2016真题包-民诉法', '2011至2016真题包-三国法', '2011至2016真题包-商经知', '2011至2016真题包-刑法', '2011至2016真题包-刑诉法', '2011至2016真题包-行政法', '理论法-法理学', '理论法-法制史' , '理论法-司法制度与法律职业道德', '理论法-宪法', '民诉法-和解调解执行程序', '民诉法-基本制度', '民诉法-诉讼非讼程序', '民诉法-仲裁制度', '商经知-经济法', '商经知-商法', '商经知-知识产权', '刑法-犯罪论', '刑法-其他分则罪', '刑法-侵犯财产罪', '刑法-侵犯人身民主权利罪', '刑法-刑罚论', '刑法-罪数', '刑诉法-基础理论','刑诉法-具体制度','刑诉法-诉讼阶段','刑诉法-特别程序及其他'];
+				var init_packages = ['三分钟体验小卡片-', '介绍-', '三国法-国际经济法', '三国法-国际私法', '三国法-国际公法', '2017年真题包-'];
+				var not_init_packages =['行政法-基础理论', '行政法-行政监督法', '行政法-行政行为法', '行政法-行政组织法', '民法-担保法', '民法-婚姻继承法', '民法-侵权责任法', '民法-物权法', '民法-债与合同法', '民法-总则', '2011至2016真题包-理论法', '2011至2016真题包-民法', '2011至2016真题包-民诉法', '2011至2016真题包-三国法', '2011至2016真题包-商经知', '2011至2016真题包-刑法', '2011至2016真题包-刑诉法', '2011至2016真题包-行政法', '理论法-法理学', '理论法-法制史' , '理论法-司法制度与法律职业道德', '理论法-宪法', '民诉法-和解调解执行程序', '民诉法-基本制度', '民诉法-诉讼非讼程序', '民诉法-仲裁制度', '商经知-经济法', '商经知-商法', '商经知-知识产权', '刑法-犯罪论', '刑法-其他分则罪', '刑法-侵犯财产罪', '刑法-侵犯人身民主权利罪', '刑法-刑罚论', '刑法-罪数', '刑诉法-基础理论','刑诉法-具体制度','刑诉法-诉讼阶段','刑诉法-特别程序及其他'];
 
 				var whole_packages = init_packages.concat(not_init_packages);
 
@@ -87,33 +86,28 @@ router.get('/', function(req, res, next){
 						async.each(cards, function(card, cb){
 							var random_number;
 
-							if( whole_package.split("-")[0].indexOf('介绍') == -1 ){
-								random_number = randomNumber({
-						          min : 10000,
-						          max : 99999,
-						          integer : true
-						        });
-							}
-							else{
-								random_number = randomNumber({
-						          min : 100,
-						          max : 999,
-						          integer : true
-						        });
+							random_number = randomNumber({
+					          min : 10000,
+					          max : 99999,
+					          integer : true
+					        });
+
+							if(card.initNumber != 0){
+								random_number = card.initNumber;
 							}
 
 							var	data_json = {
-									card_unique_id : card.card_unique_id,  //确定卡片的id
-									PackageName : card.packageName, //卡片包
-									SubPackageName : card.SubPackageName,  //子卡包
-									LastShowDate : 20000102,   //确定这张卡下次出现的时间
-									LastUpdateDate : 20000102,
-									openID : user_open_id,   //确定是谁
-									Showed: false,   //是否出现过
-									usedStatus: [],
-									activated: true,
-									randomNumber : random_number
-								}
+								card_unique_id : card.card_unique_id,  //确定卡片的id
+								PackageName : card.packageName, //卡片包
+								SubPackageName : card.SubPackageName,  //子卡包
+								LastShowDate : 20000102,   //确定这张卡下次出现的时间
+								LastUpdateDate : 20000102,
+								openID : user_open_id,   //确定是谁
+								Showed: false,   //是否出现过
+								usedStatus: [],
+								activated: true,
+								randomNumber : random_number
+							}
 							
 							var UserCardEntity = new UserCardModel(data_json);
 		                    UserCardEntity.save(function(err, usercard){
@@ -137,13 +131,13 @@ router.get('/', function(req, res, next){
 					'session_key': user_session_key
 				};
 			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-			    	res.json({'sessionID' : sessionID});       
+			    	res.json({'sessionID' : sessionID});
 			    });
 			}
 		});
 
       } else {
-        res.json({'fail' : true});
+        res.json({'fail':true});
       }
 
     });

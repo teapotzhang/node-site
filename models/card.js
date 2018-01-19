@@ -16,6 +16,7 @@ var CardSchema = new Schema({
 	yearNumber : Number,
 	reelNumber : String,
 	questionNumber : Number,
+	initNumber : Number,
 	card_unique_id : { type: String, index: { unique: true } }
 });
 

@@ -158,7 +158,6 @@ router.post('/index_package', function(req, res){
           redItem = jsonArrayobj[i].redItem;          
           cardType = 'Normal';        
         }
-
         else if(jsonArrayobj[i].hasOwnProperty('expression')){
           expression = jsonArrayobj[i].expression;
           yearNumber = parseInt(jsonArrayobj[i].yearNumber);
@@ -169,31 +168,63 @@ router.post('/index_package', function(req, res){
 
         if( packagename.indexOf('介绍') != -1){
           cardType = 'Introduction';
-        }      
+        }
 
         if(jsonArrayobj[i].hasOwnProperty('analysis')){
           analysis = jsonArrayobj[i].analysis;
         }
 
-        var data_json = {
-          'packageName' : packagename,
-          'SubPackageName' : subpackagename,  //卡片属于哪个子卡包
-          'cardType' : cardType,
-          'rightItem' : rightItem,
-          'expression' : expression,
-          'blueItem' : blueItem,
-          'redItem' : redItem,
-          'firstLine' : firstLine,
-          'lastLine' : lastLine,
-          'analysis' : analysis,
-          'yearNumber' : yearNumber,
-          'reelNumber' : reelNumber,
-          'questionNumber' : questionNumber,            
-          'card_unique_id' : card_unique_id
-        };
+        if(jsonArrayobj[i].hasOwnProperty('initNumber')){
+          //事先规定好了顺序，不能随意更改的
+          var initNumber = jsonArrayobj[i].initNumber;
+          cardType = 'FirstThreeMins';
 
-        var CardEntity = new CardModel(data_json);
-        CardEntity.save();
+          var data_json = {
+            'packageName' : packagename,
+            'SubPackageName' : subpackagename,  //卡片属于哪个子卡包
+            'cardType' : cardType,
+            'rightItem' : rightItem,
+            'expression' : expression,
+            'blueItem' : blueItem,
+            'redItem' : redItem,
+            'firstLine' : firstLine,
+            'lastLine' : lastLine,
+            'analysis' : analysis,
+            'yearNumber' : yearNumber,
+            'reelNumber' : reelNumber,
+            'questionNumber' : questionNumber,
+            'initNumber' : initNumber,
+            'card_unique_id' : card_unique_id
+          };
+
+          var CardEntity = new CardModel(data_json);
+          CardEntity.save();
+
+        }
+
+        else{
+
+          var data_json = {
+            'packageName' : packagename,
+            'SubPackageName' : subpackagename,  //卡片属于哪个子卡包
+            'cardType' : cardType,
+            'rightItem' : rightItem,
+            'expression' : expression,
+            'blueItem' : blueItem,
+            'redItem' : redItem,
+            'firstLine' : firstLine,
+            'lastLine' : lastLine,
+            'analysis' : analysis,
+            'yearNumber' : yearNumber,
+            'reelNumber' : reelNumber,
+            'questionNumber' : questionNumber,
+            'card_unique_id' : card_unique_id
+          };
+
+          var CardEntity = new CardModel(data_json);
+          CardEntity.save();
+
+        }
 
         i++;
       }

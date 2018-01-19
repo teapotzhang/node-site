@@ -34,6 +34,7 @@ router.get('/', function(req, res, next){
         async.each(userpackages, function(card, cb){
           var price, packageId;
           var current_card = card;
+          var thePackageName;
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
             price = packages[0].packagePrice;
             packageId = packages[0].packageId;
@@ -44,16 +45,25 @@ router.get('/', function(req, res, next){
               }
             }
 
+            if( current_card.PackageName.indexOf('真题') == -1 && current_card.PackageName.indexOf('介绍') == -1 ){
+              thePackageName = current_card.PackageName + '知识点';
+            }
+            else{
+              thePackageName = current_card.PackageName;
+            }
+
             var data_json ={
-              PackageName : current_card.PackageName,
+              PackageName : thePackageName,
               SubPackageName : current_card.SubPackageName,
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
               packageId : packageId,
               PackagePrice : price
             };
-            array.push(data_json); 
-            
+
+            if(PackageName != '三分钟体验小卡片'){
+              array.push(data_json); 
+            }
             cb(null, data_json);
           });
         }, function(err, results){
@@ -74,6 +84,12 @@ router.get('/activate_change', function(req, res, next){
     var packageName = req.query.packageName;
     var subPackageName = req.query.subPackageName;
     var activate_flag = req.query.activated.toString();
+
+    if( packageName.indexOf('知识点') != -1 ){
+      //是知识点卡片集合
+      packageName = packageName.split('知识点')[0];
+    }
+
     if( activate_flag == 'true' ){ activate_flag = true }else{ activate_flag = false };
 
     //获取openID 不暴漏用户

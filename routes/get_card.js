@@ -141,36 +141,42 @@ router.get('/', function(req, res, next){
         
         var tag;
 
-        if( answerStatus == 'false' ){
-          tag = 3; //回答错了
-        } 
-        else{
-          if(card_type == "Exam")
-          {
-            if(seconds <= 20){
-              tag = 1; //简单
+        if( card_type != 'FirstThreeMins' )
+        {
+          if( answerStatus == 'false' ){
+            tag = 3; //回答错了
+          } 
+          else{
+            if(card_type == "Exam")
+            {
+              if(seconds <= 20){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }
             }
-            else{
-              tag = 2; //模糊
-            }
+            if(card_type == "Normal")
+            {
+              if(seconds <= 8){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }
+            }   
+            if(card_type == "Introduction"){
+               if(seconds <= 8){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }         
+            }     
           }
-          if(card_type == "Normal")
-          {
-            if(seconds <= 8){
-              tag = 1; //简单
-            }
-            else{
-              tag = 2; //模糊
-            }
-          }   
-          if(card_type == "Introduction"){
-             if(seconds <= 8){
-              tag = 1; //简单
-            }
-            else{
-              tag = 2; //模糊
-            }         
-          }     
+        }
+        else{
+          tag = 4;
         }
 
         UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
@@ -194,6 +200,9 @@ router.get('/', function(req, res, next){
                     date = addDays(today_num, 2);
                     NewShowDate = date;
                     break;
+                case 4:
+                    NewShowDate = 50000000;
+                    break;
                 default:
                     date = addDays(today_num, 1);
                     NewShowDate = date;
@@ -210,6 +219,9 @@ router.get('/', function(req, res, next){
                       date = addDays(date, 2);
                       NewShowDate = date;
                       break;
+                  case 4:
+                      NewShowDate = 50000000;
+                      break;                      
                   default:
                       date = addDays(date, 1);
                       NewShowDate = date;
