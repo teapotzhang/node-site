@@ -61,7 +61,7 @@ router.get('/', function(req, res, next){
               PackagePrice : price
             };
 
-            if(PackageName != '三分钟体验小卡片'){
+            if(thePackageName.indexOf('三分钟体验小卡片') == -1){
               array.push(data_json); 
             }
             cb(null, data_json);
