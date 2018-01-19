@@ -177,7 +177,7 @@ router.post('/index_package', function(req, res){
         if(jsonArrayobj[i].hasOwnProperty('initNumber')){
           //事先规定好了顺序，不能随意更改的
           var initNumber = jsonArrayobj[i].initNumber;
-
+          card_unique_id = randomString({length: 16});
           if( jsonArrayobj[i].whole_line == "" ){
             cardType = 'Exam';
             expression = jsonArrayobj[i].expression;

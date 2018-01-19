@@ -141,7 +141,7 @@ router.get('/', function(req, res, next){
         
         var tag;
 
-        if( card_type != 'FirstThreeMins' )
+        if( card_unique_id.length == 32 )
         {
           if( answerStatus == 'false' ){
             tag = 3; //回答错了
