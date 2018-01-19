@@ -82,7 +82,6 @@ router.get('/', function(req, res, next){
 				}
 
 				async.each(init_packages, function(init_package, callback){
-					console.log(init_package);
 					CardModel.find({'packageName' : init_package.split("-")[0], 'SubPackageName' : init_package.split("-")[1]}, function(err, cards){
 						async.each(cards, function(card, cb){
 							var random_number;
@@ -97,8 +96,6 @@ router.get('/', function(req, res, next){
 						          integer : true
 						        });
 							}
-
-							console.log(random_number);
 
 							var	data_json = {
 								card_unique_id : card.card_unique_id,  //确定卡片的id
