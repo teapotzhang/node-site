@@ -87,14 +87,15 @@ router.get('/', function(req, res, next){
 						async.each(cards, function(card, cb){
 							var random_number;
 
-							random_number = randomNumber({
-					          min : 10000,
-					          max : 99999,
-					          integer : true
-					        });
-
-							if(card.initNumber != 0){
+							if(card.initNumber){
 								random_number = card.initNumber;
+							}
+							else{
+								random_number = randomNumber({
+						          min : 10000,
+						          max : 99999,
+						          integer : true
+						        });
 							}
 
 							console.log(random_number);
