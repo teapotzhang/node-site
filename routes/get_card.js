@@ -181,6 +181,7 @@ router.get('/', function(req, res, next){
 
         UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
           //更新LastShowDate, LastUpdateDate和usedStatus
+          var activate_flag;
           var LastShowDate = cards[0]['LastShowDate'];
           var date = LastShowDate;
           var NewShowDate;
@@ -195,17 +196,21 @@ router.get('/', function(req, res, next){
                 case 1:
                     date = addDays(today_num, 6);
                     NewShowDate = date;
+                    activate_flag = true;
                     break; 
                 case 2:
                     date = addDays(today_num, 2);
                     NewShowDate = date;
+                    activate_flag = true;
                     break;
                 case 4:
                     NewShowDate = 50000000;
+                    activate_flag = false;
                     break;
                 default:
                     date = addDays(today_num, 1);
                     NewShowDate = date;
+                    activate_flag = true;
             }          
           }
           else{
@@ -214,17 +219,21 @@ router.get('/', function(req, res, next){
                   case 1:
                       date = addDays(date, 3);
                       NewShowDate = date;
+                      activate_flag = true;
                       break;
                   case 2:
                       date = addDays(date, 2);
                       NewShowDate = date;
+                      activate_flag = true;
                       break;
                   case 4:
                       NewShowDate = 50000000;
+                      activate_flag = false;
                       break;                      
                   default:
                       date = addDays(date, 1);
                       NewShowDate = date;
+                      activate_flag = true;
               }              
             }
           }     
@@ -237,7 +246,7 @@ router.get('/', function(req, res, next){
             openID : cards[0].openID,
             Showed: true,
             usedStatus: NewArray,
-            activated: true
+            activated: activate_flag
           };
 
           UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
