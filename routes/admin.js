@@ -177,7 +177,6 @@ router.post('/index_package', function(req, res){
         if(jsonArrayobj[i].hasOwnProperty('initNumber')){
           //事先规定好了顺序，不能随意更改的
           var initNumber = jsonArrayobj[i].initNumber;
-          cardType = 'FirstThreeMins';
 
           var data_json = {
             'packageName' : packagename,
