@@ -180,6 +180,7 @@ router.post('/index_package', function(req, res){
 
           if( jsonArrayobj[i].whole_line == "" ){
             cardType = 'Exam';
+            expression = jsonArrayobj[i].expression;
             yearNumber = parseInt(jsonArrayobj[i].yearNumber);
             reelNumber = jsonArrayobj[i].reelNumber;
             questionNumber = parseInt(jsonArrayobj[i].questionNumber);            
