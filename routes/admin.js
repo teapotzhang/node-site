@@ -178,6 +178,10 @@ router.post('/index_package', function(req, res){
           //事先规定好了顺序，不能随意更改的
           var initNumber = jsonArrayobj[i].initNumber;
 
+          if( jsonArrayobj[i].whole_line == "" ){
+            cardType = 'Exam';
+          }
+
           var data_json = {
             'packageName' : packagename,
             'SubPackageName' : subpackagename,  //卡片属于哪个子卡包
