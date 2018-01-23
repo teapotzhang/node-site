@@ -67,7 +67,8 @@ function getTargetCents(openID, targetCents, cb){
         targetCents : targetCents
       }
 
-      cb(number_json);
+      var get_json = JSON.stringify(number_json);
+      cb(get_json);
     });
 
   });
