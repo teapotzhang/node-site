@@ -62,9 +62,9 @@ function getNextCard(openID, cb){
     UserCardModel.find(query, null, {limit: 100, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
-        card_json = [{
+        card_json = JSON.stringify([{
           lastCard: true
-        }];
+        }]);
         cb(card_json);
       }
       else{
@@ -93,7 +93,8 @@ function getNextCard(openID, cb){
             callback(null, card_json);
           });          
         },function(err, results){
-          cb(results);
+          var t = JSON.stringify(results);
+          cb(t);
         });       
       }
     });
