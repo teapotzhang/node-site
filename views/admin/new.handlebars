@@ -1,0 +1,69 @@
+<form ref="updateForm" id="updateForm" method="post" style="margin: 0px 30px;">
+	<h2>新增卡片</h2>
+    <br />
+    <p>选择卡包</p>
+    <select name="packageName">
+        {{#each packages}}
+        <option value="{{packageName}}-{{subPackageName}}">{{packageName}}-{{subPackageName}}</option>
+        {{/each}}
+    </select>
+    <br />
+    <br />
+    <p>正确项</p>
+    <p>真题表述为 1错2对</p>
+    <p>知识点卡片为 1蓝对2红对</p>    
+    <input style="width: 80%;" type='number' name='rightItem' placeholder='1或者2'/>
+    <br />
+    <br />
+    <p>卡片类型</p>
+    <select id="cardType" name="cardType" onchange="function()">
+        <option value="Exam">真题</option>
+        <option value="Normal">知识点</option>
+    </select>   
+    <div id="noraml">
+    	<p>蓝色混淆项</p>
+        <input style="width: 80%;" type='text' name='blueItem' placeholder='蓝色混淆项'/>
+        <br />
+        <br />
+        <p>红色混淆项</p>
+        <input style="width: 80%;" type='text' name='redItem' placeholder='红色混淆项'/>
+        <br />
+        <br />
+        <p>混淆项之前内容</p>
+        <input style="width: 80%;" type='text' name='firstLine' placeholder='混淆项之前内容'/>
+        <br />
+        <br />
+        <p>混淆项之后内容</p>
+        <input style="width: 80%;" type='text' name='lastLine' placeholder='混淆项之后内容'/>    
+        <br />
+        <br />
+        <p>解析</p>
+        <input style="width: 80%;" type='text' name='analysis' placeholder='解析'/>        
+    </div>
+    <div id="exam">
+        <p>真题题干</p>
+        <input style="width: 80%;" type='text' name='expression' placeholder='真题特有，真题的题干'/>
+        <br />
+        <br />
+        <p>解析</p>
+        <input style="width: 80%;" type='text' name='analysis' placeholder='解析'/>
+        <br />
+        <br />    
+        <p>真题年份</p>
+        <input style="width: 80%;" type='number' name='yearNumber' placeholder='真题特有，真题的年份'/>
+        <br />
+        <br />
+        <p>真题卷号</p>
+        <input style="width: 80%;" type='text' name='reelNumber' placeholder='真题特有，真题的卷号'/>
+        <br />
+        <br />
+        <p>真题题号</p>
+        <input style="width: 80%;" type='number' name='questionNumber' placeholder='真题特有，真题的题号'/>
+        <br />
+        <br />
+    </div>
+    <input type='submit' value='新增'>
+    <br />
+    <br />   
+    <br />
+</form>
