@@ -2,9 +2,11 @@ var express = require('express');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
 var UserCardModel = require('../models/userCard');
+var UserPackageModel = require('../models/userPackage');
 var PackageModel = require('../models/package');
 var csv = require('csvtojson');
 var randomString = require('random-string');
+var randomNumber = require('random-number');
 var router = express.Router();
 
 var sess;
@@ -305,6 +307,102 @@ router.post('/index/new', function(req, res){
       'questionNumber' : req.body.questionNumber,
       'card_unique_id' : card_unique_id
     };
+
+    if( packagename.indexOf('三分钟') != -1 ){
+      //是三分钟体验卡包，需要获取initNumber
+      CardModel.find({packageName : '三分钟体验小卡片'}, function(err, cards){
+        var max_num = 1;
+        for( var i = 0; i < cards.length; i++ ){
+          if( cards[i].initNumber > max_num ){
+            max_num = cards[i].initNumber;
+          }
+        }
+        max_num = max_num + 1;
+        var init_number = max_num;
+
+        var data_json = {
+          'packageName' : packagename,
+          'SubPackageName' : subpackagename,      
+          'rightItem' : req.body.rightItem,
+          'cardType' : req.body.cardType,
+          'expression' : req.body.expression,
+          'blueItem' : req.body.blueItem,
+          'redItem' : req.body.redItem,
+          'firstLine' : req.body.firstLine,
+          'lastLine' : req.body.lastLine,
+          'analysis' : req.body.analysis,
+          'yearNumber' : req.body.yearNumber,
+          'reelNumber' : req.body.reelNumber,
+          'questionNumber' : req.body.questionNumber,
+          'card_unique_id' : card_unique_id,
+          'initNumber' :  max_num
+        }
+
+        var CardEntity = new CardModel(data_json);
+        CardEntity.save();
+
+        res.json({'success': true})
+
+      });
+    }
+    else{
+      var data_json = {
+        'packageName' : packagename,
+        'SubPackageName' : subpackagename,      
+        'rightItem' : req.body.rightItem,
+        'cardType' : req.body.cardType,
+        'expression' : req.body.expression,
+        'blueItem' : req.body.blueItem,
+        'redItem' : req.body.redItem,
+        'firstLine' : req.body.firstLine,
+        'lastLine' : req.body.lastLine,
+        'analysis' : req.body.analysis,
+        'yearNumber' : req.body.yearNumber,
+        'reelNumber' : req.body.reelNumber,
+        'questionNumber' : req.body.questionNumber,
+        'card_unique_id' : card_unique_id
+      }
+
+      var CardEntity = new CardModel(data_json);
+      CardEntity.save();
+
+      var random_number = randomNumber({
+              min : 10000,
+              max : 99999,
+              integer : true
+            });
+
+      UserPackageModel.find({ PackageName : packagename, SubPackageName : subpackagename }, function(err, users){
+        if(users){
+          res.json({'success': true});
+        }
+        else{
+          for(var i = 0; i < users.length; i++){
+            UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : users[i].openID},function(err, usercards){
+              if(users){
+                res.json({'success': true});
+              }
+              else{
+                var new_json = {
+                  card_unique_id : card_unique_id,  //确定卡片的id
+                  PackageName : packagename, //确定卡包
+                  SubPackageName : subpackagename, //确定子卡包
+                  LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                  LastUpdateDate : 20000102, //确定最后一次这张卡背诵的时间
+                  openID : users[i].openID,   //确定是谁
+                  Showed: false,   //是否出现过
+                  usedStatus: [],
+                  randomNumber : random_number,
+                  activated: users[i].Activated        
+                }
+                var UserCardEntity = new UserCardModel(new_json);
+                UserCardEntity.save();                
+              }
+            });
+          }
+        }
+      });
+    }
 
 });
 
