@@ -10,7 +10,7 @@ var UserPackageSchema = new Schema({
 	openID : String
 });
 
-UserSchema.index({ openID : 1 , Activated : -1});
+UserPackageSchema.index({ openID : 1 , Activated : -1});
 
 var UserPackageModel = db.model('UserPackage', UserPackageSchema);
 module.exports = UserPackageModel;
