@@ -3,6 +3,7 @@ var Promise = require("bluebird");
 var async = require('async');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
+var UserPackageModel = require('../models/UserPackage');
 var PackageModel = require('../models/package');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
@@ -58,8 +59,8 @@ function getNextCard(openID, cb){
       },
       activated : true
     };
-    
-    UserCardModel.find(query, null, {limit: 100, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
+
+    UserCardModel.find(query, null, {limit: 30, sort: {LastShowDate: -1, randomNumber: 1}}, function(err, new_user_cards) {
       if( new_user_cards.length == 0 ){
         //完全没卡能刷
         card_json = JSON.stringify([{

@@ -267,6 +267,49 @@ router.get('/index/search', function(req, res){
 
 }); 
 
+router.get('/index/new', function(req, res){
+  PackageModel.find(function(err, packages){
+    console.log(packages);
+    var context = {
+      packages : packages.map(function(package){
+        return{
+          packageName : package.packageName,
+          subPackageName : package.SubPackageName
+        }
+      })
+    } 
+    return res.render('admin/new', context);
+  });
+});
+
+router.post('/index/new', function(req, res){
+
+    var card_unique_id = randomString({length: 32});
+
+    var packagename = req.body.packageName.split("-")[0];
+    var subpackagename = req.body.packageName.split("-")[1];
+
+    var data_json = {
+      'packageName' : packagename,
+      'SubPackageName' : subpackagename,      
+      'rightItem' : req.body.rightItem,
+      'cardType' : req.body.cardType,
+      'expression' : req.body.expression,
+      'blueItem' : req.body.blueItem,
+      'redItem' : req.body.redItem,
+      'firstLine' : req.body.firstLine,
+      'lastLine' : req.body.lastLine,
+      'analysis' : req.body.analysis,
+      'yearNumber' : req.body.yearNumber,
+      'reelNumber' : req.body.reelNumber,
+      'questionNumber' : req.body.questionNumber,
+      'card_unique_id' : card_unique_id
+    };
+
+});
+
+
+
 router.get('/index/update', function(req, res){
   return res.render('admin/update_form');
 });
