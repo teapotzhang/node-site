@@ -67,6 +67,7 @@ router.get('/', function(req, res, next){
             cb(null, data_json);
           });
         }, function(err, results){
+          console.log(array);
           var new_array = [];
           array.sort(sortBy("packageId"));       
           res.json(array);
