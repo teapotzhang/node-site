@@ -286,6 +286,8 @@ router.get('/index/new', function(req, res){
 
 router.post('/index/new', function(req, res){
 
+    console.log(req);
+
     var card_unique_id = randomString({length: 32});
 
     var packagename = req.body.packageName.split("-")[0];
