@@ -121,7 +121,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringify(result);        
+          card_json = result;        
           res.json(card_json);    
         });
 
@@ -266,7 +266,7 @@ router.get('/', function(req, res, next){
         });   
           
         PromiseGetNextCard.then(function(result){   
-          card_json = JSON.stringify(result);       
+          card_json = result;       
           res.json(card_json);    
         });
       });
