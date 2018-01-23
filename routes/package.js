@@ -35,10 +35,8 @@ router.get('/', function(req, res, next){
           var price, packageId;
           var current_card = card;
           var thePackageName;
-          console.log(card);
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
-            console.log(packages);
-            price = packages[0].packagePrice;
+            //price = packages[0].packagePrice;
             packageId = packages[0].packageId;
 
             for( var i = 0; i < packages.length; i ++ ){
@@ -60,7 +58,7 @@ router.get('/', function(req, res, next){
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
               packageId : packageId,
-              PackagePrice : price
+              PackagePrice : 0
             };
 
             if(thePackageName.indexOf('三分钟体验小卡片') == -1){
@@ -69,7 +67,6 @@ router.get('/', function(req, res, next){
             cb(null, data_json);
           });
         }, function(err, results){
-          console.log(array);
           var new_array = [];
           array.sort(sortBy("packageId"));       
           res.json(array);
