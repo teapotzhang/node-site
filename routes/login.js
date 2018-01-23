@@ -120,9 +120,7 @@ router.get('/', function(req, res, next){
 					});
 
 				}, function(err){
-			        var data_json = {'sessionID' : sessionID};
-			        var get_json = JSON.stringify(data_json);
-			        res.json(get_json);
+					res.json({'sessionID' : sessionID});
 				});
 
 			}
@@ -134,17 +132,13 @@ router.get('/', function(req, res, next){
 					'session_key': user_session_key
 				};
 			    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-			        var data_json = {'sessionID' : sessionID};
-			        var get_json = JSON.stringify(data_json);
-			        res.json(get_json);			    	
+			    	res.json({'sessionID' : sessionID});
 			    });
 			}
 		});
 
       } else {
-        var data_json = {'fail' : true};
-        var get_json = JSON.stringify(data_json);
-        res.json(get_json);         
+        res.json({'fail':true});
       }
 
     });
@@ -182,9 +176,7 @@ router.get('/add_user', function(req, res, next){
 
 	    UserModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
 	        if (err) return console.log(err);
-	        var data_json = {'success' : true};
-	        var get_json = JSON.stringify(data_json);
-	        res.json(get_json); 
+	        res.json({'success' : true}); 
 	    });			
 	});
 });
