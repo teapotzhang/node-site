@@ -36,6 +36,7 @@ router.get('/', function(req, res, next){
           var current_card = card;
           var thePackageName;
           PackageModel.find({'packageName' : current_card['PackageName']},function(err, packages){
+            console.log(packages);
             price = packages[0].packagePrice;
             packageId = packages[0].packageId;
 
