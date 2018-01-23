@@ -196,12 +196,12 @@ router.get('/', function(req, res, next){
           if( cards[0].Showed == false ){
             switch(tag) {
                 case 1:
-                    date = addDays(today_num, 6);
+                    date = addDays(today_num, 8);
                     NewShowDate = date;
                     activate_flag = true;
                     break; 
                 case 2:
-                    date = addDays(today_num, 2);
+                    date = addDays(today_num, 4);
                     NewShowDate = date;
                     activate_flag = true;
                     break;
@@ -210,7 +210,7 @@ router.get('/', function(req, res, next){
                     activate_flag = false;
                     break;
                 default:
-                    date = addDays(today_num, 1);
+                    date = addDays(today_num, 2);
                     NewShowDate = date;
                     activate_flag = true;
             }          
@@ -219,12 +219,12 @@ router.get('/', function(req, res, next){
             for( var i = 0; i < NewArray.length; i++ ){
               switch(NewArray[i]) {
                   case 1:
-                      date = addDays(date, 3);
+                      date = addDays(date, 8);
                       NewShowDate = date;
                       activate_flag = true;
                       break;
                   case 2:
-                      date = addDays(date, 2);
+                      date = addDays(date, 4);
                       NewShowDate = date;
                       activate_flag = true;
                       break;
@@ -233,7 +233,7 @@ router.get('/', function(req, res, next){
                       activate_flag = false;
                       break;                      
                   default:
-                      date = addDays(date, 1);
+                      date = addDays(date, 2);
                       NewShowDate = date;
                       activate_flag = true;
               }              
