@@ -15,5 +15,7 @@ var UserCardSchema = new Schema({
 	activated: Boolean
 });
 
+UserCardSchema.index({ openID : 1, activated: -1, LastUpdateDate : -1, LastShowDate : -1, randomNumber : 1});
+
 var UserCardModel = db.model('UserCard', UserCardSchema);
 module.exports = UserCardModel;
