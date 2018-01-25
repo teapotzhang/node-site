@@ -323,7 +323,7 @@ router.post('/index/new', function(req, res){
         var init_number = max_num;
 
         card_unique_id = randomString({length: 16});
-        
+
         var data_json = {
           'packageName' : packagename,
           'SubPackageName' : subpackagename,      
@@ -383,7 +383,8 @@ router.post('/index/new', function(req, res){
         else{
           for(var i = 0; i < users.length; i++){
             UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : users[i].openID},function(err, usercards){
-              if(users){
+              console.log(usercards);
+              if(usercards){
                 res.json({'success': true});
               }
               else{
@@ -404,6 +405,7 @@ router.post('/index/new', function(req, res){
               }
             });
           }
+          res.json({'success': true});
         }
       });
     }
