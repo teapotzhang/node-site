@@ -376,42 +376,37 @@ router.post('/index/new', function(req, res){
       UserPackageModel.find({ PackageName : packagename, SubPackageName : subpackagename }, function(err, users){
         console.log(users);
         console.log('-------------------------------');
-        if(users){
-          res.json({'success': true});
-        }
-        else{
 
-          async.each(users, function(user, callback){
+        async.each(users, function(user, callback){
 
-            UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
-              console.log(usercards);
-              console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
-              if(usercards){
-                var new_json = {
-                  card_unique_id : card_unique_id,  //确定卡片的id
-                  PackageName : packagename, //确定卡包
-                  SubPackageName : subpackagename, //确定子卡包
-                  LastShowDate : 20000102,   //确定这张卡下次出现的时间
-                  LastUpdateDate : 20000102, //确定最后一次这张卡背诵的时间
-                  openID : users[i].openID,   //确定是谁
-                  Showed: false,   //是否出现过
-                  usedStatus: [],
-                  randomNumber : random_number,
-                  activated: users[i].Activated        
-                }
-                var UserCardEntity = new UserCardModel(new_json);
-                UserCardEntity.save();                     
+          UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
+            console.log(usercards);
+            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+            if(usercards){
+              var new_json = {
+                card_unique_id : card_unique_id,  //确定卡片的id
+                PackageName : packagename, //确定卡包
+                SubPackageName : subpackagename, //确定子卡包
+                LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                LastUpdateDate : 20000102, //确定最后一次这张卡背诵的时间
+                openID : users[i].openID,   //确定是谁
+                Showed: false,   //是否出现过
+                usedStatus: [],
+                randomNumber : random_number,
+                activated: users[i].Activated        
               }
-              else{
-                res.json({'success': true});               
-              }
-            });
-
-          }, function(err, results){
-            res.json({'success': true});
+              var UserCardEntity = new UserCardModel(new_json);
+              UserCardEntity.save();                     
+            }
+            else{
+              res.json({'success': true});               
+            }
           });
-        }
-        
+
+        }, function(err, results){
+          res.json({'success': true});
+        });
+      
       });
     }
 
