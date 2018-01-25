@@ -389,7 +389,7 @@ router.post('/index/new', function(req, res){
                 SubPackageName : subpackagename, //确定子卡包
                 LastShowDate : 20000102,   //确定这张卡下次出现的时间
                 LastUpdateDate : 20000102, //确定最后一次这张卡背诵的时间
-                openID : users[i].openID,   //确定是谁
+                openID : user.openID,   //确定是谁
                 Showed: false,   //是否出现过
                 usedStatus: [],
                 randomNumber : random_number,
