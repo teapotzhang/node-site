@@ -387,9 +387,6 @@ router.post('/index/new', function(req, res){
               console.log(usercards);
               console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
               if(usercards){
-                res.json({'success': true});
-              }
-              else{
                 var new_json = {
                   card_unique_id : card_unique_id,  //确定卡片的id
                   PackageName : packagename, //确定卡包
@@ -403,7 +400,10 @@ router.post('/index/new', function(req, res){
                   activated: users[i].Activated        
                 }
                 var UserCardEntity = new UserCardModel(new_json);
-                UserCardEntity.save();                
+                UserCardEntity.save();                     
+              }
+              else{
+                res.json({'success': true});               
               }
             });
 
