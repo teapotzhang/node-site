@@ -393,7 +393,7 @@ router.post('/index/new', function(req, res){
                 Showed: false,   //是否出现过
                 usedStatus: [],
                 randomNumber : random_number,
-                activated: users[i].Activated        
+                activated: user.Activated        
               }
               var UserCardEntity = new UserCardModel(new_json);
               UserCardEntity.save();                     
