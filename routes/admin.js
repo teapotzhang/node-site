@@ -379,7 +379,7 @@ router.post('/index/new', function(req, res){
 
         async.each(users, function(user, callback){
 
-          UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
+          UserCardModel.findOne({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
             console.log(usercards);
             console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
             if(usercards){
@@ -396,10 +396,12 @@ router.post('/index/new', function(req, res){
                 activated: user.Activated        
               }
               var UserCardEntity = new UserCardModel(new_json);
-              UserCardEntity.save();                     
+              UserCardEntity.save(function(){
+                callback();
+              });                     
             }
             else{
-              res.json({'success': true});               
+              callback();
             }
           });
 
