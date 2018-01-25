@@ -377,6 +377,8 @@ router.post('/index/new', function(req, res){
             });
 
       UserPackageModel.find({ PackageName : packagename, SubPackageName : subpackagename }, function(err, users){
+        console.log(users);
+        console.log('-------------------------------');
         if(users){
           res.json({'success': true});
         }
@@ -384,6 +386,7 @@ router.post('/index/new', function(req, res){
           for(var i = 0; i < users.length; i++){
             UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : users[i].openID},function(err, usercards){
               console.log(usercards);
+              console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
               if(usercards){
                 res.json({'success': true});
               }
