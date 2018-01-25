@@ -322,6 +322,8 @@ router.post('/index/new', function(req, res){
         max_num = max_num + 1;
         var init_number = max_num;
 
+        card_unique_id = randomString({length: 16});
+        
         var data_json = {
           'packageName' : packagename,
           'SubPackageName' : subpackagename,      
