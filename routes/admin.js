@@ -1,4 +1,5 @@
 var express = require('express');
+var async = require('async');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
 var UserCardModel = require('../models/userCard');
@@ -246,7 +247,6 @@ router.post('/index_package', function(req, res){
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
     CardModel.find({"$or": [ {"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} } ]},null,{limit:20} ,function(err, cards){
-      console.log(cards);
       var context = {
         cards : cards.map(function(card){
           return{
@@ -271,7 +271,6 @@ router.get('/index/search', function(req, res){
 
 router.get('/index/new', function(req, res){
   PackageModel.find(function(err, packages){
-    console.log(packages);
     var context = {
       packages : packages.map(function(package){
         return{
@@ -285,8 +284,6 @@ router.get('/index/new', function(req, res){
 });
 
 router.post('/index/new', function(req, res){
-
-    console.log(req);
 
     var card_unique_id = randomString({length: 32});
 
@@ -383,8 +380,10 @@ router.post('/index/new', function(req, res){
           res.json({'success': true});
         }
         else{
-          for(var i = 0; i < users.length; i++){
-            UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : users[i].openID},function(err, usercards){
+
+          async.each(users, function(user, callback){
+
+            UserCardModel.find({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
               console.log(usercards);
               console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
               if(usercards){
@@ -407,9 +406,12 @@ router.post('/index/new', function(req, res){
                 UserCardEntity.save();                
               }
             });
-          }
-          res.json({'success': true});
+
+          }, function(err, results){
+            res.json({'success': true});
+          });
         }
+        
       });
     }
 
@@ -422,7 +424,6 @@ router.get('/index/update', function(req, res){
 });
 
 router.get('/index/delete', function(req, res){
-  console.log(req.query.card_unique_id);
   CardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
     UserCardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
       if(err)
@@ -565,7 +566,6 @@ router.get('/index_package/update/packageOrder', function(req, res){
 //搜索目前有哪些集合
 router.get('/index_package/search/package', function(req, res){
     var search_key = req.query.searchKey;
-    console.log(search_key);
     PackageModel.find({packageName : search_key}, function(err, packages){
       var context = {
         packages : packages.map(function(package){
