@@ -72,6 +72,7 @@ function getNextCard(openID, cb){
         //有卡可以刷哦
         async.map(new_user_cards, function(user_new_card, callback){
           var card_unique_id = user_new_card.card_unique_id;
+          var review_number = user_new_card.usedStatus.length;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
             var json = JSON.stringify(card)
             var card_json = {
@@ -89,6 +90,7 @@ function getNextCard(openID, cb){
               reelNumber : card['reelNumber'],
               questionNumber : card['questionNumber'],
               card_unique_id : card_unique_id,
+              review_number : review_number,
               lastCard : false     
             }
             callback(null, card_json);

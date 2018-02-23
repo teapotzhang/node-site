@@ -374,14 +374,9 @@ router.post('/index/new', function(req, res){
             });
 
       UserPackageModel.find({ PackageName : packagename, SubPackageName : subpackagename }, function(err, users){
-        console.log(users);
-        console.log('-------------------------------');
-
         async.each(users, function(user, callback){
 
           UserCardModel.findOne({PackageName : packagename, SubPackageName : subpackagename, openID : user.openID},function(err, usercards){
-            console.log(usercards);
-            console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
             if(usercards){
               var new_json = {
                 card_unique_id : card_unique_id,  //确定卡片的id
