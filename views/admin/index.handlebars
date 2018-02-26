@@ -40,6 +40,8 @@
     <input type='submit' value='搜索'>
 </form>
 
+<a href="/admin/index/searchAll">查找全部卡片</a>
+
 <br />
 <br />
 <br />
@@ -51,6 +53,8 @@
   <p>真题表述为 1错2对</p>
   <p>知识点卡片为 1蓝对2红对</p>
   <tr>
+    <th>集合名</th>
+    <th>卡包名</th>  
     <th>正确项</th>
     <th>真题题干</th>
     <th>解析</th>
@@ -66,6 +70,8 @@
   </tr>
   {{#each cards}}
   <tr>
+    <td>{{packageName}}</td>
+    <td>{{SubPackageName}}</td>  
     <td>{{rightItem}}</td>
     <td>{{expression}}</td>
     <td>{{analysis}}</td>    
