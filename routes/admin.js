@@ -269,31 +269,6 @@ router.get('/index/search', function(req, res){
 
 }); 
 
-router.get('/index/searchAll', function(req, res){
-    CardModel.find(function(err, cards){
-      var context = {
-        cards : cards.map(function(card){
-          return{
-            packageName : card.packageName,
-            SubPackageName : card.SubPackageName,            
-            rightItem : card.rightItem,
-            expression : card.expression,
-            blueItem : card.blueItem,
-            redItem : card.redItem,
-            firstLine : card.firstLine,
-            lastLine : card.lastLine,
-            analysis : card.analysis,
-            yearNumber : card.yearNumber,
-            reelNumber : card.reelNumber,
-            questionNumber : card.questionNumber,             
-            card_unique_id : card.card_unique_id
-          }
-        })
-      }
-      return res.render('admin/index', context);
-    });  
-});
-
 router.get('/index/new', function(req, res){
   PackageModel.find(function(err, packages){
     var context = {
