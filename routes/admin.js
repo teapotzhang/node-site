@@ -266,7 +266,30 @@ router.get('/index/search', function(req, res){
       }
       return res.render('admin/index', context);
     });
+}); 
 
+router.get('/index/searchPackage', function(req, res){
+    var search_key = req.query.searchKey;
+    CardModel.find({"packageName": search_key},null,function(err, cards){
+      var context = {
+        cards : cards.map(function(card){
+          return{
+            rightItem : card.rightItem,
+            expression : card.expression,
+            blueItem : card.blueItem,
+            redItem : card.redItem,
+            firstLine : card.firstLine,
+            lastLine : card.lastLine,
+            analysis : card.analysis,
+            yearNumber : card.yearNumber,
+            reelNumber : card.reelNumber,
+            questionNumber : card.questionNumber,             
+            card_unique_id : card.card_unique_id
+          }
+        })
+      }
+      return res.render('admin/index', context);
+    });
 }); 
 
 router.get('/index/new', function(req, res){
