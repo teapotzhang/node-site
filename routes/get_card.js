@@ -73,27 +73,31 @@ function getNextCard(openID, cb){
         async.map(new_user_cards, function(user_new_card, callback){
           var card_unique_id = user_new_card.card_unique_id;
           var review_number = user_new_card.usedStatus.length;
+          var usedStatus = user_new_card.usedStatus;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            var json = JSON.stringify(card)
-            var card_json = {
-              packageName: card['packageName'],
-              SubPackageName : card['SubPackageName'],
-              packageType: card['cardType'],
-              firstLine: card['firstLine'],
-              lastLine: card['lastLine'],
-              blueItem: card['blueItem'],
-              redItem: card['redItem'],
-              blueRight: card['rightItem'] % 2,
-              analysis: card['analysis'],
-              expression : card['expression'],
-              yearNumber : card['yearNumber'],
-              reelNumber : card['reelNumber'],
-              questionNumber : card['questionNumber'],
-              card_unique_id : card_unique_id,
-              review_number : review_number,
-              lastCard : false     
+            if(card){
+              var json = JSON.stringify(card)
+              var card_json = {
+                packageName: card['packageName'],
+                SubPackageName : card['SubPackageName'],
+                packageType: card['cardType'],
+                firstLine: card['firstLine'],
+                lastLine: card['lastLine'],
+                blueItem: card['blueItem'],
+                redItem: card['redItem'],
+                blueRight: card['rightItem'] % 2,
+                analysis: card['analysis'],
+                expression : card['expression'],
+                yearNumber : card['yearNumber'],
+                reelNumber : card['reelNumber'],
+                questionNumber : card['questionNumber'],
+                card_unique_id : card_unique_id,
+                review_number : review_number,
+                usedStatus : usedStatus,
+                lastCard : false     
+              }
+              callback(null, card_json);
             }
-            callback(null, card_json);
           });          
         },function(err, results){
           var t = JSON.stringify(results);
