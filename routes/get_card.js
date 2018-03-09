@@ -211,37 +211,39 @@ router.get('/', function(req, res, next){
                     NewShowDate = date;
                     activate_flag = true;
                     break;
+                case 3:
+                    date = addDays(today_num, 2);
+                    NewShowDate = date;
+                    activate_flag = true;
                 case 4:
                     NewShowDate = 50000000;
                     activate_flag = false;
                     break;
-                default:
-                    date = addDays(today_num, 2);
-                    NewShowDate = date;
-                    activate_flag = true;
             }          
           }
           else{
             for( var i = 0; i < NewArray.length; i++ ){
               switch(NewArray[i]) {
                   case 1:
+                      //简单
                       date = addDays(date, 8);
                       NewShowDate = date;
                       activate_flag = true;
                       break;
                   case 2:
+                      //模糊
                       date = addDays(date, 4);
                       NewShowDate = date;
                       activate_flag = true;
                       break;
+                  case 3:
+                      date = addDays(today_num, 2);
+                      NewShowDate = date;
+                      activate_flag = true;                      
                   case 4:
                       NewShowDate = 50000000;
                       activate_flag = false;
                       break;                      
-                  default:
-                      date = addDays(date, 2);
-                      NewShowDate = date;
-                      activate_flag = true;
               }              
             }
           }     
