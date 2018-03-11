@@ -8,6 +8,7 @@ var PackageModel = require('../models/package');
 var csv = require('csvtojson');
 var randomString = require('random-string');
 var randomNumber = require('random-number');
+var nowDate = require('silly-datetime');
 var router = express.Router();
 
 var sess;
@@ -435,6 +436,7 @@ router.post('/index/new', function(req, res){
           });
 
         }, function(err, results){
+          //该卡包所有卡片数量增加1
           res.json({'success': true});
         });
       
@@ -457,6 +459,7 @@ router.get('/index/delete', function(req, res){
         return res.json({'status':'fail'})
       }
       else{
+        //把卡包里面卡片数量减1
         return res.json({'status':'success'});
       }
     });    
@@ -475,54 +478,65 @@ router.post('/index/update', function(req, res){
       'analysis' : req.body.analysis
     };
 
+    var package_json = {
+      'packageName' : req.body.packageName,
+      'SubPackageName' : req.body.SubPackageName
+    };
+
     CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
-    if(cards.length === 0){
-      return res.render('admin/index');
-    }
-    else{
-      var _id = cards[0]._id;
+        if(cards.length === 0){
+          return res.render('admin/index');
+        }
+        else{
+          var _id = cards[0]._id;
 
-      data_json = {
-        'rightItem' : req.body.rightItem || cards[0].rightItem,
-        'expression' : req.body.expression || cards[0].expression,
-        'blueItem' : req.body.blueItem || cards[0].blueItem,
-        'redItem' : req.body.redItem || cards[0].redItem,
-        'firstLine' : req.body.firstLine || cards[0].firstLine,
-        'lastLine' : req.body.lastLine || cards[0].lastLine,
-        'analysis' : req.body.analysis  || cards[0].analysis,
-        'yearNumber' : req.body.yearNumber || cards[0].yearNumber,
-        'reelNumber' : req.body.reelNumber || cards[0].reelNumber,
-        'questionNumber' : req.body.questionNumber || cards[0].questionNumber 
-      };
+          data_json = {
+            'rightItem' : req.body.rightItem || cards[0].rightItem,
+            'expression' : req.body.expression || cards[0].expression,
+            'blueItem' : req.body.blueItem || cards[0].blueItem,
+            'redItem' : req.body.redItem || cards[0].redItem,
+            'firstLine' : req.body.firstLine || cards[0].firstLine,
+            'lastLine' : req.body.lastLine || cards[0].lastLine,
+            'analysis' : req.body.analysis  || cards[0].analysis,
+            'yearNumber' : req.body.yearNumber || cards[0].yearNumber,
+            'reelNumber' : req.body.reelNumber || cards[0].reelNumber,
+            'questionNumber' : req.body.questionNumber || cards[0].questionNumber 
+          };
 
-      CardModel.findByIdAndUpdate(_id, { $set: data_json}, function(err, cards){
-        CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
-          var context = {
-            cards : cards.map(function(card){
-              return{
-                packageName : card.packagename,
-                SubPackageName : card.SubPackageName,
-                cardType : card.cardType,
-                rightItem : card.rightItem,
-                expression : card.expression,
-                blueItem : card.blueItem,
-                redItem : card.redItem,
-                firstLine : card.firstLine,
-                lastLine : card.lastLine,
-                analysis : card.analysis,
-                yearNumber : card.yearNumber,
-                reelNumber : card.reelNumber,
-                questionNumber : card.questionNumber,             
-                card_unique_id : card.card_unique_id
-              }
-            })
-          }
-          return res.render('admin/index', context); 
-        });
-      });
-    }
+          nowDate.locate('zh-cn');
+          var lastUpdatedTime = nowDate.format(new Date(), 'YYYY-MM-DD');
+
+          PackageModel.update(package_json, { 'packageUpdateTime' : lastUpdatedTime }, function(err, package) {
+
+            CardModel.findByIdAndUpdate(_id, { $set: data_json}, function(err, cards){
+              CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
+                var context = {
+                  cards : cards.map(function(card){
+                    return{
+                      packageName : card.packagename,
+                      SubPackageName : card.SubPackageName,
+                      cardType : card.cardType,
+                      rightItem : card.rightItem,
+                      expression : card.expression,
+                      blueItem : card.blueItem,
+                      redItem : card.redItem,
+                      firstLine : card.firstLine,
+                      lastLine : card.lastLine,
+                      analysis : card.analysis,
+                      yearNumber : card.yearNumber,
+                      reelNumber : card.reelNumber,
+                      questionNumber : card.questionNumber,             
+                      card_unique_id : card.card_unique_id
+                    }
+                  })
+                }
+                return res.render('admin/index', context); 
+              });
+            });
+
+          });
+        }
     });
-
 });
 
 
@@ -556,7 +570,6 @@ router.get('/index_package/update/package', function(req, res){
     });
 
 });
-
 
 //更新集合的排序
 router.get('/index_package/update/packageOrder', function(req, res){

@@ -1,9 +1,12 @@
 
 <script>
-    function firm(card_unique_id) {  
-        console.log(card_unique_id);
+    function firm(whole) {  
+        console.log(whole);
         if(confirm('涉及用户数据，确定删除吗？')){
-            var theUrl = "/admin/index/delete?card_unique_id="+card_unique_id
+            card_unique_id = whole.split('+')[0];
+            packageName = whole.split('+')[1];
+            SubPackageName = whole.split('+')[2];
+            var theUrl = "/admin/index/delete?card_unique_id="+card_unique_id+"?packageName"+packageName+'?SubPackageName'+SubPackageName;
 
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() { 
@@ -104,8 +107,8 @@
     <td>{{yearNumber}}</td>
     <td>{{reelNumber}}</td>
     <td>{{questionNumber}}</td>    
-    <td><a href="/admin/index/update?card_unique_id={{card_unique_id}}">更改</a></td>
-    <td><input type="button" style="color: red" id="{{card_unique_id}}" onclick="firm(this.id)" value="删除"/></td>
+    <td><a href="/admin/index/update?card_unique_id={{card_unique_id}}?packageName={{packageName}}?SubPackageName={{SubPackageName}}">更改</a></td>
+    <td><input type="button" style="color: red" id="{{card_unique_id}}+{{packageName}}+{{SubPackageName}}" onclick="firm(this.id)" value="删除"/></td>
   </tr>
   {{/each}}
 </table>
