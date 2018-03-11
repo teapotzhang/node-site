@@ -54,6 +54,18 @@
 <br />
 <br />
 
+<form ref="searchFormPackageCardNumber" id="searchFormPackageCardNumber" method="get" action="/admin/index/searchFormPackageCardNumber">
+    <input type='text' name='searchKey_1' placeholder='输入卡包名称' style="width: 80%;" />
+    <br /><br />
+    <input type='text' name='searchKey_2' placeholder='输入子卡包名称' style="width: 80%;" />
+    <br /><br />
+    <input type='submit' value='获取卡包内卡片数量'>
+</form>
+
+<br />
+<br />
+<br />
+
 <h2>卡片列表</h2>
 
 <table>
@@ -62,7 +74,8 @@
   <p>知识点卡片为 1蓝对2红对</p>
   <tr>
     <th>集合名</th>
-    <th>卡包名</th>  
+    <th>卡包名</th>
+    <th>集合内卡包的数量</th>
     <th>正确项</th>
     <th>真题题干</th>
     <th>解析</th>
@@ -79,7 +92,8 @@
   {{#each cards}}
   <tr>
     <td>{{packageName}}</td>
-    <td>{{SubPackageName}}</td>  
+    <td>{{SubPackageName}}</td>
+    <td>{{cardsNumber}}</td>   
     <td>{{rightItem}}</td>
     <td>{{expression}}</td>
     <td>{{analysis}}</td>    
