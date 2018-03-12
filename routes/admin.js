@@ -302,7 +302,7 @@ router.get('/index/searchFormPackageCardNumber', function(req, res){
       }
       return res.render('admin/index', context);
     });
-}); 
+});
 
 router.get('/index/new', function(req, res){
   PackageModel.find(function(err, packages){
