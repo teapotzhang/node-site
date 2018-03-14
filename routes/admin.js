@@ -294,7 +294,8 @@ router.get('/index/searchPackage', function(req, res){
 });
 
 router.get('/index/searchFormPackageCardNumber', function(req, res){
-    var search_key = req.query.searchKey;
+    var search_key_1 = req.query.search_key_1;
+    var search_key_2 = req.query.search_key_2;
     CardModel.find({"packageName": search_key_1, "SubPackageName": search_key_2},null,function(err, cards){
       var cardsNumber = cards.length;
       return res.render('admin/index', cardsNumber);
@@ -502,6 +503,7 @@ router.post('/index/update', function(req, res){
 
           nowDate.locate('zh-cn');
           var lastUpdatedTime = nowDate.format(new Date(), 'YYYY-MM-DD');
+          console.log(lastUpdatedTime);
 
           PackageModel.update(package_json, { 'packageUpdateTime' : lastUpdatedTime }, function(err, package) {
 
