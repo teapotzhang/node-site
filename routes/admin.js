@@ -459,6 +459,8 @@ router.get('/index/update', function(req, res){
 
 router.get('/index/delete', function(req, res){
   CardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
+    console.log(cards);
+
     UserCardModel.remove({card_unique_id : req.query.card_unique_id}, function(err, cards){
       if(err)
       {
@@ -468,7 +470,8 @@ router.get('/index/delete', function(req, res){
         //把卡包里面卡片数量减1
         return res.json({'status':'success'});
       }
-    });    
+    });
+
   }); 
 });
 
@@ -484,17 +487,16 @@ router.post('/index/update', function(req, res){
       'analysis' : req.body.analysis
     };
 
-    var package_json = {
-      'packageName' : req.body.packageName,
-      'SubPackageName' : req.body.SubPackageName
-    };
-
     CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
         if(cards.length === 0){
           return res.render('admin/index');
         }
         else{
           var _id = cards[0]._id;
+          var package_json = {
+            'packageName' : cards[0].packageName,
+            'SubPackageName' : cards[0].SubPackageName
+          };
 
           data_json = {
             'rightItem' : req.body.rightItem || cards[0].rightItem,
