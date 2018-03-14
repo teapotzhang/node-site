@@ -62,7 +62,17 @@ router.post('/login', function(req,res, next){
 router.get('/index', function (req, res) {
    sess = req.session;
    if( sess.authenticated ){
-    return res.render('admin/index'); 
+    PackageModel.find(function(err, packages){
+      var  context = {
+        packages : packages.map(function(package){
+          return{
+            packageName : package.packageName,
+            subPackageName : package.SubPackageName
+          }
+        })
+      }
+      return res.render('admin/index', context);  
+    });
    }
    else{
       return res.redirect('/admin/login');
@@ -247,10 +257,15 @@ router.post('/index_package', function(req, res){
 
 router.get('/index/search', function(req, res){
     var search_key = req.query.searchKey;
+
     CardModel.find({"$or": [ {"expression": {$regex:search_key} }, {"blueItem": {$regex:search_key} },{"redItem": {$regex:search_key} },{"firstLine": {$regex:search_key} },{"lastLine": {$regex:search_key} } ]},null,{limit:20} ,function(err, cards){
-      var context = {
-        cards : cards.map(function(card){
+      
+    PackageModel.find(function(err, packages){
+      var  context = {
+         cards : cards.map(function(card){
           return{
+            packageName : card.packageName,
+            SubPackageName : card.SubPackageName,
             rightItem : card.rightItem,
             expression : card.expression,
             blueItem : card.blueItem,
@@ -263,18 +278,28 @@ router.get('/index/search', function(req, res){
             questionNumber : card.questionNumber,             
             card_unique_id : card.card_unique_id
           }
+        }),       
+        packages : packages.map(function(package){
+          return{
+            packageName : package.packageName,
+            subPackageName : package.SubPackageName
+          }
         })
       }
-      return res.render('admin/index', context);
+      return res.render('admin/index', context);  
+    });
     });
 });
 
 router.get('/index/searchPackage', function(req, res){
     var search_key = req.query.searchKey;
     CardModel.find({"packageName": search_key},null,function(err, cards){
+      PackageModel.find(function(err, packages){
       var context = {
         cards : cards.map(function(card){
           return{
+            packageName : card.packageName,
+            SubPackageName : card.SubPackageName,            
             rightItem : card.rightItem,
             expression : card.expression,
             blueItem : card.blueItem,
@@ -287,26 +312,44 @@ router.get('/index/searchPackage', function(req, res){
             questionNumber : card.questionNumber,             
             card_unique_id : card.card_unique_id
           }
-        })
+        }),       
+        packages : packages.map(function(package){
+          return{
+            packageName : package.packageName,
+            subPackageName : package.SubPackageName
+          }
+        })        
       }
       return res.render('admin/index', context);
+    });
     });
 });
 
 router.get('/index/searchFormPackageCardNumber', function(req, res){
-    var search_key_1 = req.query.search_key_1;
-    var search_key_2 = req.query.search_key_2;
-    console.log(search_key_1)
-    console.log(search_key_2)
+
+    var search_key_1 = req.query.packageName.split('-')[0];
+    var search_key_2 = req.query.packageName.split('-')[1];
+
     CardModel.find({"packageName": search_key_1, "SubPackageName": search_key_2},function(err, cards){
       
       var cardsNumber = cards.length;
       
       PackageModel.update({"packageName": search_key_1, "SubPackageName": search_key_2}, { 'packageCardNumber' : cardsNumber, 'packageUpdateTime' : ''}, function(err, package) {
-        console.log('success');
+        
+        PackageModel.find(function(err, packages){
+          var  context = {
+            packages : packages.map(function(package){
+              return{
+                packageName : package.packageName,
+                subPackageName : package.SubPackageName
+              }
+            })
+          }
+          return res.render('admin/index', context);  
+        });
+
       });
 
-      return res.render('admin/index');
     });
 });
 
@@ -519,10 +562,11 @@ router.post('/index/update', function(req, res){
 
             CardModel.findByIdAndUpdate(_id, { $set: data_json}, function(err, cards){
               CardModel.find({card_unique_id : req.query.card_unique_id}, function(err, cards){
-                var context = {
+                PackageModel.find(function(err, packages){
+                  var  context = {
                   cards : cards.map(function(card){
                     return{
-                      packageName : card.packagename,
+                      packageName : card.packageName,
                       SubPackageName : card.SubPackageName,
                       cardType : card.cardType,
                       rightItem : card.rightItem,
@@ -537,9 +581,16 @@ router.post('/index/update', function(req, res){
                       questionNumber : card.questionNumber,             
                       card_unique_id : card.card_unique_id
                     }
-                  })
-                }
-                return res.render('admin/index', context); 
+                    }),                    
+                    packages : packages.map(function(package){
+                      return{
+                        packageName : package.packageName,
+                        subPackageName : package.SubPackageName
+                      }
+                    })
+                  }
+                  return res.render('admin/index', context);  
+                });
               });
             });
 
