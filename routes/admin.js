@@ -302,7 +302,7 @@ router.get('/index/searchFormPackageCardNumber', function(req, res){
       
       var cardsNumber = cards.length;
       
-      PackageModel.update({"packageName": search_key_1, "SubPackageName": search_key_2}, { 'packageCardNumber' : cardsNumber}, function(err, package) {
+      PackageModel.update({"packageName": search_key_1, "SubPackageName": search_key_2}, { 'packageCardNumber' : cardsNumber, 'packageUpdateTime' : ''}, function(err, package) {
         console.log('success');
       });
 
