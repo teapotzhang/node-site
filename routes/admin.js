@@ -297,10 +297,7 @@ router.get('/index/searchFormPackageCardNumber', function(req, res){
     var search_key = req.query.searchKey;
     CardModel.find({"packageName": search_key_1, "SubPackageName": search_key_2},null,function(err, cards){
       var cardsNumber = cards.length;
-      var context = {
-        cards : cardsNumber
-      }
-      return res.render('admin/index', context);
+      return res.render('admin/index', cardsNumber);
     });
 });
 
