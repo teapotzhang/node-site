@@ -55,6 +55,8 @@ router.get('/', function(req, res, next){
             var data_json ={
               PackageName : thePackageName,
               SubPackageName : current_card.SubPackageName,
+              packageCardNumber : packages[0].packageCardNumber,
+              packageUpdateTime : packages[0].packageUpdateTime,
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
               packageId : packageId,
