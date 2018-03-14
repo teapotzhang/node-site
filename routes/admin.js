@@ -296,9 +296,17 @@ router.get('/index/searchPackage', function(req, res){
 router.get('/index/searchFormPackageCardNumber', function(req, res){
     var search_key_1 = req.query.search_key_1;
     var search_key_2 = req.query.search_key_2;
-    CardModel.find({"packageName": search_key_1, "SubPackageName": search_key_2},null,function(err, cards){
+    console.log(search_key_1)
+    console.log(search_key_2)
+    CardModel.find({"packageName": search_key_1, "SubPackageName": search_key_2},function(err, cards){
+      
       var cardsNumber = cards.length;
-      return res.render('admin/index', cardsNumber);
+      
+      PackageModel.update({"packageName": search_key_1, "SubPackageName": search_key_2}, { 'packageCardNumber' : cardsNumber}, function(err, package) {
+        console.log('success');
+      });
+
+      return res.render('admin/index');
     });
 });
 
