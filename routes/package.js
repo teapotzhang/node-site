@@ -83,6 +83,7 @@ router.get('/', function(req, res, next){
 router.get('/activate_change_all', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName;
+    var subPackageNames = req.query.subPackageName;
     var activate_flag = req.query.activated.toString();
 
     if( packageName.indexOf('知识点') != -1 ){
@@ -98,7 +99,9 @@ router.get('/activate_change_all', function(req, res, next){
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
-      UserPackageModel.find({'openID' : openID, 'PackageName' : packageName}, function(err, userpackages){
+
+      async.map(subPackageNames, function(subPackageName, callback){
+      UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
         //先在userpackage里标注为不激活
 
         var _id = userpackages[0]._id;
@@ -108,12 +111,12 @@ router.get('/activate_change_all', function(req, res, next){
 
         UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
           //更新userpackage后，更新usercard
-          var thequery = {'openID' : openID, 'PackageName' : packageName};
+          var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
 
           UserCardModel.find(thequery, function(err, usercards){
             if(usercards.length === 0){
               
-                CardModel.find({'packageName' : packageName}, function(err, cards){
+                CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
                   async.each(cards, function(card, callback){
                     var random_number = randomNumber({
                           min : 10000,
@@ -138,7 +141,7 @@ router.get('/activate_change_all', function(req, res, next){
                       callback();
                     });
                   },function(){
-                    res.json({success: true});
+                    callback();
                   });
                 
                 });
@@ -146,14 +149,16 @@ router.get('/activate_change_all', function(req, res, next){
             else{
               UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
                 if (err) return res.json(err);
-                res.json({success: true});
+                callback();
               });
             }
           });
         });
-        
       });
-    });    
+      }, function(err, res){
+        res.json({success: true});
+      });
+    });
 });
 
 //在package页面执行activate de-activate操作的时候，执行该路径，将卡片从userPackage userCard里标记为不激活
