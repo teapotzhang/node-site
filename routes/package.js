@@ -18,6 +18,78 @@ function sortBy(field) {
     }
 }
 
+function activateChange(sessionID, packageName, subPackageName, activate_flag){
+  if( packageName.indexOf('知识点') != -1 ){
+    //是知识点卡片集合
+    packageName = packageName.split('知识点')[0];
+  }
+
+  if( activate_flag == 'true' ){ activate_flag = true }else{ activate_flag = false };
+
+  //获取openID 不暴漏用户
+  var openID;
+
+  UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+    openID = user['openID'];
+    //确保获取了user后，进行接下来的操作
+    UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
+      //先在userpackage里标注为不激活
+
+      var _id = userpackages[0]._id;
+      var data_json = {
+        'Activated' : activate_flag
+      };
+
+      UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+        //更新userpackage后，更新usercard
+        var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
+
+        UserCardModel.find(thequery, function(err, usercards){
+          if(usercards.length === 0){
+            
+              CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
+                async.each(cards, function(card, callback){
+                  var random_number = randomNumber({
+                        min : 10000,
+                        max : 99999,
+                        integer : true
+                      });
+
+                  var data_json = {
+                      card_unique_id : card.card_unique_id,  //确定卡片的id
+                      PackageName : card.packageName, //卡片包
+                      SubPackageName : card.SubPackageName,  //子卡包
+                      LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                      LastUpdateDate : 20000102,
+                      openID : openID,   //确定是谁
+                      Showed: false,   //是否出现过
+                      usedStatus: [],
+                      activated: true,
+                      randomNumber : random_number
+                    }
+                  var UserCardEntity = new UserCardModel(data_json);
+                  UserCardEntity.save(function(err, usercard){
+                    callback();
+                  });
+                },function(){
+                  return 'done'
+                });
+              
+              });
+          }
+          else{
+            UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
+              if (err) return res.json(err);
+              return 'done'
+            });
+          }
+        });
+      });
+      
+    });
+  });
+}
+
 router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
@@ -100,63 +172,17 @@ router.get('/activate_change_all', function(req, res, next){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
 
-      for(var k = 0; k <= subPackageNames.length; k++ )
-      {
-          var subPackageName = subPackageNames[k];
-          UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
-            //先在userpackage里标注
-            var _id = userpackages[0]._id;
-            var data_json = {
-              'Activated' : activate_flag
-            };
-
-            UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-              //更新userpackage后，更新usercard
-              var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
-
-              UserCardModel.find(thequery, function(err, usercards){
-                if(usercards.length === 0){
-                    CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
-                      async.each(cards, function(card, callback){
-                        var random_number = randomNumber({
-                              min : 10000,
-                              max : 99999,
-                              integer : true
-                            });
-
-                        var data_json = {
-                            card_unique_id : card.card_unique_id,  //确定卡片的id
-                            PackageName : card.packageName, //卡片包
-                            SubPackageName : card.SubPackageName,  //子卡包
-                            LastShowDate : 20000102,   //确定这张卡下次出现的时间
-                            LastUpdateDate : 20000102,
-                            openID : openID,   //确定是谁
-                            Showed: false,   //是否出现过
-                            usedStatus: [],
-                            activated: true,
-                            randomNumber : random_number
-                          }
-                        var UserCardEntity = new UserCardModel(data_json);
-                        UserCardEntity.save(function(err, usercard){
-                          callback();
-                        });
-                      },function(){
-                        
-                      });
-                    
-                    });
-                }
-                else{
-                  UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
-                    if (err) return res.json(err);
-                    
-                  });
-                }
-              });
-            });
-          });
-        }
-
+      async.each(subPackageNames, function(subPackageName, cb){
+          var k = activateChange(sessionID,packageName,subPackageName,activate_flag);
+          if( k == 'done' ){
+            cb();
+          }
+          else{
+            res.json({fail: true});
+          }
+      },function(){
+        res.json({success: true});
+      });
     });
 });
 
