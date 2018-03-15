@@ -24,8 +24,6 @@ function activateChange(sessionID, packageName, subPackageName, activate_flag){
     packageName = packageName.split('知识点')[0];
   }
 
-  if( activate_flag == 'true' ){ activate_flag = true }else{ activate_flag = false };
-
   //获取openID 不暴漏用户
   var openID;
 
