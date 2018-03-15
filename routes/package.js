@@ -100,7 +100,7 @@ router.get('/activate_change_all', function(req, res, next){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
 
-      async.map(subPackageNames, function(subPackageName, callback){
+      async.map(subPackageNames, function(subPackageName, cb){
       UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
         //先在userpackage里标注为不激活
 
@@ -141,7 +141,7 @@ router.get('/activate_change_all', function(req, res, next){
                       callback();
                     });
                   },function(){
-                    callback();
+                    cb();
                   });
                 
                 });
@@ -149,7 +149,7 @@ router.get('/activate_change_all', function(req, res, next){
             else{
               UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
                 if (err) return res.json(err);
-                callback();
+                cb();
               });
             }
           });
