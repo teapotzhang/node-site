@@ -100,8 +100,6 @@ router.get('/activate_change_all', function(req, res, next){
       openID = user['openID'];
       //确保获取了user后，进行接下来的操作
 
-      var PromiseGetNextCard = new Promise(function (resolve){
-
       for(var k = 0; k <= subPackageNames.length; k++ )
       {
           var subPackageName = subPackageNames[k];
@@ -158,12 +156,6 @@ router.get('/activate_change_all', function(req, res, next){
             });
           });
         }
-        resolve(1);
-      });   
-        
-      PromiseGetNextCard.then(function(){
-        res.json({success: true});    
-      });
 
     });
 });
