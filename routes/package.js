@@ -83,7 +83,7 @@ router.get('/', function(req, res, next){
 router.get('/activate_change_all', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName;
-    var subPackageNames = req.query.subPackageName;
+    var subPackageNames = JSON.parse(req.query.subPackageName);
     var activate_flag = req.query.activated.toString();
 
     if( packageName.indexOf('知识点') != -1 ){
@@ -102,58 +102,59 @@ router.get('/activate_change_all', function(req, res, next){
 
       async.each(subPackageNames, function(subPackageName, cb){
 
-      UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
-        //先在userpackage里标注
-        var _id = userpackages[0]._id;
-        var data_json = {
-          'Activated' : activate_flag
-        };
+        UserPackageModel.find({'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName}, function(err, userpackages){
+          //先在userpackage里标注
+          var _id = userpackages[0]._id;
+          var data_json = {
+            'Activated' : activate_flag
+          };
 
-        UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
-          //更新userpackage后，更新usercard
-          var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
+          UserPackageModel.findByIdAndUpdate(_id, { $set: data_json}, {new: false}, function(err, cards){
+            //更新userpackage后，更新usercard
+            var thequery = {'openID' : openID, 'PackageName' : packageName, 'SubPackageName' : subPackageName};
 
-          UserCardModel.find(thequery, function(err, usercards){
-            if(usercards.length === 0){
-                CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
-                  async.each(cards, function(card, callback){
-                    var random_number = randomNumber({
-                          min : 10000,
-                          max : 99999,
-                          integer : true
-                        });
+            UserCardModel.find(thequery, function(err, usercards){
+              if(usercards.length === 0){
+                  CardModel.find({'packageName' : packageName, 'SubPackageName' : subPackageName}, function(err, cards){
+                    async.each(cards, function(card, callback){
+                      var random_number = randomNumber({
+                            min : 10000,
+                            max : 99999,
+                            integer : true
+                          });
 
-                    var data_json = {
-                        card_unique_id : card.card_unique_id,  //确定卡片的id
-                        PackageName : card.packageName, //卡片包
-                        SubPackageName : card.SubPackageName,  //子卡包
-                        LastShowDate : 20000102,   //确定这张卡下次出现的时间
-                        LastUpdateDate : 20000102,
-                        openID : openID,   //确定是谁
-                        Showed: false,   //是否出现过
-                        usedStatus: [],
-                        activated: true,
-                        randomNumber : random_number
-                      }
-                    var UserCardEntity = new UserCardModel(data_json);
-                    UserCardEntity.save(function(err, usercard){
-                      callback();
+                      var data_json = {
+                          card_unique_id : card.card_unique_id,  //确定卡片的id
+                          PackageName : card.packageName, //卡片包
+                          SubPackageName : card.SubPackageName,  //子卡包
+                          LastShowDate : 20000102,   //确定这张卡下次出现的时间
+                          LastUpdateDate : 20000102,
+                          openID : openID,   //确定是谁
+                          Showed: false,   //是否出现过
+                          usedStatus: [],
+                          activated: true,
+                          randomNumber : random_number
+                        }
+                      var UserCardEntity = new UserCardModel(data_json);
+                      UserCardEntity.save(function(err, usercard){
+                        callback();
+                      });
+                    },function(){
+                      cb();
                     });
-                  },function(){
-                    cb();
+                  
                   });
-                
+              }
+              else{
+                UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
+                  if (err) return res.json(err);
+                  cb();
                 });
-            }
-            else{
-              UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
-                if (err) return res.json(err);
-                cb();
-              });
-            }
+              }
+            });
           });
         });
-      });
+
       }, function(err, res){
         res.json({success: true});
       });
