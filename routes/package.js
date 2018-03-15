@@ -158,7 +158,7 @@ router.get('/activate_change_all', function(req, res, next){
             });
           });
         }
-        resolve();
+        resolve(1);
       });   
         
       PromiseGetNextCard.then(function(){
