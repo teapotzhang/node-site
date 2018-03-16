@@ -75,7 +75,7 @@ function getNextCard(openID, cb){
           var review_number = user_new_card.usedStatus.length;
           var usedStatus = user_new_card.usedStatus;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            if(card.redItem != '' || card.expression != ''){
+            if(card.redItem != "" || card.expression != ""){
               var json = JSON.stringify(card)
               var card_json = {
                 packageName: card['packageName'],
@@ -94,12 +94,27 @@ function getNextCard(openID, cb){
                 card_unique_id : card_unique_id,
                 review_number : review_number,
                 usedStatus : usedStatus,
-                lastCard : false     
+                emptey_card : false,
+                lastCard : false
               }
               callback(null, card_json);
             }
-          });          
+            else{
+              callback(null, {'emptey_card' : true});
+            }
+          });
         },function(err, results){
+            for(var i=0,flag=true,len=results.length;i<len;flag ? i++ : i){
+                    
+               if( results[i]&&results[i].emptey_card==true ){
+                    results.splice(i,1);
+                    flag = false;
+                } else {
+                    flag = true;
+                }
+
+            }
+
           var t = JSON.stringify(results);
           cb(t);
         });       
