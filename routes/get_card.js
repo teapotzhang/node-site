@@ -75,7 +75,7 @@ function getNextCard(openID, cb){
           var review_number = user_new_card.usedStatus.length;
           var usedStatus = user_new_card.usedStatus;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            if(card){
+            if(card.redItem != '' || card.expression != ''){
               var json = JSON.stringify(card)
               var card_json = {
                 packageName: card['packageName'],
