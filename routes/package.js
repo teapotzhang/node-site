@@ -153,7 +153,7 @@ router.get('/', function(req, res, next){
 router.get('/activate_change_all', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
     var packageName = req.query.packageName;
-    var subPackageNames = JSON.parse(req.query.subPackageName);
+    var subPackageNames = req.query.subPackageName;
     var activate_flag = req.query.activated.toString();
 
     if( packageName.indexOf('知识点') != -1 ){
