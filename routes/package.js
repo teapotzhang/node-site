@@ -77,7 +77,7 @@ function activateChange(sessionID, packageName, subPackageName, activate_flag){
           }
           else{
             UserCardModel.update(thequery, {activated: activate_flag}, {multi: true},function(err) {
-              if (err) return res.json(err);
+              if (err) return err;
               return 'done'
             });
           }
