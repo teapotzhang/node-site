@@ -75,29 +75,31 @@ function getNextCard(openID, cb){
           var review_number = user_new_card.usedStatus.length;
           var usedStatus = user_new_card.usedStatus;
           CardModel.findOne({'card_unique_id': card_unique_id}, function(err, card){
-            if(card.redItem != "" || card.expression != ""){
-              var json = JSON.stringify(card)
-              var card_json = {
-                packageName: card['packageName'],
-                SubPackageName : card['SubPackageName'],
-                packageType: card['cardType'],
-                firstLine: card['firstLine'],
-                lastLine: card['lastLine'],
-                blueItem: card['blueItem'],
-                redItem: card['redItem'],
-                blueRight: card['rightItem'] % 2,
-                analysis: card['analysis'],
-                expression : card['expression'],
-                yearNumber : card['yearNumber'],
-                reelNumber : card['reelNumber'],
-                questionNumber : card['questionNumber'],
-                card_unique_id : card_unique_id,
-                review_number : review_number,
-                usedStatus : usedStatus,
-                emptey_card : false,
-                lastCard : false
+            if(card){
+              if(card.redItem != "" || card.expression != ""){
+                var json = JSON.stringify(card)
+                var card_json = {
+                  packageName: card['packageName'],
+                  SubPackageName : card['SubPackageName'],
+                  packageType: card['cardType'],
+                  firstLine: card['firstLine'],
+                  lastLine: card['lastLine'],
+                  blueItem: card['blueItem'],
+                  redItem: card['redItem'],
+                  blueRight: card['rightItem'] % 2,
+                  analysis: card['analysis'],
+                  expression : card['expression'],
+                  yearNumber : card['yearNumber'],
+                  reelNumber : card['reelNumber'],
+                  questionNumber : card['questionNumber'],
+                  card_unique_id : card_unique_id,
+                  review_number : review_number,
+                  usedStatus : usedStatus,
+                  emptey_card : false,
+                  lastCard : false
+                }
+                callback(null, card_json);
               }
-              callback(null, card_json);
             }
             else{
               callback(null, {'emptey_card' : true});
