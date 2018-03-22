@@ -39,7 +39,14 @@ function getTargetCents(openID, targetCents, cb){
 
     //用户一共刷了多少张卡
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
-      total_cards = cards.length;
+
+      var total = 0;
+
+      for( var i = 0; i < cards.length; i ++ ){
+        total = cards[i]['usedStatus'].length + total;
+      }
+
+      total_cards = cards.length + total;
 
       //用户距离司考还有多少天
       var days = dateCompare();
@@ -64,11 +71,13 @@ function getTargetCents(openID, targetCents, cb){
       var number_json = {
         done : today_number,
         all : today_need,
-        targetCents : targetCents
+        targetCents : targetCents,
+        total_cards: total_cards
       }
 
       var get_json = JSON.stringify(number_json);
       cb(get_json);
+
     });
 
   });
