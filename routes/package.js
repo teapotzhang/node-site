@@ -112,6 +112,7 @@ router.get('/', function(req, res, next){
             for( var i = 0; i < packages.length; i ++ ){
               if( current_card.SubPackageName == packages[i]['SubPackageName'] ){
                 packageId = packages[i]['packageId'];
+                packageCardNumber = packages[i]['packageCardNumber'];
               }
             }
 
@@ -125,7 +126,7 @@ router.get('/', function(req, res, next){
             var data_json ={
               PackageName : thePackageName,
               SubPackageName : current_card.SubPackageName,
-              packageCardNumber : packages[0].packageCardNumber,
+              packageCardNumber : packageCardNumber,
               packageUpdateTime : packages[0].packageUpdateTime,
               Purchased : current_card.Purchased,
               Activated : current_card.Activated,
