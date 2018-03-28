@@ -2,6 +2,7 @@ var express = require('express');
 var async = require('async');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
+var UserModel = require('../models/user');
 var UserCardModel = require('../models/userCard');
 var UserPackageModel = require('../models/userPackage');
 var PackageModel = require('../models/package');
@@ -17,6 +18,21 @@ function get_line(whole_line){
   var _whole_line = whole_line || "#";
   var k = _whole_line.split('#');
   return k; 
+}
+
+function dateObjToDateNumber(date_obj){
+    var year = date_obj.getFullYear().toString();
+    var month = (date_obj.getMonth() + 1).toString();
+    var date_n = date_obj.getDate().toString();
+    if( date_n < 10 ){
+      date_n = '0' + date_n;
+    }
+    if( month < 10 ){
+      month = '0' + month;
+    }
+    var result = year + month + date_n;
+    result = parseInt(result);
+    return result;
 }
 
 router.get('/login', function(req, res, next){
@@ -678,6 +694,39 @@ router.get('/index_package/search/package', function(req, res){
       }
       return res.render('admin/index_package', context); 
     });
+});
+
+router.get('/index/userCard', function(req, res){
+  var today_obj = new Date();
+  var today_num = dateObjToDateNumber(today_obj);  
+  UserModel.find({}, function(err, users){
+    async.each(users, function(userData, callback){
+        let openId = users.openID;
+        UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
+          let today_number = cards.length;
+
+          //用户一共刷了多少张卡
+          UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
+
+            var total = 0;
+
+            for( var i = 0; i < cards.length; i ++ ){
+              total = cards[i]['usedStatus'].length + total;
+            }
+
+            total_cards = cards.length + total;
+
+            UserModel.update({'openID' : openId}, {'todayCards': today_number, 'totalCards' : total_cards},{multi: true},function(err, user){
+              callback();
+            });
+
+          });
+
+        })
+    }, function(res){
+      res.json({'success':true});
+    });
+  });
 });
 
 

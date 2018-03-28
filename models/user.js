@@ -20,7 +20,9 @@ var UserSchema = new Schema({
 	province: String,
 	city: String,
 	country: String,
-	targetCents : Number
+	targetCents : Number,
+	todayCards : Number,
+	totalCards : Number
 });
 
 var UserModel = db.model('User', UserSchema);
