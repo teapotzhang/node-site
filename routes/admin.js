@@ -723,8 +723,8 @@ router.get('/index/userCard', function(req, res){
           });
 
         })
-    }, function(res){
-      res.json({'success':true});
+    }, function(results){
+      return res.render('admin/index'); 
     });
   });
 });
