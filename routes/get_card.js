@@ -133,25 +133,27 @@ router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
     //获取openID 不暴漏用户
-    var openID, card_unique_id;
+    var openID, card_unique_id, total_num, today_num;
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     openID = user['openID'];
+    total_num = user['totalCards'];
+    today_num = user['todayCards'];
 
     if(req.query.first_card == 'true'){
       //是当天的头一百张卡
       //去card表里查询卡的具体内容
 
-        var card_json;
-        var PromiseGetNextCard = new Promise(function(resolve,reject){   
-          getNextCard(openID, function(result){   
-            resolve(result);    
-           });    
-        });   
-          
-        PromiseGetNextCard.then(function(result){   
-          card_json = result;        
-          res.json(card_json);    
-        });
+      var card_json;
+      var PromiseGetNextCard = new Promise(function(resolve,reject){   
+        getNextCard(openID, function(result){   
+          resolve(result);    
+         });    
+      });   
+        
+      PromiseGetNextCard.then(function(result){   
+        card_json = result;        
+        res.json(card_json);    
+      });
 
     }
     else{
@@ -159,6 +161,8 @@ router.get('/', function(req, res, next){
 
       //回传的用户刷卡详情数组
       var memoryData = JSON.parse(req.query.memoryData);
+
+      var cardNum = memoryData.length;
 
       async.each(memoryData, function(singleMemoryData, callback){
 

@@ -22,7 +22,8 @@ var UserSchema = new Schema({
 	country: String,
 	targetCents : Number,
 	todayCards : Number,
-	totalCards : Number
+	totalCards : Number,
+	lastUpdateTime : Number
 });
 
 var UserModel = db.model('User', UserSchema);

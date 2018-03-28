@@ -716,7 +716,7 @@ router.get('/index/userCard', function(req, res){
 
             total_cards = cards.length + total;
 
-            UserModel.update({'openID' : openId}, {'todayCards': today_number, 'totalCards' : total_cards},{multi: true},function(err, user){
+            UserModel.update({'openID' : openId}, {'todayCards': today_number, 'totalCards' : total_cards, 'lastUpdateTime' : today_num},{multi: true},function(err, user){
               callback();
             });
 
