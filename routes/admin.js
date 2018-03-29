@@ -707,10 +707,7 @@ router.get('/index/userCard', function(req, res){
         UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
           let today_number = cards.length;
           let userCardRecord = { 'date' : today_num, 'cards' : today_number };
-
-          if( today_number > 0 ){
-            recordArray.push(userCardRecord);
-          }
+          recordArray.push(userCardRecord);
 
           //用户一共刷了多少张卡
           UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
