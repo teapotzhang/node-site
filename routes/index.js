@@ -147,7 +147,7 @@ router.get('/upload_num', function(req, res, next){
     });
 });
 
-router.get('/getArray', function(req, res, next){
+router.get('/getTotalArray', function(req, res, next){
   var total_array = [];
   UserModel.find({}, null, {limit: 1500, sort: {totalCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
@@ -156,6 +156,21 @@ router.get('/getArray', function(req, res, next){
     }, function(results){
       total_array = JSON.stringify(total_array);
       res.json(total_array);
+    });
+  });
+});
+
+router.get('/getTodayArray', function(req, res, next){
+  var today_array = [];
+  var today_obj = new Date();
+  var today_num = dateObjToDateNumber(today_obj);  
+  UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
+    async.each(users, function(user, callback){
+      today_array.push(user['todayCards']);
+      callback();
+    }, function(results){
+      today_array = JSON.stringify(today_array);
+      res.json(today_array);
     });
   });
 });
