@@ -149,13 +149,15 @@ router.get('/upload_num', function(req, res, next){
 
 router.get('/getTotalArray', function(req, res, next){
   var total_array = [];
+  var total_nick_array = [];
   UserModel.find({}, null, {limit: 1500, sort: {totalCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
       total_array.push(user['totalCards']);
+      total_nick_array.push(user['nickName']);
       callback();
     }, function(results){
       total_array = JSON.stringify(total_array);
-      res.json(total_array);
+      res.json({'array':total_array,'nickname':total_nick_array});
     });
   });
 });
