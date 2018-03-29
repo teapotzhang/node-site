@@ -33,54 +33,65 @@ function getTargetCents(openID, targetCents, cb){
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj);
   
-  //用户今天刷了多少张卡
-  UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
-    today_number = cards.length;
+  var total_num_array = [];
+  var today_num_array = [];
 
-    //用户一共刷了多少张卡
-    UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
-
-      var total = 0;
-
-      for( var i = 0; i < cards.length; i ++ ){
-        total = cards[i]['usedStatus'].length + total;
+  UserModel.find({}, null, {limit: 1500, sort: {totalCards: -1}}, function(err, total_cards) {
+    for( var i = 0; i < total_cards.length; i ++ ){
+      total_num_array.push(total_cards[i]['totalCards'])
+    }
+    UserModel.find({lastUpdateTime : today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, todayCards) {
+      for( var i = 0; i < total_cards.length; i ++ ){
+        today_num_array.push(todayCards[i]['todayCards'])
       }
+        //用户今天刷了多少张卡
+        UserModel.find({'openID' : openID}, function(err, user){
 
-      total_cards = cards.length + total;
+            var today_number = user[0].todayCards;
+            var total_cards = user[0].totalCards;
 
-      //用户距离司考还有多少天
-      var days = dateCompare();
+            lastUpdateTime = user[0].lastUpdateTime;
 
-      switch(parseInt(targetCents))
-      {
-      case 320:
-        total_cards_set = 10000;
-        break;
-      case 360:
-        total_cards_set = 25000;
-        break;
-      case 380:
-        total_cards_set = 35000;
-        break;
-      default:
-        total_cards_set = 50000;
-      }
+            if( lastUpdateTime < today_num ){
+              today_number = 0;
+            }
 
-      today_need = Math.floor((total_cards_set - total_cards)/days);
+            //用户距离司考还有多少天
+            var days = dateCompare();
 
-      var number_json = {
-        done : today_number,
-        all : today_need,
-        targetCents : targetCents,
-        total_cards: total_cards
-      }
+            switch(parseInt(targetCents))
+            {
+            case 320:
+              total_cards_set = 10000;
+              break;
+            case 360:
+              total_cards_set = 25000;
+              break;
+            case 380:
+              total_cards_set = 35000;
+              break;
+            default:
+              total_cards_set = 50000;
+            }
 
-      var get_json = JSON.stringify(number_json);
-      cb(get_json);
+            today_need = Math.floor((total_cards_set - total_cards)/days);
 
+            var number_json = {
+              done : today_number,
+              all : today_need,
+              targetCents : targetCents,
+              total_cards: total_cards,
+              total_cards_array: total_num_array,
+              today_cards_array: today_num_array
+            }
+
+            var get_json = JSON.stringify(number_json);
+            cb(get_json);
+
+        });
     });
-
   });
+
 }
 
 //加载小程序首页的时候，执行该路径，获取今日刷的卡数，以及用户的目标分数
