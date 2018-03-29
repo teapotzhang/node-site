@@ -166,7 +166,9 @@ router.get('/getTodayArray', function(req, res, next){
   var today_num = dateObjToDateNumber(today_obj);  
   UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
-      today_array.push(user['todayCards']);
+      if( user['todayCards'] > 0 ){
+        today_array.push(user['todayCards']);
+      }
       callback();
     }, function(results){
       today_array = JSON.stringify(today_array);
