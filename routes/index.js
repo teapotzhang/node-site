@@ -149,7 +149,7 @@ router.get('/upload_num', function(req, res, next){
 
 router.get('/getArray', function(req, res, next){
   var total_array = [];
-  UserModel.find({}, null, {limit: 30, sort: {totalCards: -1}}, function(err, users){
+  UserModel.find({}, null, {limit: 1500, sort: {totalCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
       total_array.push(user['totalCards']);
       callback();
