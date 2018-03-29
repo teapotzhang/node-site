@@ -1,4 +1,6 @@
 var express = require('express');
+var Promise = require("bluebird");
+var async = require('async');
 var UserModel = require('../models/user');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
@@ -143,6 +145,19 @@ router.get('/upload_num', function(req, res, next){
 
       });     
     });
+});
+
+router.get('/getArray', function(req, res, next){
+  var total_array = [];
+  UserModel.find({}, null, {limit: 30, sort: {totalCards: -1}}, function(err, users){
+    async.each(users, function(user, callback){
+      total_array.push(user['totalCards']);
+      callback();
+    }, function(results){
+      total_array = JSON.stringify(total_array);
+      res.json(total_array);
+    });
+  });
 });
 
 module.exports = router;

@@ -729,5 +729,4 @@ router.get('/index/userCard', function(req, res){
   });
 });
 
-
 module.exports = router;
