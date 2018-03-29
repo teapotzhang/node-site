@@ -133,11 +133,12 @@ router.get('/', function(req, res, next){
     var sessionID = req.query.sessionID; //确定用户
 
     //获取openID 不暴漏用户
-    var openID, card_unique_id, total_num, today_num;
+    var openID, card_unique_id, total_num, today_num, lastUpdateTime;
     UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     openID = user['openID'];
     total_num = user['totalCards'];
     today_num = user['todayCards'];
+    lastUpdateTime = user['lastUpdateTime'];
 
     if(req.query.first_card == 'true'){
       //是当天的头一百张卡
@@ -164,145 +165,164 @@ router.get('/', function(req, res, next){
 
       var cardNum = memoryData.length;
 
-      async.each(memoryData, function(singleMemoryData, callback){
+      total_num = total_num + cardNum;
 
-        var seconds = parseInt(singleMemoryData.seconds);
-        var answerStatus = singleMemoryData.answerStatus;
-        var card_unique_id = singleMemoryData.card_unique_id;
-        var card_type = singleMemoryData.card_type;
-        
-        var tag;
+      var today_obj = new Date();
+      var today_num = dateObjToDateNumber(today_obj);
 
-        if( card_unique_id.length == 32 )
-        {
-          if( answerStatus == 'false' ){
-            tag = 3; //回答错了
-          } 
-          else{
-            if(card_type == "Exam")
-            {
-              if(seconds <= 20){
-                tag = 1; //简单
+
+      if( lastUpdateTime < today_num ){
+        //今天刚刚开始刷卡
+        today_num = cardNum;
+        lastUpdateTime = today_num
+      }
+      else{
+        today_num = today_num + cardNum;
+      }
+
+      UserModel.update({'openID' : openId}, {'todayCards': today_num, 'totalCards' : total_num, 'lastUpdateTime' : lastUpdateTime},{multi: true},function(err, user){
+
+        async.each(memoryData, function(singleMemoryData, callback){
+
+          var seconds = parseInt(singleMemoryData.seconds);
+          var answerStatus = singleMemoryData.answerStatus;
+          var card_unique_id = singleMemoryData.card_unique_id;
+          var card_type = singleMemoryData.card_type;
+          
+          var tag;
+
+          if( card_unique_id.length == 32 )
+          {
+            if( answerStatus == 'false' ){
+              tag = 3; //回答错了
+            } 
+            else{
+              if(card_type == "Exam")
+              {
+                if(seconds <= 20){
+                  tag = 1; //简单
+                }
+                else{
+                  tag = 2; //模糊
+                }
               }
-              else{
-                tag = 2; //模糊
-              }
+              if(card_type == "Normal")
+              {
+                if(seconds <= 8){
+                  tag = 1; //简单
+                }
+                else{
+                  tag = 2; //模糊
+                }
+              }   
+              if(card_type == "Introduction"){
+                 if(seconds <= 8){
+                  tag = 1; //简单
+                }
+                else{
+                  tag = 2; //模糊
+                }         
+              }     
             }
-            if(card_type == "Normal")
-            {
-              if(seconds <= 8){
-                tag = 1; //简单
-              }
-              else{
-                tag = 2; //模糊
-              }
-            }   
-            if(card_type == "Introduction"){
-               if(seconds <= 8){
-                tag = 1; //简单
-              }
-              else{
-                tag = 2; //模糊
-              }         
-            }     
-          }
-        }
-        else{
-          tag = 4;
-        }
-
-        UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
-          //更新LastShowDate, LastUpdateDate和usedStatus
-          var activate_flag;
-          var LastShowDate = cards[0]['LastShowDate'];
-          var date = LastShowDate;
-          var NewShowDate;
-          var NewArray = [];
-          NewArray = cards[0]['usedStatus'].slice(0);
-          var today_obj = new Date();
-          var today_num = dateObjToDateNumber(today_obj);        
-          NewUpdateDate = addDays(today_num, 0);        
-          NewArray.push(tag);
-          if( cards[0].Showed == false ){
-            switch(tag) {
-                case 1:
-                    date = addDays(today_num, 8);
-                    NewShowDate = date;
-                    activate_flag = true;
-                    break; 
-                case 2:
-                    date = addDays(today_num, 4);
-                    NewShowDate = date;
-                    activate_flag = true;
-                    break;
-                case 3:
-                    date = addDays(today_num, 2);
-                    NewShowDate = date;
-                    activate_flag = true;
-                case 4:
-                    NewShowDate = 50000000;
-                    activate_flag = false;
-                    break;
-            }          
           }
           else{
-            for( var i = 0; i < NewArray.length; i++ ){
-              switch(NewArray[i]) {
+            tag = 4;
+          }
+
+          UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
+            //更新LastShowDate, LastUpdateDate和usedStatus
+            var activate_flag;
+            var LastShowDate = cards[0]['LastShowDate'];
+            var date = LastShowDate;
+            var NewShowDate;
+            var NewArray = [];
+            NewArray = cards[0]['usedStatus'].slice(0);
+            var today_obj = new Date();
+            var today_num = dateObjToDateNumber(today_obj);        
+            NewUpdateDate = addDays(today_num, 0);        
+            NewArray.push(tag);
+            if( cards[0].Showed == false ){
+              switch(tag) {
                   case 1:
-                      //简单
-                      date = addDays(date, 8);
+                      date = addDays(today_num, 8);
                       NewShowDate = date;
                       activate_flag = true;
-                      break;
+                      break; 
                   case 2:
-                      //模糊
-                      date = addDays(date, 4);
+                      date = addDays(today_num, 4);
                       NewShowDate = date;
                       activate_flag = true;
                       break;
                   case 3:
                       date = addDays(today_num, 2);
                       NewShowDate = date;
-                      activate_flag = true;                      
+                      activate_flag = true;
                   case 4:
                       NewShowDate = 50000000;
                       activate_flag = false;
-                      break;                      
-              }              
+                      break;
+              }          
             }
-          }     
-          
-          var _id = cards[0]._id;
-          var m_data_json = {
-            card_unique_id : cards[0].card_unique_id,  
-            LastShowDate : NewShowDate,   
-            LastUpdateDate : NewUpdateDate, 
-            openID : cards[0].openID,
-            Showed: true,
-            usedStatus: NewArray,
-            activated: activate_flag
-          };
+            else{
+              for( var i = 0; i < NewArray.length; i++ ){
+                switch(NewArray[i]) {
+                    case 1:
+                        //简单
+                        date = addDays(date, 8);
+                        NewShowDate = date;
+                        activate_flag = true;
+                        break;
+                    case 2:
+                        //模糊
+                        date = addDays(date, 4);
+                        NewShowDate = date;
+                        activate_flag = true;
+                        break;
+                    case 3:
+                        date = addDays(today_num, 2);
+                        NewShowDate = date;
+                        activate_flag = true;                      
+                    case 4:
+                        NewShowDate = 50000000;
+                        activate_flag = false;
+                        break;                      
+                }              
+              }
+            }     
+            
+            var _id = cards[0]._id;
+            var m_data_json = {
+              card_unique_id : cards[0].card_unique_id,  
+              LastShowDate : NewShowDate,   
+              LastUpdateDate : NewUpdateDate, 
+              openID : cards[0].openID,
+              Showed: true,
+              usedStatus: NewArray,
+              activated: activate_flag
+            };
 
-          UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
-            if (err){
-              console.log('err   ' + err);
-            }
-            callback();
-          });        
+            UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
+              if (err){
+                console.log('err   ' + err);
+              }
+              callback();
+            });        
+          });
+        }, function(err, results){
+          //标记完后返回下一堆张卡
+          var card_json;
+          var PromiseGetNextCard = new Promise(function(resolve,reject){   
+            getNextCard(openID, function(result){   
+              resolve(result);    
+             });    
+          });   
+            
+          PromiseGetNextCard.then(function(result){   
+            card_json = result;       
+            res.json(card_json);    
+          });
         });
-      }, function(err, results){
-        //标记完后返回下一堆张卡
-        var card_json;
-        var PromiseGetNextCard = new Promise(function(resolve,reject){   
-          getNextCard(openID, function(result){   
-            resolve(result);    
-           });    
-        });   
-          
-        PromiseGetNextCard.then(function(result){   
-          card_json = result;       
-          res.json(card_json);    
-        });
+
       });
     }
     });  
