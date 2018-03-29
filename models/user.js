@@ -13,7 +13,7 @@ var UserSchema = new Schema({
         required: true
     },
 	unionID : String,
-	timestamp : Number,    
+	timestamp : Number,
 	gender: String,
 	avartar_url: String,
 	session_id: { type: String, index: { unique: true } },
@@ -21,6 +21,7 @@ var UserSchema = new Schema({
 	city: String,
 	country: String,
 	targetCents : Number,
+	userCardRecord : Array,
 	todayCards : Number,
 	totalCards : Number,
 	lastUpdateTime : Number
