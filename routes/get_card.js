@@ -180,8 +180,6 @@ router.get('/', function(req, res, next){
         today_num = today_num + cardNum;
       }
 
-      UserModel.update({'openID' : openId}, {'todayCards': today_num, 'totalCards' : total_num, 'lastUpdateTime' : lastUpdateTime},{multi: true},function(err, user){
-
         async.each(memoryData, function(singleMemoryData, callback){
 
           var seconds = parseInt(singleMemoryData.seconds);
@@ -323,7 +321,6 @@ router.get('/', function(req, res, next){
           });
         });
 
-      });
     }
     });  
 });
