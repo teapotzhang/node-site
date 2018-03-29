@@ -170,7 +170,6 @@ router.get('/', function(req, res, next){
       var today_obj = new Date();
       var today_num = dateObjToDateNumber(today_obj);
 
-
       if( lastUpdateTime < today_num ){
         //今天刚刚开始刷卡
         today_num = cardNum;
@@ -180,8 +179,208 @@ router.get('/', function(req, res, next){
         today_num = today_num + cardNum;
       }
 
-        async.each(memoryData, function(singleMemoryData, callback){
+      async.each(memoryData, function(singleMemoryData, callback){
 
+        var seconds = parseInt(singleMemoryData.seconds);
+        var answerStatus = singleMemoryData.answerStatus;
+        var card_unique_id = singleMemoryData.card_unique_id;
+        var card_type = singleMemoryData.card_type;
+        
+        var tag;
+
+        if( card_unique_id.length == 32 )
+        {
+          if( answerStatus == 'false' ){
+            tag = 3; //回答错了
+          } 
+          else{
+            if(card_type == "Exam")
+            {
+              if(seconds <= 20){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }
+            }
+            if(card_type == "Normal")
+            {
+              if(seconds <= 8){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }
+            }   
+            if(card_type == "Introduction"){
+               if(seconds <= 8){
+                tag = 1; //简单
+              }
+              else{
+                tag = 2; //模糊
+              }         
+            }     
+          }
+        }
+        else{
+          tag = 4;
+        }
+
+        UserCardModel.find({'card_unique_id' : card_unique_id, 'openID' : openID}, function(err, cards){
+          //更新LastShowDate, LastUpdateDate和usedStatus
+          var activate_flag;
+          var LastShowDate = cards[0]['LastShowDate'];
+          var date = LastShowDate;
+          var NewShowDate;
+          var NewArray = [];
+          NewArray = cards[0]['usedStatus'].slice(0);
+          var today_obj = new Date();
+          var today_num = dateObjToDateNumber(today_obj);        
+          NewUpdateDate = addDays(today_num, 0);        
+          NewArray.push(tag);
+          if( cards[0].Showed == false ){
+            switch(tag) {
+                case 1:
+                    date = addDays(today_num, 8);
+                    NewShowDate = date;
+                    activate_flag = true;
+                    break; 
+                case 2:
+                    date = addDays(today_num, 4);
+                    NewShowDate = date;
+                    activate_flag = true;
+                    break;
+                case 3:
+                    date = addDays(today_num, 2);
+                    NewShowDate = date;
+                    activate_flag = true;
+                case 4:
+                    NewShowDate = 50000000;
+                    activate_flag = false;
+                    break;
+            }          
+          }
+          else{
+            for( var i = 0; i < NewArray.length; i++ ){
+              switch(NewArray[i]) {
+                  case 1:
+                      //简单
+                      date = addDays(date, 8);
+                      NewShowDate = date;
+                      activate_flag = true;
+                      break;
+                  case 2:
+                      //模糊
+                      date = addDays(date, 4);
+                      NewShowDate = date;
+                      activate_flag = true;
+                      break;
+                  case 3:
+                      date = addDays(today_num, 2);
+                      NewShowDate = date;
+                      activate_flag = true;                      
+                  case 4:
+                      NewShowDate = 50000000;
+                      activate_flag = false;
+                      break;                      
+              }              
+            }
+          }     
+          
+          var _id = cards[0]._id;
+          var m_data_json = {
+            card_unique_id : cards[0].card_unique_id,  
+            LastShowDate : NewShowDate,   
+            LastUpdateDate : NewUpdateDate, 
+            openID : cards[0].openID,
+            Showed: true,
+            usedStatus: NewArray,
+            activated: activate_flag
+          };
+
+          UserCardModel.findByIdAndUpdate(_id, { $set: m_data_json}, {new: false}, function(err, cards){
+            if (err){
+              console.log('err   ' + err);
+            }
+            callback();
+          });        
+        });
+      }, function(err, results){
+        //标记完后返回下一堆张卡
+        var card_json;
+        var PromiseGetNextCard = new Promise(function(resolve,reject){   
+          getNextCard(openID, function(result){   
+            resolve(result);    
+           });    
+        });   
+          
+        PromiseGetNextCard.then(function(result){   
+          card_json = result;       
+          res.json(card_json);    
+        });
+      });
+
+    }
+    });  
+});
+
+router.get('/test', function(req, res, next){
+
+    var packageName;
+    var sessionID = req.query.sessionID; //确定用户
+
+    //获取openID 不暴漏用户
+    var openID, card_unique_id, total_num, today_num, lastUpdateTime;
+    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+    openID = user['openID'];
+    total_num = user['totalCards'];
+    lastUpdateTime = user['lastUpdateTime'];
+    userCardRecord = user['userCardRecord'];
+
+    if(req.query.first_card == 'true'){
+      //是当天的头一百张卡
+      //去card表里查询卡的具体内容
+      var card_json;
+      var PromiseGetNextCard = new Promise(function(resolve,reject){   
+        getNextCard(openID, function(result){   
+          resolve(result);    
+         });    
+      });   
+        
+      PromiseGetNextCard.then(function(result){   
+        card_json = result;        
+        res.json(card_json);    
+      });
+
+    }
+    else{
+      //用户有回传的需要处理的数据
+      //回传的用户刷卡详情数组
+      var memoryData = JSON.parse(req.query.memoryData);
+      var cardNum = memoryData.length; //进来的刷卡数据
+      var cardRecord = userCardRecord;
+      total_num = total_num + cardNum; //总刷卡数量总是更新的
+
+      var today_obj = new Date();
+      var today_num = dateObjToDateNumber(today_obj);  //今天的日期
+
+      if( lastUpdateTime < today_num ){
+        //今天刚刚开始刷卡
+        lastUpdateTime = today_num;
+        cardRecord.push({'date':today_num,'cards':cardNum})        
+      }
+      else{
+        for( var i = 0; i < cardRecord.length; i++ ){
+          if( cardRecord[i].date == today_num ){
+            //匹配到了，这个用户今天刷过卡，更新这个数据
+            cardRecord[i].cards = cardRecord[i].cards + cardNum
+          }
+        }
+      }
+
+      //整理完毕，cardRecord是新数组 total_num是新的刷卡总数 lastUpdateTime是上次刷卡日期
+      UserModel.update({'openID' : openId}, {'totalCards' : total_num, 'lastUpdateTime' : lastUpdateTime, 'userCardRecord':cardRecord},{multi: true},function(err, user){
+        async.each(memoryData, function(singleMemoryData, callback){
           var seconds = parseInt(singleMemoryData.seconds);
           var answerStatus = singleMemoryData.answerStatus;
           var card_unique_id = singleMemoryData.card_unique_id;
@@ -320,9 +519,9 @@ router.get('/', function(req, res, next){
             res.json(card_json);    
           });
         });
-
+      });
     }
-    });  
+    });
 });
 
 module.exports = router;

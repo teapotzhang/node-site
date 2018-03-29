@@ -22,7 +22,7 @@ var UserSchema = new Schema({
 	country: String,
 	targetCents : Number,
 	userCardRecord : Array,
-	todayCards : Number,
+	todayCards : Number,  //弃用，变成一个数组
 	totalCards : Number,
 	lastUpdateTime : Number
 });
