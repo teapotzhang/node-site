@@ -699,11 +699,10 @@ router.get('/index_package/search/package', function(req, res){
 router.get('/index/userCard', function(req, res){
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj);
-  var recordArray = [];
-
   UserModel.find({}, function(err, users){
     async.each(users, function(userData, callback){
         let openId = userData.openID;
+        var recordArray = [];
         UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
           let today_number = cards.length;
           let userCardRecord = { 'date' : today_num, 'cards' : today_number };
@@ -711,15 +710,11 @@ router.get('/index/userCard', function(req, res){
 
           //用户一共刷了多少张卡
           UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
-
             var total = 0;
-
             for( var i = 0; i < cards.length; i ++ ){
               total = cards[i]['usedStatus'].length + total;
             }
-
             total_cards = cards.length + total;
-
             UserModel.update({'openID' : openId}, {'todayCards': today_number, 'totalCards' : total_cards, 'lastUpdateTime' : today_num, 'userCardRecord':recordArray},{multi: true},function(err, user){
               callback();
             });
