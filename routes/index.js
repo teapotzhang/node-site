@@ -155,6 +155,7 @@ router.get('/getTotalArray', function(req, res, next){
   var today_num = dateObjToDateNumber(today_obj) ;
   var totalList = [];
   var todayList = [];
+  var openID;
 
   RankModel.find({'date':today_num},function(err, rankList){    
     for( var i = 0; i < rankList[0].totalList; i++ ){
@@ -170,29 +171,34 @@ router.get('/getTotalArray', function(req, res, next){
       }
     }
 
-    //用户一共刷了多少张卡
-    UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
+    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
+      console.log(user);
+      openID = user['openID'];
 
-      var total = 0;
+      //用户一共刷了多少张卡
+      UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
-      for( var i = 0; i < cards.length; i ++ ){
-        total = cards[i]['usedStatus'].length + total;
-      }
+        var total = 0;
 
-      total_cards = cards.length + total;
-
-      var rank = 1;
-
-      for( var i = 0; i < totalList.length; i++ ){
-        //这个人比他厉害，排他前面
-        if( totalList[i] > totalList ){
-          rank ++;
+        for( var i = 0; i < cards.length; i ++ ){
+          total = cards[i]['usedStatus'].length + total;
         }
-      }
 
-      var percent = rank/totalList.length;
+        total_cards = cards.length + total;
 
-      res.json({'percent':percent, 'today_array':todayList});
+        var rank = 1;
+
+        for( var i = 0; i < totalList.length; i++ ){
+          //这个人比他厉害，排他前面
+          if( totalList[i] > totalList ){
+            rank ++;
+          }
+        }
+
+        var percent = rank/totalList.length;
+
+        res.json({'percent':percent, 'today_array':todayList});
+      });
     });
   });
 });
