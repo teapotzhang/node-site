@@ -21,10 +21,10 @@ var UserSchema = new Schema({
 	city: String,
 	country: String,
 	targetCents : Number,
-	userCardRecord : Array,
-	todayCards : Number,  //弃用，变成一个数组
-	totalCards : Number,
-	lastUpdateTime : Number
+	userCardRecord : Array,	//弃用
+	todayCards : Number,  //弃用
+	totalCards : Number,  //弃用
+	lastUpdateTime : Number //弃用
 });
 
 var UserModel = db.model('User', UserSchema);

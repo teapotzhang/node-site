@@ -1,5 +1,6 @@
 var express = require('express');
 var async = require('async');
+var RankModel = require('../models/rank');
 var AdminModel = require('../models/admin');
 var CardModel = require('../models/card');
 var UserModel = require('../models/user');
@@ -699,46 +700,47 @@ router.get('/index_package/search/package', function(req, res){
 router.get('/index/userCard', function(req, res){
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj);
+  var todayArray = [];
+  var totalArray = [];
   UserModel.find({}, function(err, users){
     async.each(users, function(userData, callback){
-        let openId = userData.openID;
-        let recordArray = userData.userCardRecord;
-        var the_flag = 0;
+      let openId = userData.openID;
+      let recordArray = userData.userCardRecord;
+      var the_flag = 0;
 
-        for( var i = 0; i < recordArray.length; i++ ){
-          if( recordArray[i]['date'] == today_num ){
-            //今天已经有过惹
-            //记录flag值
-            the_flag = i;
-          }
+      for( var i = 0; i < recordArray.length; i++ ){
+        if( recordArray[i]['date'] == today_num ){
+          //今天已经有过惹
+          //记录flag值
+          the_flag = i;
         }
+      }
 
-        UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
-          let today_number = cards.length;
-          let userCardRecord = { 'date' : today_num, 'cards' : today_number };
-
-          if( i == 0 ){
-            recordArray.push(userCardRecord);
+      UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
+        let today_number = cards.length;
+        let today_json = {'openID' : openId,'today_number':today_number};
+        todayArray.push(today_json);
+        //用户一共刷了多少张卡
+        UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
+          var total = 0;
+          for( var i = 0; i < cards.length; i ++ ){
+            total = cards[i]['usedStatus'].length + total;
           }
-          else{
-            recordArray[the_flag] = userCardRecord;
-          }
-
-          //用户一共刷了多少张卡
-          UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
-            var total = 0;
-            for( var i = 0; i < cards.length; i ++ ){
-              total = cards[i]['usedStatus'].length + total;
-            }
-            total_cards = cards.length + total;
-            UserModel.update({'openID' : openId}, {'todayCards': today_number, 'totalCards' : total_cards, 'lastUpdateTime' : today_num, 'userCardRecord':recordArray},{multi: true},function(err, user){
-              callback();
-            });
-
-          });
-
-        })
+          total_cards = cards.length + total;
+          let total_json = {'openID' : openId,'total_number':total_cards};
+          totalArray.push(total_json);
+          callback()
+        });
+      })
     }, function(results){
+      var data_json = {
+          'todayList' : todayArray,
+          'totalList' : totalArray,
+          'date' : today_num
+      };
+
+      var RankEntity = new RankModel(data_json);
+      RankEntity.save();
       return res.render('admin/index'); 
     });
   });

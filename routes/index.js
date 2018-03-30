@@ -148,32 +148,7 @@ router.get('/upload_num', function(req, res, next){
 });
 
 router.get('/getTotalArray', function(req, res, next){
-  var total_array = [];
-
-  UserModel.find({}, function(err, users){
-    let datas = users;//全部数据
-    let resultData = []//结果数据
-    let size = datas.length;
-    let interval = Math.floor(size/1500) == 0 ? 1 : Math.floor(size/1500) ;
-    for(let i = 0;i < size; i += interval){
-        resultData.push(datas[i]['totalCards'])
-    }
-    let new_array = resultData.slice(0, 1500);
-    res.json({'array':new_array});
-  });
-
-
-  /*
-  UserModel.aggregate({$sample:{size:1500}}, function(err, users){
-    async.each(users, function(user, callback){
-      total_array.push(user['totalCards']);
-      callback();
-    }, function(results){
-      res.json({'array':total_array});
-    });
-  });
-  */
-
+  res.json({'i_am_implementing_it':true})
 });
 
 router.get('/getTodayArray', function(req, res, next){
