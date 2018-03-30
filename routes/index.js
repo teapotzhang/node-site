@@ -154,9 +154,9 @@ router.get('/getTotalArray', function(req, res, next){
     let datas = users;//全部数据
     let resultData = []//结果数据
     let size = datas.length;
-    let interval = Math.floor(size/1500) == 0?1:Math.floor(size/1500);
-    for(let i = 0;i<size;i+=interval){
-        resultData.push(datas.slice(i).totalCards)
+    let interval = Math.floor(size/1500) == 0 ? 1 : Math.floor(size/1500) ;
+    for(let i = 0;i < size; i += interval){
+        resultData.push(datas[i]['totalCards'])
     }
     res.json({'array':resultData});
   });
