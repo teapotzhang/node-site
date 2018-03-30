@@ -702,6 +702,7 @@ router.get('/index/userCard', function(req, res){
   UserModel.find({}, function(err, users){
     async.each(users, function(userData, callback){
         let openId = userData.openID;
+        let userCardRecord = userData.userCardRecord;
         var recordArray = [];
         UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
           let today_number = cards.length;
