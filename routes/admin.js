@@ -705,8 +705,8 @@ router.get('/index/userCard', function(req, res){
         let recordArray = userData.userCardRecord;
         var the_flag = 0;
 
-        for( var i = 0; i < userCardRecordArray.length; i++ ){
-          if( userCardRecordArray[i]['date'] == today_num ){
+        for( var i = 0; i < recordArray.length; i++ ){
+          if( recordArray[i]['date'] == today_num ){
             //今天已经有过惹
             //记录flag值
             the_flag = i;
