@@ -45,7 +45,7 @@ function getTargetCents(openID, targetCents, cb){
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
 
-    RankModel.find({'date':today_num},function(err, rankList){
+    RankModel.find({'date':20180330},function(err, rankList){
      
       for( var i = 0; i < rankList[0].totalList.length; i++ ){
         //整理totalList
