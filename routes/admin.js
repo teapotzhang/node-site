@@ -702,12 +702,27 @@ router.get('/index/userCard', function(req, res){
   UserModel.find({}, function(err, users){
     async.each(users, function(userData, callback){
         let openId = userData.openID;
-        let userCardRecord = userData.userCardRecord;
-        var recordArray = [];
+        let recordArray = userData.userCardRecord;
+        var the_flag = 0;
+
+        for( var i = 0; i < userCardRecordArray.length; i++ ){
+          if( userCardRecordArray[i]['date'] == today_num ){
+            //今天已经有过惹
+            //记录flag值
+            the_flag = i;
+          }
+        }
+
         UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
           let today_number = cards.length;
           let userCardRecord = { 'date' : today_num, 'cards' : today_number };
-          recordArray.push(userCardRecord);
+
+          if( i == 0 ){
+            recordArray.push(userCardRecord);
+          }
+          else{
+            recordArray[the_flag] = userCardRecord;
+          }
 
           //用户一共刷了多少张卡
           UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
