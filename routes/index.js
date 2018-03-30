@@ -197,7 +197,7 @@ router.get('/getTotalArray', function(req, res, next){
 
         var percent = rank/totalList.length;
 
-        res.json({'percent':percent, 'today_array':todayList});
+        res.json({'percent':total_cards, 'today_array':rankList[0]});
       });
     });
   });
