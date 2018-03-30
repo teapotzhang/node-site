@@ -158,7 +158,6 @@ router.get('/getTotalArray', function(req, res, next){
     for(let i = 0;i < size; i += interval){
         resultData.push(datas[i]['totalCards'])
     }
-    resultData.slice(0, 1500);
     res.json({'array':resultData});
   });
 
