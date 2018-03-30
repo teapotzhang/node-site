@@ -62,18 +62,32 @@ function getTargetCents(openID, targetCents, cb){
 
       total_cards = cards.length + total;
 
+      let mockArray = [];
+
+      for( var k = 1; k <= 1499; k++ ){
+        mockArray.push(k);
+      }
 
       var rank = 0;
 
-      for( var i = 0; i < totalList.length; i++ ){
-        //这个人比他厉害，排他前面
-        if( totalList[i] > total_cards ){
-          rank ++;
+      var percentArray = [];
+
+      for( var m = 0; m <= mockArray.length; m ++ ){
+
+        var the_rank = 0
+        for( var i = 0; i < totalList.length; i++ ){
+          //这个人比他厉害，排他前面
+          if( totalList[i] > mockArray[m] ){
+           // rank ++;
+           the_rank ++;
+          }
         }
+        var the_percent = (totalList.length-the_rank)/totalList.length;
+        percentArray.push(the_percent);
+
+       // var percent = (totalList.length-rank)/totalList.length;
+
       }
-
-      var percent = (totalList.length-rank)/totalList.length;
-
       //用户距离司考还有多少天
       var days = dateCompare();
 
@@ -99,7 +113,7 @@ function getTargetCents(openID, targetCents, cb){
         all : today_need,
         targetCents : targetCents,
         total_cards: total_cards,
-        percent : percent
+        percent : percentArray
       }
 
       var get_json = JSON.stringify(number_json);
