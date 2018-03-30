@@ -34,6 +34,7 @@ function dateCompare(){
 function getTargetCents(openID, targetCents, cb){
   var today_number, total_cards, total_cards_set, today_need;
   var today_obj = new Date();
+  var totalList = [];
   var today_num = dateObjToDateNumber(today_obj);
   
   //用户今天刷了多少张卡
@@ -43,6 +44,16 @@ function getTargetCents(openID, targetCents, cb){
     //用户一共刷了多少张卡
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
+
+    RankModel.find({'date':today_num},function(err, rankList){
+     
+      for( var i = 0; i < rankList[0].totalList.length; i++ ){
+        //整理totalList
+        if( rankList[0].totalList[i].total_number > 0 ){
+          totalList.push(rankList[0].totalList[i].total_number);
+        }
+      }
+
       var total = 0;
 
       for( var i = 0; i < cards.length; i ++ ){
@@ -50,6 +61,18 @@ function getTargetCents(openID, targetCents, cb){
       }
 
       total_cards = cards.length + total;
+
+
+      var rank = 0;
+
+      for( var i = 0; i < totalList.length; i++ ){
+        //这个人比他厉害，排他前面
+        if( totalList[i] > total_cards ){
+          rank ++;
+        }
+      }
+
+      var percent = (totalList.length-rank)/totalList.length;
 
       //用户距离司考还有多少天
       var days = dateCompare();
@@ -75,13 +98,16 @@ function getTargetCents(openID, targetCents, cb){
         done : today_number,
         all : today_need,
         targetCents : targetCents,
-        total_cards: total_cards
+        total_cards: total_cards,
+        percent : percent
       }
 
       var get_json = JSON.stringify(number_json);
       cb(get_json);
 
     });
+
+  });
 
   });
 }
@@ -148,93 +174,23 @@ router.get('/upload_num', function(req, res, next){
     });
 });
 
-router.get('/getTotalArray', function(req, res, next){
-  var sessionID = req.query.sessionID; //确定用户
+router.get('/getArray', function(req, res, next){
 
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj) ;
-  var totalList = [];
   var todayList = [];
-  var openID;
 
-  RankModel.find({'date':today_num},function(err, rankList){  
-    //到这一步没有问题  
-    for( var i = 0; i < rankList[0].totalList.length; i++ ){
-      //整理totalList
-      if( rankList[0].totalList[i].total_number > 0 ){
-        totalList.push(rankList[0].totalList[i].total_number);
-      }
-    }
+  RankModel.find({'date':today_num},function(err, rankList){
+     
     for( var i = 0; i < rankList[0].todayList.length; i++ ){
       //整理todayList
       if( rankList[0].todayList[i].today_number > 0 ){
         todayList.push(rankList[0].todayList[i].today_number);
       }
     }
+    res.json({'today_array':todayList});
 
-    UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
-      console.log(user);
-      openID = user['openID'];
-
-      //用户一共刷了多少张卡
-      UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
-
-        var total = 0;
-
-        for( var i = 0; i < cards.length; i ++ ){
-          total = cards[i]['usedStatus'].length + total;
-        }
-
-        total_cards = cards.length + total;
-
-        var rank = 1;
-
-        for( var i = 0; i < totalList.length; i++ ){
-          //这个人比他厉害，排他前面
-          if( totalList[i] > total_cards ){
-            rank ++;
-          }
-        }
-
-        var percent = rank/totalList.length;
-
-        res.json({'percent':percent, 'today_array':todayList});
-      });
-    });
   });
-});
-
-router.get('/getTodayArray', function(req, res, next){
-  var today_array = [];
-  var today_obj = new Date();
-  var today_num = dateObjToDateNumber(today_obj) ;
-
-  var total_array = [];
-
-  UserModel.aggregate({$sample:{size:1500}}, function(err, users){
-    async.each(users, function(user, callback){
-      total_array.push(user['totalCards']);
-      callback();
-    }, function(results){
-
-      UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
-        async.each(users, function(user, cb){
-          for( var i = 0; i < user['userCardRecord'].length; i++ ){
-            if( user['userCardRecord'][i]['date'] == today_num ){
-              if( user['userCardRecord'][i]['cards'] > 0 ){
-                today_array.push(user['todayCards']);
-              }
-            }
-          }
-          cb();
-        }, function(results){
-          res.json({'array':total_array, 'today_array': today_array});
-        });
-      });
-
-    });
-  });
-
 });
 
 module.exports = router;
