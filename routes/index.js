@@ -157,14 +157,15 @@ router.get('/getTotalArray', function(req, res, next){
   var todayList = [];
   var openID;
 
-  RankModel.find({'date':today_num},function(err, rankList){    
-    for( var i = 0; i < rankList[0].totalList; i++ ){
+  RankModel.find({'date':today_num},function(err, rankList){  
+    //到这一步没有问题  
+    for( var i = 0; i < rankList[0].totalList.length; i++ ){
       //整理totalList
       if( rankList[0].totalList[i].total_number > 0 ){
         totalList.push(rankList[0].totalList[i].total_number);
       }
     }
-    for( var i = 0; i < rankList[0].todayList; i++ ){
+    for( var i = 0; i < rankList[0].todayList.length; i++ ){
       //整理todayList
       if( rankList[0].todayList[i].today_number > 0 ){
         todayList.push(rankList[0].todayList[i].today_number);
@@ -197,7 +198,7 @@ router.get('/getTotalArray', function(req, res, next){
 
         var percent = rank/totalList.length;
 
-        res.json({'percent':total_cards, 'today_array':rankList[0]});
+        res.json({'percent':percent, 'today_array':todayList});
       });
     });
   });
