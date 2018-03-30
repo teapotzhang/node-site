@@ -190,7 +190,7 @@ router.get('/getTotalArray', function(req, res, next){
 
         for( var i = 0; i < totalList.length; i++ ){
           //这个人比他厉害，排他前面
-          if( totalList[i] > totalList ){
+          if( totalList[i] > total_cards ){
             rank ++;
           }
         }
