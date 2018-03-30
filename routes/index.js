@@ -149,11 +149,9 @@ router.get('/upload_num', function(req, res, next){
 
 router.get('/getTotalArray', function(req, res, next){
   var total_array = [];
-  var total_nick_array = [];
   UserModel.aggregate({$sample:{size:1500}}, function(err, users){
     async.each(users, function(user, callback){
       total_array.push(user['totalCards']);
-      total_nick_array.push(user['nickName']);
       callback();
     }, function(results){
       res.json({'array':total_array});
@@ -164,19 +162,18 @@ router.get('/getTotalArray', function(req, res, next){
 router.get('/getTodayArray', function(req, res, next){
   var today_array = [];
   var today_obj = new Date();
-  var today_num = dateObjToDateNumber(today_obj) ;  
+  var today_num = dateObjToDateNumber(today_obj) ;
   UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
       for( var i = 0; i < user['userCardRecord'].length; i++ ){
         if( user['userCardRecord'][i]['date'] == today_num ){
-          if( user['userCardRecord']['cards'] > 0 ){
+          if( user['userCardRecord'][i]['cards'] > 0 ){
             today_array.push(user['todayCards']);
           }
         }
       }
       callback();
     }, function(results){
-      today_array = JSON.stringify(today_array);
       res.json(today_array);
     });
   });
