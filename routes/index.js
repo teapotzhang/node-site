@@ -165,7 +165,7 @@ router.get('/getTotalArray', function(req, res, next){
 router.get('/getTodayArray', function(req, res, next){
   var today_array = [];
   var today_obj = new Date();
-  var today_num = dateObjToDateNumber(today_obj) - 1 ;  
+  var today_num = dateObjToDateNumber(today_obj) ;  
   UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
       for( var i = 0; i < user['userCardRecord'].length; i++ ){
