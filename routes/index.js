@@ -165,10 +165,10 @@ router.get('/getTotalArray', function(req, res, next){
 router.get('/getTodayArray', function(req, res, next){
   var today_array = [];
   var today_obj = new Date();
-  var today_num = dateObjToDateNumber(today_obj);  
+  var today_num = dateObjToDateNumber(today_obj) - 1 ;  
   UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
     async.each(users, function(user, callback){
-      if( user['todayCards'] > 0 ){
+      if( user['userCardRecord']['cards'] > 0 ){
         today_array.push(user['todayCards']);
       }
       callback();
