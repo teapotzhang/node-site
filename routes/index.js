@@ -163,20 +163,33 @@ router.get('/getTodayArray', function(req, res, next){
   var today_array = [];
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj) ;
-  UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
+
+  var total_array = [];
+
+  UserModel.aggregate({$sample:{size:1500}}, function(err, users){
     async.each(users, function(user, callback){
-      for( var i = 0; i < user['userCardRecord'].length; i++ ){
-        if( user['userCardRecord'][i]['date'] == today_num ){
-          if( user['userCardRecord'][i]['cards'] > 0 ){
-            today_array.push(user['todayCards']);
-          }
-        }
-      }
+      total_array.push(user['totalCards']);
       callback();
     }, function(results){
-      res.json(today_array);
+
+      UserModel.find({lastUpdateTime:today_num}, null, {limit: 1500, sort: {todayCards: -1}}, function(err, users){
+        async.each(users, function(user, cb){
+          for( var i = 0; i < user['userCardRecord'].length; i++ ){
+            if( user['userCardRecord'][i]['date'] == today_num ){
+              if( user['userCardRecord'][i]['cards'] > 0 ){
+                today_array.push(user['todayCards']);
+              }
+            }
+          }
+          cb();
+        }, function(results){
+          res.json({'array':total_array, 'today_array': today_array});
+        });
+      });
+
     });
   });
+
 });
 
 module.exports = router;
