@@ -2,6 +2,7 @@ var express = require('express');
 var Promise = require("bluebird");
 var async = require('async');
 var UserModel = require('../models/user');
+var RankModel = require('../models/rank');
 var UserCardModel = require('../models/userCard');
 var router = express.Router();
 
@@ -148,7 +149,52 @@ router.get('/upload_num', function(req, res, next){
 });
 
 router.get('/getTotalArray', function(req, res, next){
-  res.json({'i_am_implementing_it':true})
+  var sessionID = req.query.sessionID; //确定用户
+
+  var today_obj = new Date();
+  var today_num = dateObjToDateNumber(today_obj) ;
+  var totalList = [];
+  var todayList = [];
+
+  RankModel.find({'date':today_num},function(err, rankList){    
+    for( var i = 0; i < rankList[0].totalList; i++ ){
+      //整理totalList
+      if( rankList[0].totalList[i].total_number > 0 ){
+        totalList.push(rankList[0].totalList[i].total_number);
+      }
+    }
+    for( var i = 0; i < rankList[0].todayList; i++ ){
+      //整理todayList
+      if( rankList[0].todayList[i].today_number > 0 ){
+        todayList.push(rankList[0].todayList[i].today_number);
+      }
+    }
+
+    //用户一共刷了多少张卡
+    UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
+
+      var total = 0;
+
+      for( var i = 0; i < cards.length; i ++ ){
+        total = cards[i]['usedStatus'].length + total;
+      }
+
+      total_cards = cards.length + total;
+
+      var rank = 1;
+
+      for( var i = 0; i < totalList.length; i++ ){
+        //这个人比他厉害，排他前面
+        if( totalList[i] > totalList ){
+          rank ++;
+        }
+      }
+
+      var percent = rank/totalList.length;
+
+      res.json({'percent':percent, 'today_array':todayList});
+    });
+  });
 });
 
 router.get('/getTodayArray', function(req, res, next){

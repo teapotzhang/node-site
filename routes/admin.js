@@ -705,17 +705,6 @@ router.get('/index/userCard', function(req, res){
   UserModel.find({}, function(err, users){
     async.each(users, function(userData, callback){
       let openId = userData.openID;
-      let recordArray = userData.userCardRecord;
-      var the_flag = 0;
-
-      for( var i = 0; i < recordArray.length; i++ ){
-        if( recordArray[i]['date'] == today_num ){
-          //今天已经有过惹
-          //记录flag值
-          the_flag = i;
-        }
-      }
-
       UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
         let today_number = cards.length;
         let today_json = {'openID' : openId,'today_number':today_number};
