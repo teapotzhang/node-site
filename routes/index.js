@@ -179,7 +179,7 @@ router.get('/getArray', function(req, res, next){
   var today_num = dateObjToDateNumber(today_obj) ;
   var todayList = [];
 
-  RankModel.find({'date':today_num},function(err, rankList){
+  RankModel.find({'date':20180330},function(err, rankList){
      
     for( var i = 0; i < rankList[0].todayList.length; i++ ){
       //整理todayList
