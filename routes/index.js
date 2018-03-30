@@ -149,9 +149,11 @@ router.get('/upload_num', function(req, res, next){
 
 router.get('/getTotalArray', function(req, res, next){
   var total_array = [];
+  var total_nick_array = [];
   UserModel.aggregate({$sample:{size:1500}}, function(err, users){
     async.each(users, function(user, callback){
       total_array.push(user['totalCards']);
+      total_nick_array.push(user['nickName']);
       callback();
     }, function(results){
       res.json({'array':total_array});
