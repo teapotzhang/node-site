@@ -85,10 +85,10 @@ function getTargetCents(openID, targetCents, cb){
         total_cards_set = 25000;
         break;
       case 380:
-        total_cards_set = 35000;
+        total_cards_set = 30000;
         break;
       default:
-        total_cards_set = 50000;
+        total_cards_set = 38000;
       }
 
       today_need = Math.floor((total_cards_set - total_cards)/days);
