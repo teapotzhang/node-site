@@ -35,6 +35,7 @@ function dateCompare(){
 function getTargetCents(openID, targetCents, cb){
   var today_number, total_cards, total_cards_set, today_need;
   var today_obj = new Date();
+  var totalList = [];
   var today_num = dateObjToDateNumber(today_obj);
   
   //用户今天刷了多少张卡
@@ -44,6 +45,9 @@ function getTargetCents(openID, targetCents, cb){
     //用户一共刷了多少张卡
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
+    RankModel.find({'date':20180330},function(err, rankList){
+     
+
       var total = 0;
 
       for( var i = 0; i < cards.length; i ++ ){
@@ -52,17 +56,48 @@ function getTargetCents(openID, targetCents, cb){
 
       total_cards = cards.length + total;
 
-      let pi = Math.PI;
-
-      let percent;
-
-        let t = 7 - total_cards/2500;
-
-        percent = 2 * Math.atan(Math.sqrt(total_cards)) / (pi*total_cards)
-      
-        if( percent > 0.9999 ){
-          percent = 0.9999
+      for( var i = 0; i < rankList[0].totalList.length; i++ ){
+        //整理totalList
+        if( rankList[0].totalList[i].total_number > 0 ){
+          totalList.push(rankList[0].totalList[i].total_number);
         }
+      }
+      
+      for( var m = 0; m < 5000; m++){
+        var random_number = randomNumber({
+          min : 200,
+          max : 2000,
+          integer : true
+        });
+
+        totalList.push(random_number);
+      }
+
+      for( var m = 0; m < 500; m++){
+
+        var random_number = randomNumber({
+          min : 2001,
+          max : 12000,
+          integer : true
+        });
+
+        totalList.push(random_number);
+      }   
+
+      var rank = 0;
+
+      for( var i = 0; i < totalList.length; i++ ){
+        //这个人比他厉害，排他前面
+        if( totalList[i] > total_cards ){
+          rank ++;
+        }
+      }
+
+      var percent = (totalList.length-rank)/totalList.length;
+
+      if( percent > 0.9999 ){
+        percent = 0.9999
+      }
 
       //用户距离司考还有多少天
       var days = dateCompare();
@@ -95,7 +130,7 @@ function getTargetCents(openID, targetCents, cb){
       var get_json = JSON.stringify(number_json);
       cb(get_json);
 
-    
+    });
 
   });
 
@@ -169,29 +204,30 @@ router.get('/getArray', function(req, res, next){
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj) ;
   var todayList = [];
+  for( var m = 0; m < 200; m++){
 
-  RankModel.find({'date':20180330},function(err, rankList){
-     
-    for( var i = 0; i < rankList[0].todayList.length; i++ ){
-      //整理todayList
-      if( rankList[0].todayList[i].today_number > 0 ){
-        todayList.push(rankList[0].todayList[i].today_number);
-      }
-    }
-    for( var m = 0; m < 50; m++){
+    var random_number = randomNumber({
+      min : 1,
+      max : 92,
+      integer : true
+    });
 
-      var random_number = randomNumber({
-        min : 1,
-        max : 200,
-        integer : true
-      });
+    todayList.push(random_number);
 
-      todayList.push(random_number);
+  }
+  for( var k = 0; k < 200; k++){
 
-    }
-    res.json({'today_array':todayList});
+    var random_number = randomNumber({
+      min : 93,
+      max : 302,
+      integer : true
+    });
 
-  });
+    todayList.push(random_number);
+
+  }  
+  res.json({'today_array':todayList});
+
 });
 
 router.get('/getMockArray', function(req, res, next){
