@@ -17,7 +17,7 @@ function dateObjToDateNumber(date_obj){
     return result;
 }
 
-var j = schedule.scheduleJob('15 00 * * *', function(){
+var j = schedule.scheduleJob('02 00 * * *', function(){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);	
     var yesterday_num = today_num - 1;

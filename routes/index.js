@@ -54,56 +54,108 @@ function getTargetCents(openID, targetCents, cb){
 
     total_cards = cards.length + total;
 
-
       RankModel.find({'date':today_num},function(err, rankList){
-       
-        totalList = totalList.concat(rankList[0]['totalList'])
 
-        var rank = 0;
+        if( rankList.length == 0 ){
+          RankModel.find({'date':today_num-1},function(err, rankListOld){
+            totalList = totalList.concat(rankListOld[0]['totalList'])
 
-        for( var i = 0; i < totalList.length; i++ ){
-          //这个人比他厉害，排他前面
-          if( totalList[i] > total_cards ){
-            rank ++;
+            var rank = 0;
+
+            for( var i = 0; i < totalList.length; i++ ){
+              //这个人比他厉害，排他前面
+              if( totalList[i] > total_cards ){
+                rank ++;
+              }
+            }
+
+            var percent = (totalList.length-rank)/totalList.length;
+
+            if( percent > 0.9999 ){
+              percent = 0.9999
+            }
+
+            //用户距离司考还有多少天
+            var days = dateCompare();
+
+            switch(parseInt(targetCents))
+            {
+            case 320:
+              total_cards_set = 10000;
+              break;
+            case 360:
+              total_cards_set = 25000;
+              break;
+            case 380:
+              total_cards_set = 30000;
+              break;
+            default:
+              total_cards_set = 38000;
+            }
+
+            today_need = Math.floor((total_cards_set - total_cards)/days);
+
+            var number_json = {
+              done : today_number,
+              all : today_need,
+              targetCents : targetCents,
+              total_cards: total_cards,
+              percent : percent
+            }
+
+            var get_json = JSON.stringify(number_json);
+            cb(get_json);
+          });
+        }
+        else{
+          totalList = totalList.concat(rankList[0]['totalList'])
+
+          var rank = 0;
+
+          for( var i = 0; i < totalList.length; i++ ){
+            //这个人比他厉害，排他前面
+            if( totalList[i] > total_cards ){
+              rank ++;
+            }
           }
+
+          var percent = (totalList.length-rank)/totalList.length;
+
+          if( percent > 0.9999 ){
+            percent = 0.9999
+          }
+
+          //用户距离司考还有多少天
+          var days = dateCompare();
+
+          switch(parseInt(targetCents))
+          {
+          case 320:
+            total_cards_set = 10000;
+            break;
+          case 360:
+            total_cards_set = 25000;
+            break;
+          case 380:
+            total_cards_set = 30000;
+            break;
+          default:
+            total_cards_set = 38000;
+          }
+
+          today_need = Math.floor((total_cards_set - total_cards)/days);
+
+          var number_json = {
+            done : today_number,
+            all : today_need,
+            targetCents : targetCents,
+            total_cards: total_cards,
+            percent : percent
+          }
+
+          var get_json = JSON.stringify(number_json);
+          cb(get_json);
         }
-
-        var percent = (totalList.length-rank)/totalList.length;
-
-        if( percent > 0.9999 ){
-          percent = 0.9999
-        }
-
-        //用户距离司考还有多少天
-        var days = dateCompare();
-
-        switch(parseInt(targetCents))
-        {
-        case 320:
-          total_cards_set = 10000;
-          break;
-        case 360:
-          total_cards_set = 25000;
-          break;
-        case 380:
-          total_cards_set = 30000;
-          break;
-        default:
-          total_cards_set = 38000;
-        }
-
-        today_need = Math.floor((total_cards_set - total_cards)/days);
-
-        var number_json = {
-          done : today_number,
-          all : today_need,
-          targetCents : targetCents,
-          total_cards: total_cards,
-          percent : percent
-        }
-
-        var get_json = JSON.stringify(number_json);
-        cb(get_json);
 
       });
 
