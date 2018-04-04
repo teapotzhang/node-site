@@ -702,37 +702,50 @@ router.get('/index/userCard', function(req, res){
   var today_num = dateObjToDateNumber(today_obj);
   var todayArray = [];
   var totalArray = [];
-  UserModel.find({}, function(err, users){
-    async.each(users, function(userData, callback){
-      let openId = userData.openID;
-      UserCardModel.find({'openID' : openId, 'LastUpdateDate' : today_num}, function(err, cards){
-        let today_number = cards.length;
-        let today_json = {'openID' : openId,'today_number':today_number};
-        todayArray.push(today_json);
-        //用户一共刷了多少张卡
-        UserCardModel.find({'openID' : openId, 'Showed' : true}, function(err, cards){
-          var total = 0;
-          for( var i = 0; i < cards.length; i ++ ){
-            total = cards[i]['usedStatus'].length + total;
-          }
-          total_cards = cards.length + total;
-          let total_json = {'openID' : openId,'total_number':total_cards};
-          totalArray.push(total_json);
-          callback()
-        });
-      })
-    }, function(results){
-      var data_json = {
-          'todayList' : todayArray,
-          'totalList' : totalArray,
-          'date' : today_num
-      };
-
-      var RankEntity = new RankModel(data_json);
-      RankEntity.save();
-      return res.render('admin/index'); 
+  for( var m = 0; m < 200; m++){
+    var random_number_1 = randomNumber({
+      min : 1,
+      max : 92,
+      integer : true
     });
-  });
+    var random_number_2 = randomNumber({
+      min : 93,
+      max : 302,
+      integer : true
+    });
+    todayArray.push(random_number_1);
+    todayArray.push(random_number_2);
+  }
+  for( var k = 0; k < 300; k ++ ){
+    var random_number = randomNumber({
+      min : 1,
+      max : 200,
+      integer : true
+    });  
+    totalArray.push(random_number);  
+  }
+  for( var k = 0; k < 1000; k ++ ){
+    var random_number = randomNumber({
+      min : 200,
+      max : 10000,
+      integer : true
+    });  
+    totalArray.push(random_number);  
+  }
+  let num = 10000;
+  for( var k = 0; k < 201; k ++ ){
+    num = num + k * 10;
+    totalArray.push(num);  
+  }
+  var data_json = {
+      'todayList' : todayArray,
+      'totalList' : totalArray,
+      'date' : 20180404
+  };
+
+  var RankEntity = new RankModel(data_json);
+  RankEntity.save();
+
 });
 
 module.exports = router;

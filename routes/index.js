@@ -40,7 +40,7 @@ function getTargetCents(openID, targetCents, cb){
   
   //用户今天刷了多少张卡
   UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
-    
+
     today_number = cards.length;
 
     //用户一共刷了多少张卡
@@ -230,68 +230,6 @@ router.get('/getArray', function(req, res, next){
   }  
   res.json({'today_array':todayList});
 
-});
-
-router.get('/getMockArray', function(req, res, next){
-    var mockArray = [];
-    var totalList = [];
-    var percentArray = [];
-
-    for( var k = 1; k <= 1500; k ++ ){
-      mockArray.push(k);
-    }
-
-    RankModel.find({'date':20180330},function(err, rankList){
-     
-    for( var i = 0; i < rankList[0].totalList.length; i++ ){
-      //整理totalList
-      if( rankList[0].totalList[i].total_number > 0 ){
-        totalList.push(rankList[0].totalList[i].total_number);
-      }
-    }
-    
-    for( var m = 0; m < 5000; m++){
-
-      var random_number = randomNumber({
-        min : 200,
-        max : 2000,
-        integer : true
-      });
-
-      totalList.push(random_number);
-
-    }
-
-    for( var m = 0; m < 500; m++){
-
-      var random_number = randomNumber({
-        min : 2001,
-        max : 12000,
-        integer : true
-      });
-
-      totalList.push(random_number);
-
-    }    
-
-    for( var g = 0; g < mockArray.length; g ++ ){
-      var total_cards = mockArray[g];
-      var rank = 0;
-
-      for( var i = 0; i < totalList.length; i++ ){
-        //这个人比他厉害，排他前面
-        if( totalList[i] > total_cards ){
-          rank ++;
-        }
-      }
-
-      var percent = (totalList.length-rank)/totalList.length;
-      percentArray.push(percent);
-    }
-
-    res.json({'mockData':percentArray})
-
-  });
 });
 
 module.exports = router;
