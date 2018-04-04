@@ -17,11 +17,12 @@ function dateObjToDateNumber(date_obj){
     return result;
 }
 
-var j = schedule.scheduleJob('05 00 * * *', function(){
+var j = schedule.scheduleJob('15 00 * * *', function(){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);	
     var yesterday_num = today_num - 1;
 	var todayArray = [];
+	var totalArray = [];
 	for( var m = 0; m < 200; m++){
 	    var random_number_1 = randomNumber({
 	      min : 1,
