@@ -40,98 +40,99 @@ function getTargetCents(openID, targetCents, cb){
   
   //用户今天刷了多少张卡
   UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
+    
     today_number = cards.length;
 
     //用户一共刷了多少张卡
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
-      var total = 0;
+    var total = 0;
 
-      for( var i = 0; i < cards.length; i ++ ){
-        total = cards[i]['usedStatus'].length + total;
-      }
+    for( var i = 0; i < cards.length; i ++ ){
+      total = cards[i]['usedStatus'].length + total;
+    }
 
-      total_cards = cards.length + total;
+    total_cards = cards.length + total;
 
 
-    RankModel.find({'date':20180330},function(err, rankList){
-     
+      RankModel.find({'date':20180330},function(err, rankList){
+       
 
-      for( var i = 0; i < rankList[0].totalList.length; i++ ){
-        //整理totalList
-        if( rankList[0].totalList[i].total_number > 0 ){
-          totalList.push(rankList[0].totalList[i].total_number);
+        for( var i = 0; i < rankList[0].totalList.length; i++ ){
+          //整理totalList
+          if( rankList[0].totalList[i].total_number > 0 ){
+            totalList.push(rankList[0].totalList[i].total_number);
+          }
         }
-      }
-      
-      for( var m = 0; m < 5000; m++){
-        var random_number = randomNumber({
-          min : 200,
-          max : 2000,
-          integer : true
-        });
+        
+        for( var m = 0; m < 5000; m++){
+          var random_number = randomNumber({
+            min : 200,
+            max : 2000,
+            integer : true
+          });
 
-        totalList.push(random_number);
-      }
-
-      for( var m = 0; m < 500; m++){
-
-        var random_number = randomNumber({
-          min : 2001,
-          max : 12000,
-          integer : true
-        });
-
-        totalList.push(random_number);
-      }   
-
-      var rank = 0;
-
-      for( var i = 0; i < totalList.length; i++ ){
-        //这个人比他厉害，排他前面
-        if( totalList[i] > total_cards ){
-          rank ++;
+          totalList.push(random_number);
         }
-      }
 
-      var percent = (totalList.length-rank)/totalList.length;
+        for( var m = 0; m < 500; m++){
 
-      if( percent > 0.9999 ){
-        percent = 0.9999
-      }
+          var random_number = randomNumber({
+            min : 2001,
+            max : 12000,
+            integer : true
+          });
 
-      //用户距离司考还有多少天
-      var days = dateCompare();
+          totalList.push(random_number);
+        }   
 
-      switch(parseInt(targetCents))
-      {
-      case 320:
-        total_cards_set = 10000;
-        break;
-      case 360:
-        total_cards_set = 25000;
-        break;
-      case 380:
-        total_cards_set = 30000;
-        break;
-      default:
-        total_cards_set = 38000;
-      }
+        var rank = 0;
 
-      today_need = Math.floor((total_cards_set - total_cards)/days);
+        for( var i = 0; i < totalList.length; i++ ){
+          //这个人比他厉害，排他前面
+          if( totalList[i] > total_cards ){
+            rank ++;
+          }
+        }
 
-      var number_json = {
-        done : today_number,
-        all : today_need,
-        targetCents : targetCents,
-        total_cards: total_cards,
-        percent : percent
-      }
+        var percent = (totalList.length-rank)/totalList.length;
 
-      var get_json = JSON.stringify(number_json);
-      cb(get_json);
+        if( percent > 0.9999 ){
+          percent = 0.9999
+        }
 
-    });
+        //用户距离司考还有多少天
+        var days = dateCompare();
+
+        switch(parseInt(targetCents))
+        {
+        case 320:
+          total_cards_set = 10000;
+          break;
+        case 360:
+          total_cards_set = 25000;
+          break;
+        case 380:
+          total_cards_set = 30000;
+          break;
+        default:
+          total_cards_set = 38000;
+        }
+
+        today_need = Math.floor((total_cards_set - total_cards)/days);
+
+        var number_json = {
+          done : today_number,
+          all : today_need,
+          targetCents : targetCents,
+          total_cards: total_cards,
+          percent : percent
+        }
+
+        var get_json = JSON.stringify(number_json);
+        cb(get_json);
+
+      });
 
   });
 
