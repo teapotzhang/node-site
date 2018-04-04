@@ -56,10 +56,9 @@ function getTargetCents(openID, targetCents, cb){
 
       let percent;
 
-      for( let k = 1; k <= 10; k ++ ){
-        let t = 7 - k/2500;
-        percent = 2 * Math.atan(Math.sqrt(k)) / (pi*t)
-      }
+        let t = 7 - total_cards/2500;
+        percent = 2 * Math.atan(Math.sqrt(total_cards)) / (pi*total_cards)
+      
 
       //用户距离司考还有多少天
       var days = dateCompare();
