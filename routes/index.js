@@ -45,9 +45,6 @@ function getTargetCents(openID, targetCents, cb){
     //用户一共刷了多少张卡
     UserCardModel.find({'openID' : openID, 'Showed' : true}, function(err, cards){
 
-    RankModel.find({'date':20180330},function(err, rankList){
-     
-
       var total = 0;
 
       for( var i = 0; i < cards.length; i ++ ){
@@ -55,6 +52,10 @@ function getTargetCents(openID, targetCents, cb){
       }
 
       total_cards = cards.length + total;
+
+
+    RankModel.find({'date':20180330},function(err, rankList){
+     
 
       for( var i = 0; i < rankList[0].totalList.length; i++ ){
         //整理totalList
