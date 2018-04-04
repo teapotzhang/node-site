@@ -183,14 +183,14 @@ router.get('/getArray', function(req, res, next){
     if( rankList.length == 0 ){
       //还没有今天的数据呢，取昨天的吧
       RankModel.find({'date':yesterday_num},function(err, rankListY){
-        todayList = todayList.concat(rankListY[0]['todayList']);
+        todayList = rankListY[0].todayList;
       })
     }
     else{
-      todayList = todayList.concat(rankList[0]['todayList']);
+      todayList = rankList[0].todayList;
     }
+    res.json({'today_array':todayList});
   }) 
-  res.json({'today_array':todayList});
 });
 
 module.exports = router;
