@@ -57,8 +57,12 @@ function getTargetCents(openID, targetCents, cb){
       let percent;
 
         let t = 7 - total_cards/2500;
+
         percent = 2 * Math.atan(Math.sqrt(total_cards)) / (pi*total_cards)
       
+        if( percent > 0.9999 ){
+          percent = 0.9999
+        }
 
       //用户距离司考还有多少天
       var days = dateCompare();
