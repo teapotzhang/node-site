@@ -55,36 +55,9 @@ function getTargetCents(openID, targetCents, cb){
     total_cards = cards.length + total;
 
 
-      RankModel.find({'date':20180330},function(err, rankList){
+      RankModel.find({'date':today_num},function(err, rankList){
        
-
-        for( var i = 0; i < rankList[0].totalList.length; i++ ){
-          //整理totalList
-          if( rankList[0].totalList[i].total_number > 0 ){
-            totalList.push(rankList[0].totalList[i].total_number);
-          }
-        }
-        
-        for( var m = 0; m < 5000; m++){
-          var random_number = randomNumber({
-            min : 200,
-            max : 2000,
-            integer : true
-          });
-
-          totalList.push(random_number);
-        }
-
-        for( var m = 0; m < 500; m++){
-
-          var random_number = randomNumber({
-            min : 2001,
-            max : 12000,
-            integer : true
-          });
-
-          totalList.push(random_number);
-        }   
+        totalList = totalList.concat(rankList[0]['totalList'])
 
         var rank = 0;
 
@@ -202,20 +175,22 @@ router.get('/upload_num', function(req, res, next){
 });
 
 router.get('/getArray', function(req, res, next){
-
   var today_obj = new Date();
   var today_num = dateObjToDateNumber(today_obj);
+  var todayList = [];
   var yesterday_num = today_num - 1;
   RankModel.find({'date':today_num},function(err, rankList){
     if( rankList.length == 0 ){
       //还没有今天的数据呢，取昨天的吧
+      RankModel.find({'date':yesterday_num},function(err, rankListY){
+        todayList = todayList.concat(rankListY[0]['todayList']);
+      })
     }
     else{
-      
+      todayList = todayList.concat(rankList[0]['todayList']);
     }
   }) 
   res.json({'today_array':todayList});
-
 });
 
 module.exports = router;
