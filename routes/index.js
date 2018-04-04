@@ -204,30 +204,16 @@ router.get('/upload_num', function(req, res, next){
 router.get('/getArray', function(req, res, next){
 
   var today_obj = new Date();
-  var today_num = dateObjToDateNumber(today_obj) ;
-  var todayList = [];
-  for( var m = 0; m < 200; m++){
-
-    var random_number = randomNumber({
-      min : 1,
-      max : 92,
-      integer : true
-    });
-
-    todayList.push(random_number);
-
-  }
-  for( var k = 0; k < 200; k++){
-
-    var random_number = randomNumber({
-      min : 93,
-      max : 302,
-      integer : true
-    });
-
-    todayList.push(random_number);
-
-  }  
+  var today_num = dateObjToDateNumber(today_obj);
+  var yesterday_num = today_num - 1;
+  RankModel.find({'date':today_num},function(err, rankList){
+    if( rankList.length == 0 ){
+      //还没有今天的数据呢，取昨天的吧
+    }
+    else{
+      
+    }
+  }) 
   res.json({'today_array':todayList});
 
 });

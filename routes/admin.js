@@ -697,4 +697,49 @@ router.get('/index_package/search/package', function(req, res){
     });
 });
 
+router.get('/index/userCard', function(req, res){
+  var today_obj = new Date();
+  var today_num = dateObjToDateNumber(today_obj);
+  var todayArray = [];
+  var totalArray = [];
+  for( var m = 0; m < 200; m++){
+    var random_number_1 = randomNumber({
+      min : 1,
+      max : 92,
+      integer : true
+    });
+    var random_number_2 = randomNumber({
+      min : 93,
+      max : 302,
+      integer : true
+    });
+    todayArray.push(random_number_1);
+    todayArray.push(random_number_2);
+  }
+  for( var k = 0; k < 300; k ++ ){
+    var random_number = randomNumber({
+      min : 1,
+      max : 200,
+      integer : true
+    });  
+    totalArray.push(random_number);  
+  }
+  for( var k = 0; k < 700; k ++ ){
+    var random_number = randomNumber({
+      min : 200,
+      max : 10000,
+      integer : true
+    });  
+    totalArray.push(random_number);  
+  }
+  var data_json = {
+      'todayList' : todayArray,
+      'totalList' : totalArray,
+      'date' : 20180404
+  };
+  RankModel.update({'date' : 20180404}, data_json,{multi: true},function(err, ranklist){
+    return res.render('admin/index'); 
+  });
+});
+
 module.exports = router;
