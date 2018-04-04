@@ -212,6 +212,18 @@ router.get('/getMockArray', function(req, res, next){
       }
     }
     
+    for( var m = 0; m < 5000; m++){
+
+      var random_number = randomNumber({
+        min : 1,
+        max : 200,
+        integer : true
+      });
+
+      totalList.push(random_number);
+
+    }
+
     for( var g = 0; g < mockArray.length; g ++ ){
       var total_cards = mockArray[g];
       var rank = 0;
