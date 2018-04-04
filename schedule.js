@@ -36,6 +36,7 @@ var j = schedule.scheduleJob('05 00 * * *', function(){
 	    todayArray.push(random_number_1);
 	    todayArray.push(random_number_2);
 	}
+	todayArray.push(93);
 	RankModel.find({'date': today_num},function(err, rankList){
 		if( rankList.length == 0 ){
 			RankModel.find({'date': yesterday_num},function(err, rankListNew){
