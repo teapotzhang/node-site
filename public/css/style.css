@@ -91,8 +91,9 @@ html, body{
 }
 
 #cartoon{
-	background: #f0f0f0;
+	background: #fcfcfc;
 	padding-bottom: 40px;
+	text-align: center;
 }
 
 #features{
@@ -100,28 +101,28 @@ html, body{
 	text-align: center;
 }
 
-#features h2{
+h2{
 	line-height: 30px;
 	font-size: 20px;
 }
 
-#features .features_icon{
+.features_icon{
 	border-radius: 50%;
 	background: #32b6f4;
 	margin: 40px auto 20px;
-	width: 180px;
-	height: 180px;
+	width: 120px;
+	height: 120px;
 }
 
-#features .feature_icon{
-	width: 180px;
-	height: 180px;
-	padding: 40px;
+.feature_icon{
+	width: 120px;
+	height: 120px;
+	padding: 20px;
 	margin: 0px auto;
 	display: block;
 }
 
-#features h3{
+h3{
 	font-weight: 600;
 	font-size: 20px;
 	text-align: center;
@@ -131,7 +132,7 @@ html, body{
 
 #QA{
 	padding: 50px 0px;
-	background: #f0f0f0;
+	background: #fff;
 	text-align: center;
 }
 
@@ -155,7 +156,7 @@ html, body{
 #contact{
 	padding: 50px 0px;
 	text-align: center;
-	height: 600px;
+	background: #fcfcfc;
 }
 
 #contact img{
@@ -176,6 +177,15 @@ table th, table td{
 	padding: 40px 0 0;
 }
 
+@media(min-width: 768px){
+	#for-big-screen{
+		display: block;
+	}
+	#for-small-screen{
+		display: none;
+	}
+}
+
 @media(max-width: 768px){
 	.v-center-logo{
 		height: 400px;
@@ -183,6 +193,18 @@ table th, table td{
 	.v-center-img{
 		height: 600px;
 	}
+	#for-big-screen{
+		display: none;
+	}
+	#for-small-screen{
+		display: block;
+	}
+}
+
+.flex{
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 
