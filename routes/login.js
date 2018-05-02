@@ -15,11 +15,10 @@ var user_open_id, user_session_key, sessionID;
 
 
 router.get('/', function(req, res, next){
-
 	//wechat user login, get code
 	let code = req.query.code;
-	sessionID = req.query.sessionID.toString();
-
+	//sessionID = req.query.sessionID.toString();
+	sessionID = req.query.sessionID || '';
     if(sessionID.length != 32){
 	   sessionID = randomString({length: 32});
     }
@@ -36,7 +35,7 @@ router.get('/', function(req, res, next){
       if (response.statusCode === 200) {
         user_open_id = data.openid;
         user_session_key = data.session_key;
-        
+       console.log("login result :" + user_session_key); 
 		UserModel.find({'openID' : user_open_id}, function(err, users){
 			if(users.length === 0){
 				//是新用户

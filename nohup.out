@@ -1,0 +1,91 @@
+(node:23683) DeprecationWarning: `open()` is deprecated in mongoose >= 4.11.0, use `openUri()` instead, or set the `useMongoClient` option if using `connect()` or `createConnection()`. See http://mongoosejs.com/docs/connections.html#use-mongo-client
+Express started on http://localhost:8083; press Ctrl -C to terminate.
+Db.prototype.authenticate method will no longer be available in the next major release 3.x as MongoDB 3.6 will only allow auth against users in the admin db and will no longer allow multiple credentials on a socket. Please authenticate using MongoClient.connect with auth credentials.
+Mongoose connection open to mongodb://peiwen:XiaoKa001@172.17.17.10:27017/memory?authSource=admin
+TypeError: Cannot read property 'toString' of undefined
+    at /home/peiwen/node-site/routes/login.js:20:34
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/peiwen/node-site/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/home/peiwen/node-site/node_modules/express/lib/router/index.js:174:3)
+    at router (/home/peiwen/node-site/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/peiwen/node-site/node_modules/express/lib/router/index.js:317:13)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at /home/peiwen/node-site/memory.js:45:2
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/peiwen/node-site/node_modules/express/lib/router/index.js:317:13)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/peiwen/node-site/node_modules/serve-static/index.js:121:7)
+(node:23904) DeprecationWarning: `open()` is deprecated in mongoose >= 4.11.0, use `openUri()` instead, or set the `useMongoClient` option if using `connect()` or `createConnection()`. See http://mongoosejs.com/docs/connections.html#use-mongo-client
+Express started on http://localhost:8083; press Ctrl -C to terminate.
+Db.prototype.authenticate method will no longer be available in the next major release 3.x as MongoDB 3.6 will only allow auth against users in the admin db and will no longer allow multiple credentials on a socket. Please authenticate using MongoClient.connect with auth credentials.
+Mongoose connection open to mongodb://peiwen:XiaoKa001@172.17.17.10:27017/memory?authSource=admin
+TypeError: Cannot read property 'length' of undefined
+    at /home/peiwen/node-site/routes/login.js:22:18
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/peiwen/node-site/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/home/peiwen/node-site/node_modules/express/lib/router/index.js:174:3)
+    at router (/home/peiwen/node-site/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/peiwen/node-site/node_modules/express/lib/router/index.js:317:13)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at /home/peiwen/node-site/memory.js:45:2
+    at Layer.handle [as handle_request] (/home/peiwen/node-site/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/peiwen/node-site/node_modules/express/lib/router/index.js:317:13)
+    at /home/peiwen/node-site/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/peiwen/node-site/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/peiwen/node-site/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/peiwen/node-site/node_modules/serve-static/index.js:121:7)
+(node:24186) DeprecationWarning: `open()` is deprecated in mongoose >= 4.11.0, use `openUri()` instead, or set the `useMongoClient` option if using `connect()` or `createConnection()`. See http://mongoosejs.com/docs/connections.html#use-mongo-client
+Express started on http://localhost:8080; press Ctrl -C to terminate.
+Db.prototype.authenticate method will no longer be available in the next major release 3.x as MongoDB 3.6 will only allow auth against users in the admin db and will no longer allow multiple credentials on a socket. Please authenticate using MongoClient.connect with auth credentials.
+Mongoose connection open to mongodb://peiwen:XiaoKa001@172.17.17.10:27017/memory?authSource=admin
+login result :polggMKrhXqlvvWQDxvCkg==
+(node:24186) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+{ _id: 5ae27e1488ba920510f249cf,
+  session_id: 'ettptRRVB1je6LASzCuMSkUFN3XIaHGC',
+  openID: 'oP5oh0YI2SGmQG6_LNLXdxMRROnI',
+  session_key: 'polggMKrhXqlvvWQDxvCkg==',
+  targetCents: 380,
+  __v: 0,
+  country: 'China',
+  city: 'Yubei',
+  province: 'Chongqing',
+  avartar_url: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLBJ6Ka0LZibJTJHd0xPSI017n5ic8VeiahrDypag5TCHkCrAalGkGaZ29LibVqjdv6BgI3U8DM6Lia97g/0',
+  gender: '1',
+  nickName: 'Planet',
+  timestamp: 1525142889,
+  unionID: 'o58ia0Tsq7_NLqFDWD-xCYSHwxHI',
+  userCardRecord: [] }
+(node:24186) [DEP0079] DeprecationWarning: Custom inspection function on Objects via .inspect() is deprecated
+events.js:167
+      throw er; // Unhandled 'error' event
+      ^
+
+TypeError: Cannot read property 'totalList' of undefined
+    at /home/peiwen/node-site/routes/index.js:61:56
+    at model.Query.<anonymous> (/home/peiwen/node-site/node_modules/mongoose/lib/model.js:4056:16)
+    at /home/peiwen/node-site/node_modules/kareem/index.js:273:21
+    at /home/peiwen/node-site/node_modules/kareem/index.js:131:16
+    at process._tickCallback (internal/process/next_tick.js:172:11)
+Emitted 'error' event at:
+    at model.Query.<anonymous> (/home/peiwen/node-site/node_modules/mongoose/lib/model.js:4058:13)
+    at /home/peiwen/node-site/node_modules/kareem/index.js:273:21
+    at /home/peiwen/node-site/node_modules/kareem/index.js:131:16
+    at process._tickCallback (internal/process/next_tick.js:172:11)

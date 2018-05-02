@@ -20,7 +20,7 @@ function dateObjToDateNumber(date_obj){
 var j = schedule.scheduleJob('02 00 * * *', function(){
     var today_obj = new Date();
     var today_num = dateObjToDateNumber(today_obj);	
-    var yesterday_num = today_num - 1;
+    var yesterday_num = 20180501;
 	var todayArray = [];
 	var totalArray = [];
 	for( var m = 0; m < 200; m++){

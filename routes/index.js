@@ -6,6 +6,18 @@ var RankModel = require('../models/rank');
 var UserCardModel = require('../models/userCard');
 var randomNumber = require('random-number');
 var router = express.Router();
+// by huming
+var log4js = require('log4js');
+log4js.configure({
+  appenders: {
+    out: { type: 'stdout' },//设置是否在控制台打印日志
+    info: { type: 'file', filename: './logs/info.log' }
+  },
+  categories: {
+    default: { appenders: [ 'out', 'info' ], level: 'info' }//去掉'out'。控制台不打印日志
+  }
+});
+var logger = log4js.getLogger('info'); 
 
 function dateObjToDateNumber(date_obj){
     var year = date_obj.getFullYear().toString();
@@ -37,10 +49,10 @@ function getTargetCents(openID, targetCents, cb){
   var today_obj = new Date();
   var totalList = [];
   var today_num = dateObjToDateNumber(today_obj);
-  
+  logger.info("getTargetCents"); 
   //用户今天刷了多少张卡
   UserCardModel.find({'openID' : openID, 'LastUpdateDate' : today_num}, function(err, cards){
-
+	
     today_number = cards.length;
 
     //用户一共刷了多少张卡
@@ -51,15 +63,15 @@ function getTargetCents(openID, targetCents, cb){
     for( var i = 0; i < cards.length; i ++ ){
       total = cards[i]['usedStatus'].length + total;
     }
-
+    logger.info("line -66 =" + total);
     total_cards = cards.length + total;
 
       RankModel.find({'date':today_num},function(err, rankList){
-
+	logger.info("line-70" + rankList + " aaa")
         if( rankList.length == 0 ){
           RankModel.find({'date':today_num-1},function(err, rankListOld){
             totalList = totalList.concat(rankListOld[0]['totalList'])
-
+		logger.info("line-74");
             var rank = 0;
 
             for( var i = 0; i < totalList.length; i++ ){
@@ -104,6 +116,7 @@ function getTargetCents(openID, targetCents, cb){
             }
 
             var get_json = JSON.stringify(number_json);
+		logger.info("line-119");
             cb(get_json);
           });
         }
@@ -154,6 +167,7 @@ function getTargetCents(openID, targetCents, cb){
           }
 
           var get_json = JSON.stringify(number_json);
+		logger.info("line-170")
           cb(get_json);
         }
 
@@ -166,7 +180,6 @@ function getTargetCents(openID, targetCents, cb){
 
 //加载小程序首页的时候，执行该路径，获取今日刷的卡数，以及用户的目标分数
 router.get('/', function(req, res, next){
-
   var sessionID = req.query.sessionID; //确定用户
 
   //获取openID 不暴漏用户
@@ -174,6 +187,7 @@ router.get('/', function(req, res, next){
 
   UserModel.findOne({ 'session_id' : sessionID }, function(err, user){
     console.log(user);
+    logger.info(user);
     openID = user['openID'];
     targetCents = user['targetCents'];
     //确保获取了user后，进行接下来的操作
@@ -234,7 +248,7 @@ router.get('/getArray', function(req, res, next){
   RankModel.find({'date':today_num},function(err, rankList){
     if( rankList.length == 0 ){
       //还没有今天的数据呢，取昨天的吧
-      RankModel.find({'date':yesterday_num},function(err, rankListY){
+      RankModel.find({'date':20180420},function(err, rankListY){
         todayList = rankListY[0].todayList;
       })
     }
@@ -243,6 +257,12 @@ router.get('/getArray', function(req, res, next){
     }
     res.json({'today_array':todayList});
   }) 
+});
+
+
+router.get('/test', function(req, res, next){
+    logger.info("this is a log4js test1111111111111!");
+    res.json({'aaa': 'test123'});
 });
 
 module.exports = router;
